@@ -5,6 +5,15 @@ Curso DN-0111 Gestión de la Innovación y Estrategia Competitiva (UCR), Equipo 
 
 > **DEMO ILUSTRATIVA:** los datos son simulados y no corresponden a cifras reales de Terránea.
 
+## Qué incluye
+
+Informe por páginas con estilo de tablero BI:
+
+- **Resumen, Matriz, Simulación, Productos y clientes, Bitácora, Recursos y riesgos.**
+- **Datos:** tablas ficticias de productos y clientes, editables; todo se recalcula al instante.
+- **Documentación:** contexto, modelo de datos, medidas, parámetros, indicadores y riesgos.
+- **Panel ⚙ Parámetros:** pesos de la matriz y supuestos de la simulación, configurables en vivo.
+
 ## Cómo verla
 
 - **En línea:** abra el enlace de GitHub Pages del repositorio (Settings → Pages).
@@ -20,7 +29,7 @@ Todo está en un solo archivo: `index.html`.
 Lo que está en el código:
 
 - Datos del informe: constantes `CRITERIOS`, `ESPERADOS`, `RECURSOS_C`, `INDICADORES` y `RIESGOS_C`.
-- Productos ficticios: `PRODUCTOS`.
+- Datos ficticios iniciales: `PRODUCTOS` y `CLIENTES`.
 - Supuestos iniciales de la simulación: `SUP_DEF` y `EXTRA_DEF`.
 - Colores y modo oscuro: variables CSS en `:root`.
 
