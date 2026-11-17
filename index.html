@@ -1,0 +1,1132 @@
+<!doctype html>
+<html lang="es-CR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Revisión de cartera · Terránea</title>
+<meta name="description" content="Demo interactiva de cuatro alternativas para la gestión de la cartera de productos y clientes de Terránea S.A. (DN-0111, UCR). Datos simulados.">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  color-scheme: light;
+  --bg:#f4f3ef; --surface:#fcfcfb; --surface-2:#f0efec; --surface-3:#e6e4de;
+  --border:#d9d7d0; --grid:#e6e4de;
+  --text:#0b0b0b; --text-2:#52514e; --text-3:#62615d;
+  --accent:#2a78d6; --accent-ink:#1c5cab; --accent-soft:#e3eefc;
+  --tab-sel-bg:#1c5cab; --tab-sel-ink:#ffffff;
+  --alt-a:#eb6834; --alt-b:#1baf7a; --alt-c:#2a78d6; --alt-d:#7a7974;
+  --band-bg:#fff1c2; --band-text:#4d3800; --band-border:#d9ab2e;
+  --warn-bg:#fdecea; --warn-text:#8a1f1f; --warn-border:#e8a5a5;
+  --ok-text:#006300;
+  --heat-0:#f0efec; --heat-1:#cde2fb; --heat-2:#86b6ef; --heat-3:#256abf;
+  --heat-ink-0:#52514e; --heat-ink-1:#0b0b0b; --heat-ink-2:#0b0b0b; --heat-ink-3:#ffffff;
+  --seg-1:#1c5cab; --seg-2:#5598e7; --seg-3:#b7d3f6; --seg-ink-1:#ffffff; --seg-ink-2:#0b0b0b; --seg-ink-3:#0b0b0b;
+  --quad-a:#f0efec; --quad-b:#f7f6f3;
+  --focus:#1c5cab;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --bg:#121211; --surface:#1a1a19; --surface-2:#242422; --surface-3:#2e2e2b;
+    --border:#3a3a37; --grid:#2e2e2b;
+    --text:#f0efec; --text-2:#c3c2b7; --text-3:#a9a89f;
+    --accent:#3987e5; --accent-ink:#86b6ef; --accent-soft:#1b2c44;
+    --tab-sel-bg:#86b6ef; --tab-sel-ink:#0b0b0b;
+    --alt-a:#d95926; --alt-b:#199e70; --alt-c:#3987e5; --alt-d:#8f8e88;
+    --band-bg:#3a2f0a; --band-text:#ffe08a; --band-border:#8a6d1a;
+    --warn-bg:#3d1b1b; --warn-text:#ffb4b4; --warn-border:#7a3434;
+    --ok-text:#6fdc6f;
+    --heat-0:#242422; --heat-1:#1c3556; --heat-2:#256abf; --heat-3:#86b6ef;
+    --heat-ink-0:#c3c2b7; --heat-ink-1:#f0efec; --heat-ink-2:#ffffff; --heat-ink-3:#0b0b0b;
+    --seg-1:#86b6ef; --seg-2:#3987e5; --seg-3:#1c3556; --seg-ink-1:#0b0b0b; --seg-ink-2:#0b0b0b; --seg-ink-3:#f0efec;
+    --quad-a:#242422; --quad-b:#1f1f1d;
+    --focus:#86b6ef;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --bg:#121211; --surface:#1a1a19; --surface-2:#242422; --surface-3:#2e2e2b;
+  --border:#3a3a37; --grid:#2e2e2b;
+  --text:#f0efec; --text-2:#c3c2b7; --text-3:#a9a89f;
+  --accent:#3987e5; --accent-ink:#86b6ef; --accent-soft:#1b2c44;
+  --tab-sel-bg:#86b6ef; --tab-sel-ink:#0b0b0b;
+  --alt-a:#d95926; --alt-b:#199e70; --alt-c:#3987e5; --alt-d:#8f8e88;
+  --band-bg:#3a2f0a; --band-text:#ffe08a; --band-border:#8a6d1a;
+  --warn-bg:#3d1b1b; --warn-text:#ffb4b4; --warn-border:#7a3434;
+  --ok-text:#6fdc6f;
+  --heat-0:#242422; --heat-1:#1c3556; --heat-2:#256abf; --heat-3:#86b6ef;
+  --heat-ink-0:#c3c2b7; --heat-ink-1:#f0efec; --heat-ink-2:#ffffff; --heat-ink-3:#0b0b0b;
+  --seg-1:#86b6ef; --seg-2:#3987e5; --seg-3:#1c3556; --seg-ink-1:#0b0b0b; --seg-ink-2:#0b0b0b; --seg-ink-3:#f0efec;
+  --quad-a:#242422; --quad-b:#1f1f1d;
+  --focus:#86b6ef;
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;overflow-x:hidden}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+h1,h2,h3{line-height:1.25;margin:0}
+h1{font-size:clamp(1.3rem,3.6vw,1.9rem);font-weight:700;letter-spacing:-.01em}
+h2{font-size:1.15rem;font-weight:650}
+h3{font-size:.98rem;font-weight:650}
+p{margin:.4em 0}
+small,.muted{color:var(--text-2)}
+.tiny{font-size:.8rem;color:var(--text-2)}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px;border-radius:4px}
+button{font:inherit;color:inherit}
+
+/* Encabezado */
+header.top{padding:20px 0 12px}
+.top-row{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
+.course{color:var(--text-2);font-size:.88rem;margin-top:4px}
+.theme-btn{border:1px solid var(--border);background:var(--surface);border-radius:999px;padding:6px 12px;cursor:pointer;font-size:.85rem;white-space:nowrap}
+.theme-btn:hover{background:var(--surface-2)}
+.band{margin-top:12px;background:var(--band-bg);color:var(--band-text);border:1px solid var(--band-border);border-radius:8px;padding:8px 12px;font-weight:700;font-size:.85rem;letter-spacing:.03em;text-align:center}
+
+/* Pestañas */
+.tabs-bar{position:sticky;top:0;z-index:20;background:var(--bg);padding:10px 0;border-bottom:1px solid var(--border)}
+[role="tablist"]{display:flex;flex-wrap:wrap;gap:6px}
+[role="tab"]{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);background:var(--surface);border-radius:8px;padding:7px 11px;cursor:pointer;font-size:.9rem;min-height:40px}
+[role="tab"]:hover{background:var(--surface-2)}
+[role="tab"][aria-selected="true"]{background:var(--tab-sel-bg);color:var(--tab-sel-ink);border-color:var(--tab-sel-bg)}
+[role="tab"] .tname{font-weight:500}
+.rec-badge{font-size:.7rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;border-radius:999px;padding:1px 7px;background:var(--accent-soft);color:var(--accent-ink);white-space:nowrap}
+[role="tab"][aria-selected="true"] .rec-badge{background:var(--tab-sel-ink);color:var(--tab-sel-bg)}
+@media (max-width:640px){ [role="tab"] .tname{display:none} [role="tab"]{padding:7px 10px} }
+
+/* Distintivo de alternativa: letra + forma + color */
+.alt{display:inline-flex;align-items:center;gap:4px;font-weight:700;white-space:nowrap}
+.alt .g{font-size:.95em;line-height:1}
+.g-A{color:var(--alt-a)} .g-B{color:var(--alt-b)} .g-C{color:var(--alt-c)} .g-D{color:var(--alt-d)}
+[role="tab"][aria-selected="true"] .g{color:inherit}
+
+main{padding:16px 0 8px}
+section.block{margin:0 0 18px;scroll-margin-top:72px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;min-width:0}
+.card.rec{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset}
+.sec-head{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:baseline;justify-content:space-between;margin-bottom:10px}
+.sec-num{display:inline-block;min-width:1.6em;color:var(--text-3);font-weight:600}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr))}
+.note{font-size:.84rem;color:var(--text-2);border-left:3px solid var(--border);padding:2px 0 2px 10px;margin:8px 0}
+.note.strong{border-left-color:var(--band-border);color:var(--text);background:var(--band-bg);padding:6px 10px;border-radius:0 6px 6px 0}
+.tag{display:inline-block;font-size:.72rem;font-weight:600;border:1px solid var(--border);border-radius:999px;padding:1px 8px;color:var(--text-2);white-space:nowrap}
+.tag.sim{border-style:dashed}
+
+/* KPIs */
+.kpis{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr))}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px}
+.kpi .lbl{font-size:.8rem;color:var(--text-2)}
+.kpi .val{font-size:1.6rem;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.2;margin-top:2px}
+.kpi .val.txt{font-size:1rem;font-weight:600}
+.kpi .sub{font-size:.78rem;color:var(--text-2);margin-top:2px}
+
+/* Tablas */
+.table-wrap{overflow-x:auto;max-width:100%}
+table{border-collapse:collapse;width:100%;font-size:.88rem}
+th,td{padding:7px 8px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}
+th{font-weight:600;color:var(--text-2);font-size:.8rem}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+caption{text-align:left;font-size:.8rem;color:var(--text-2);padding-bottom:6px}
+
+/* Ficha */
+.ficha dl{display:grid;grid-template-columns:minmax(0,9.5em) minmax(0,1fr);gap:6px 12px;margin:10px 0 0}
+.ficha dt{font-weight:600;color:var(--text-2);font-size:.85rem}
+.ficha dd{margin:0}
+@media (max-width:480px){ .ficha dl{grid-template-columns:1fr} .ficha dd{margin-bottom:6px} }
+.ficha-mini dl{grid-template-columns:1fr;gap:2px}
+.ficha-mini dd{margin-bottom:6px;font-size:.88rem}
+
+/* Matriz */
+.matriz td.crit{min-width:0;width:auto}
+.matriz .wrow{display:flex;align-items:center;gap:8px;margin-top:4px}
+.matriz input[type=range]{flex:1;min-width:0}
+.matriz output{font-variant-numeric:tabular-nums;font-weight:600;min-width:3.2em;text-align:right}
+.matriz th.sc,.matriz td.sc{text-align:center;width:2.6em;padding-left:2px;padding-right:2px;font-variant-numeric:tabular-nums}
+.matriz .colC{background:var(--accent-soft)}
+.matriz tfoot td{font-weight:700;border-bottom:none}
+.matriz td.best{outline:2px solid var(--accent);outline-offset:-2px;border-radius:4px}
+.sumline{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+.alert{border:1px solid var(--warn-border);background:var(--warn-bg);color:var(--warn-text);border-radius:8px;padding:8px 10px;font-size:.88rem}
+.okline{color:var(--ok-text);font-weight:600;font-size:.88rem}
+.btn{border:1px solid var(--border);background:var(--surface);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:.85rem}
+.btn:hover{background:var(--surface-2)}
+.rank{display:grid;gap:8px;margin-top:6px}
+.rank-row{display:grid;grid-template-columns:5.2em minmax(0,1fr) 3.4em;gap:8px;align-items:center}
+.bar-track{height:14px;background:var(--surface-2);border-radius:4px;overflow:hidden}
+.bar-fill{height:100%;border-radius:0 4px 4px 0}
+.rank-row .v{font-variant-numeric:tabular-nums;font-weight:600;text-align:right}
+.rank-row.top .v{color:var(--accent-ink)}
+.verif{font-size:.82rem;margin-top:10px;color:var(--text-2)}
+
+/* Gráficos */
+.chart-box{position:relative;height:340px;width:100%}
+@media (max-width:640px){ .chart-box{height:290px} }
+.overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;padding:24px}
+.overlay[hidden]{display:none}
+.overlay span{background:var(--surface);border:1px dashed var(--border);border-radius:8px;padding:8px 12px;font-size:.88rem;color:var(--text);text-align:center;max-width:22em}
+.controls{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin-bottom:10px}
+select{font:inherit;padding:6px 8px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);max-width:100%}
+label{font-size:.88rem}
+details summary{cursor:pointer;color:var(--accent-ink);font-size:.88rem;margin-top:8px}
+.disclaimer{font-weight:600;font-size:.85rem;color:var(--text);margin:6px 0 10px}
+
+/* Supuestos */
+fieldset{border:1px solid var(--border);border-radius:10px;padding:10px 12px 12px;margin:0 0 12px;min-width:0}
+legend{font-weight:600;font-size:.88rem;padding:0 4px}
+.radios{display:flex;flex-wrap:wrap;gap:6px 14px}
+.radios label{display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+.slider{display:grid;grid-template-columns:minmax(0,1fr) 4.6em;gap:2px 10px;align-items:center;margin:8px 0}
+.slider label{grid-column:1 / -1}
+.slider input{width:100%;min-width:0}
+.slider output{font-variant-numeric:tabular-nums;font-weight:600;text-align:right;font-size:.88rem}
+.slider .hint{grid-column:1 / -1;font-size:.76rem;color:var(--text-2)}
+input[type=range]{accent-color:var(--accent-ink);height:28px}
+input[disabled]{opacity:.45}
+.formula{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.8rem;background:var(--surface-2);border-radius:6px;padding:8px 10px;line-height:1.6;overflow-wrap:anywhere}
+
+/* Indicadores */
+.ind-list{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.ind-list li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;border-bottom:1px solid var(--border);padding:6px 0;font-size:.88rem}
+.ind-list .meta{color:var(--text-2);font-size:.78rem;grid-column:1 / -1}
+.ind-list .sv{font-weight:600;font-variant-numeric:tabular-nums;text-align:right}
+
+/* Producto */
+.legend-row{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.82rem;color:var(--text-2);margin-top:8px}
+.legend-row .sw{display:inline-block;margin-right:4px}
+.prod-card h3{margin-bottom:4px}
+.prod-card dl{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;margin:8px 0 0;font-size:.88rem}
+.prod-card dt{color:var(--text-2)}
+.prod-card dd{margin:0;text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.lect td.cur{font-weight:700;background:var(--accent-soft)}
+.lect td,.lect th{font-size:.8rem;padding:6px 5px}
+
+/* Bitácora */
+.bitacora td{font-size:.84rem}
+.dim{opacity:.55}
+
+/* Recursos */
+.res-row{display:grid;grid-template-columns:7.2em minmax(0,1fr);gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)}
+.res-row:last-child{border-bottom:none}
+.res-bar{display:flex;height:26px;border-radius:0 4px 4px 0;overflow:hidden;gap:2px;background:transparent}
+.res-bar .seg{display:flex;align-items:center;justify-content:center;font-size:.74rem;font-weight:600;white-space:nowrap;overflow:hidden}
+.res-none{height:26px;border:1px dashed var(--border);border-radius:4px;display:flex;align-items:center;padding:0 10px;font-size:.8rem;color:var(--text-2)}
+.res-legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.8rem;color:var(--text-2);margin-top:8px}
+.sq{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-1px;margin-right:5px}
+.heat{display:grid;grid-template-columns:5.2em repeat(3,minmax(0,1fr));gap:3px;font-size:.8rem}
+.heat .hd{color:var(--text-2);font-weight:600;display:flex;align-items:center;justify-content:center;text-align:center;padding:4px}
+.heat .rh{justify-content:flex-end;padding-right:8px}
+.heat .cell{min-height:58px;border-radius:6px;display:flex;flex-wrap:wrap;gap:4px;align-content:center;justify-content:center;padding:6px;font-weight:700}
+.heat .chip{border-radius:999px;padding:1px 7px;font-size:.76rem;border:1px solid currentColor}
+.lv0{background:var(--heat-0);color:var(--heat-ink-0)} .lv1{background:var(--heat-1);color:var(--heat-ink-1)}
+.lv2{background:var(--heat-2);color:var(--heat-ink-2)} .lv3{background:var(--heat-3);color:var(--heat-ink-3)}
+.axis-cap{font-size:.76rem;color:var(--text-2);text-align:center;margin-top:4px}
+
+footer{border-top:1px solid var(--border);margin-top:10px;padding:16px 0 28px;font-size:.84rem;color:var(--text-2)}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+@media (prefers-reduced-motion: reduce){ *{transition:none!important;animation:none!important} }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="top-row">
+      <div>
+        <h1>Revisión periódica de cartera · Terránea S.A.</h1>
+        <p class="course">Cuatro alternativas para la gestión de la cartera de productos y clientes · UCR · DN-0111 Gestión de la Innovación y Estrategia Competitiva</p>
+      </div>
+      <button type="button" class="theme-btn" id="themeBtn" aria-label="Cambiar tema de color">Tema: automático</button>
+    </div>
+    <div class="band" role="note">DEMO ILUSTRATIVA · datos simulados, no son cifras reales de Terránea</div>
+  </div>
+</header>
+
+<div class="tabs-bar">
+  <div class="wrap">
+    <div role="tablist" id="tablist" aria-label="Alternativas de mejora">
+      <button role="tab" id="tab-A" aria-controls="panel" aria-selected="false" tabindex="-1" data-alt="A"><span class="alt"><span class="g g-A" aria-hidden="true">▲</span>A</span><span class="tname">Depuración única</span></button>
+      <button role="tab" id="tab-B" aria-controls="panel" aria-selected="false" tabindex="-1" data-alt="B"><span class="alt"><span class="g g-B" aria-hidden="true">■</span>B</span><span class="tname">Alertas en tablero</span></button>
+      <button role="tab" id="tab-C" aria-controls="panel" aria-selected="true" tabindex="0" data-alt="C"><span class="alt"><span class="g g-C" aria-hidden="true">●</span>C</span><span class="tname">Revisión periódica (RPC)</span><span class="rec-badge">Recomendada</span></button>
+      <button role="tab" id="tab-D" aria-controls="panel" aria-selected="false" tabindex="-1" data-alt="D"><span class="alt"><span class="g g-D" aria-hidden="true">◆</span>D</span><span class="tname">Costeo ABC previo</span></button>
+      <button role="tab" id="tab-todas" aria-controls="panel" aria-selected="false" tabindex="-1" data-alt="todas"><span aria-hidden="true">▲■●◆</span> Comparar todas</button>
+    </div>
+  </div>
+</div>
+
+<main id="panel" role="tabpanel" aria-labelledby="tab-C" tabindex="-1">
+  <div class="wrap">
+
+    <!-- KPIs -->
+    <section class="block" aria-labelledby="kpiTitle">
+      <div class="sec-head">
+        <h2 id="kpiTitle"><span class="sec-num">2</span><span id="kpiTitleText">Resumen de la alternativa</span></h2>
+        <span class="tag sim">Valores simulados a 24 meses salvo el puntaje</span>
+      </div>
+      <div id="kpis" aria-live="polite"></div>
+    </section>
+
+    <!-- Ficha -->
+    <section class="block" aria-labelledby="fichaTitle">
+      <div class="sec-head"><h2 id="fichaTitle"><span class="sec-num">3</span>Ficha de la alternativa</h2><span class="tag">Según el informe</span></div>
+      <div id="ficha"></div>
+    </section>
+
+    <!-- Matriz -->
+    <section class="block" aria-labelledby="matTitle">
+      <div class="sec-head"><h2 id="matTitle"><span class="sec-num">4</span>Matriz de selección ponderada</h2><span class="tag">Datos del informe · pesos editables</span></div>
+      <div class="grid g2">
+        <div class="card">
+          <div class="table-wrap">
+            <table class="matriz" id="matriz">
+              <caption>Escala de 1 a 5. Mueva los controles para cambiar los pesos.</caption>
+              <thead><tr>
+                <th scope="col">Criterio y peso</th>
+                <th scope="col" class="sc"><span class="alt"><span class="g g-A" aria-hidden="true">▲</span>A</span></th>
+                <th scope="col" class="sc"><span class="alt"><span class="g g-B" aria-hidden="true">■</span>B</span></th>
+                <th scope="col" class="sc colC"><span class="alt"><span class="g g-C" aria-hidden="true">●</span>C</span></th>
+                <th scope="col" class="sc"><span class="alt"><span class="g g-D" aria-hidden="true">◆</span>D</span></th>
+              </tr></thead>
+              <tbody id="matBody"></tbody>
+              <tfoot><tr id="matFoot"></tr></tfoot>
+            </table>
+          </div>
+          <div class="sumline">
+            <span id="sumMsg" aria-live="polite"></span>
+            <button type="button" class="btn" id="btnNorm">Normalizar a 100 %</button>
+            <button type="button" class="btn" id="btnResetW">Restaurar pesos del informe</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Ranking en vivo</h3>
+          <p class="tiny">Puntaje ponderado = Σ (peso × puntaje). Barras en escala de 0 a 5.</p>
+          <div class="rank" id="rank" aria-live="polite"></div>
+          <p class="verif" id="verif"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Simulación -->
+    <section class="block" aria-labelledby="simTitle">
+      <div class="sec-head"><h2 id="simTitle"><span class="sec-num">5</span>Simulación de impacto · 24 meses</h2><span class="tag sim">Supuestos simulados</span></div>
+      <div class="grid g2" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,560px),1fr))">
+        <div class="card">
+          <div class="controls">
+            <label for="metricSel">Métrica</label>
+            <select id="metricSel">
+              <option value="horas">% de horas de línea en productos Ajustar o Descontinuar</option>
+              <option value="tp">Throughput por hora de la cartera (índice base 100)</option>
+              <option value="dec">Decisiones documentadas y trazables acumuladas</option>
+              <option value="ses">Sesiones de comité realizadas vs. programadas</option>
+            </select>
+          </div>
+          <p class="disclaimer" role="note">Curvas ilustrativas para visualizar la lógica del modelo; no son pronósticos.</p>
+          <p class="tiny" id="metricHint"></p>
+          <div class="chart-box"><canvas id="simChart" role="img" aria-label="Gráfico de líneas de la simulación a 24 meses"></canvas></div>
+          <p class="tiny" id="simNote"></p>
+          <details>
+            <summary>Ver los datos del gráfico en tabla</summary>
+            <div class="table-wrap" id="simTable"></div>
+          </details>
+        </div>
+        <div class="card">
+          <h3>Supuestos</h3>
+          <p class="tiny">Edite los parámetros; todo se recalcula en vivo. Nada de esto proviene del informe.</p>
+          <fieldset>
+            <legend>Editar supuestos de</legend>
+            <div class="radios" id="editRadios"></div>
+          </fieldset>
+          <fieldset id="supFs">
+            <legend id="supLegend">Parámetros</legend>
+            <div class="slider"><label for="s-k">Velocidad del efecto (k)</label><input type="range" id="s-k" min="0.05" max="1" step="0.05" aria-describedby="h-k"><output for="s-k" id="o-k"></output><span class="hint" id="h-k">Fracción de la brecha hasta el efecto máximo que se cierra en cada mes con acción.</span></div>
+            <div class="slider"><label for="s-E">Efecto máximo (E)</label><input type="range" id="s-E" min="0" max="100" step="5" aria-describedby="h-E"><output for="s-E" id="o-E"></output><span class="hint" id="h-E">Porcentaje de la brecha de la cartera que la alternativa podría cerrar como máximo.</span></div>
+            <div class="slider"><label for="s-r">Reversión sin rutina (r)</label><input type="range" id="s-r" min="0" max="20" step="1" aria-describedby="h-r"><output for="s-r" id="o-r"></output><span class="hint" id="h-r">Pérdida mensual del efecto cuando no hay rutina que lo sostenga.</span></div>
+            <div class="slider"><label for="s-t0">Mes de inicio</label><input type="range" id="s-t0" min="1" max="24" step="1" aria-describedby="h-t0"><output for="s-t0" id="o-t0"></output><span class="hint" id="h-t0">Primer mes en que la alternativa actúa.</span></div>
+          </fieldset>
+          <fieldset>
+            <legend>Supuestos específicos</legend>
+            <div class="slider"><label for="s-const">Constancia de sesiones de C</label><input type="range" id="s-const" min="0" max="100" step="5" aria-describedby="h-const"><output for="s-const" id="o-const"></output><span class="hint" id="h-const">Factor crítico de C: porcentaje de sesiones bimestrales que sí se realizan.</span></div>
+            <div class="slider"><label for="s-dec">Decisiones registradas por sesión (C)</label><input type="range" id="s-dec" min="1" max="8" step="1"><output for="s-dec" id="o-dec"></output></div>
+            <div class="slider"><label for="s-corte">Corte de margen de A</label><input type="range" id="s-corte" min="15" max="45" step="1" aria-describedby="h-corte"><output for="s-corte" id="o-corte"></output><span class="hint" id="h-corte">A retira los productos con margen unitario por debajo de este corte.</span></div>
+          </fieldset>
+          <button type="button" class="btn" id="btnResetS">Restaurar supuestos</button>
+          <details>
+            <summary>Ver el modelo</summary>
+            <div class="formula" id="formula"></div>
+          </details>
+        </div>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <div class="sec-head"><h3>Indicadores de seguimiento de C</h3><span class="tag">Metas preliminares del informe · valor simulado</span></div>
+        <ul class="ind-list" id="indList"></ul>
+      </div>
+    </section>
+
+    <!-- Mapa de productos -->
+    <section class="block" aria-labelledby="mapTitle">
+      <div class="sec-head"><h2 id="mapTitle"><span class="sec-num">6</span>Mapa de clasificación de productos</h2><span class="tag sim">Productos ficticios</span></div>
+      <div class="grid g2" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,520px),1fr))">
+        <div class="card">
+          <div class="controls">
+            <label for="prodSel">Producto</label>
+            <select id="prodSel"></select>
+          </div>
+          <p class="tiny" id="lensText"></p>
+          <div class="chart-box"><canvas id="mapChart" role="img" aria-label="Mapa de dispersión de productos ficticios: volumen frente a throughput por hora"></canvas><div class="overlay" id="mapOverlay" hidden><span id="mapOverlayText"></span></div></div>
+          <div class="legend-row" id="mapLegend"></div>
+          <p class="tiny">Throughput por hora = (precio por kg − costo variable por kg) × kg producidos por hora. Alto o bajo según la mediana de la cartera. Haga clic en un punto o use el selector.</p>
+        </div>
+        <div class="grid" style="align-content:start">
+          <div class="card prod-card" id="prodCard" aria-live="polite"></div>
+          <div class="card">
+            <h3>Lectura de cada producto según la alternativa</h3>
+            <div class="table-wrap"><table class="lect" id="lectTable"></table></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bitácora -->
+    <section class="block" aria-labelledby="bitTitle">
+      <div class="sec-head"><h2 id="bitTitle"><span class="sec-num">7</span>Bitácora de decisiones · vista de C</h2><span class="tag sim">Filas ficticias · formato de la Tabla C2</span></div>
+      <div class="card" id="bitCard">
+        <p class="note" id="bitNote"></p>
+        <div class="table-wrap"><table class="bitacora" id="bitTable"></table></div>
+      </div>
+    </section>
+
+    <!-- Recursos y riesgos -->
+    <section class="block" aria-labelledby="resTitle">
+      <div class="sec-head"><h2 id="resTitle"><span class="sec-num">8</span>Recursos y riesgos por alternativa</h2><span class="tag">Datos del informe</span></div>
+      <div class="grid g2">
+        <div class="card">
+          <h3>Horas-persona estimadas · primer año</h3>
+          <p class="tiny">Solo C está cuantificado en el informe.</p>
+          <div id="resBars"></div>
+          <div class="res-legend" id="resLegend"></div>
+          <p class="tiny" id="resNote"></p>
+        </div>
+        <div class="card">
+          <h3>Mapa de calor de riesgos de C</h3>
+          <p class="tiny">Probabilidad × impacto según el informe. Para A, B y D: no cuantificado en el informe.</p>
+          <div class="heat" id="heat" role="img" aria-label="Mapa de calor de riesgos de la alternativa C"></div>
+          <p class="axis-cap">Impacto →</p>
+          <div class="res-legend" aria-hidden="true">Severidad (probabilidad × impacto):
+            <span><span class="sq lv0"></span>Muy baja</span><span><span class="sq lv1"></span>Baja</span><span><span class="sq lv2"></span>Media</span><span><span class="sq lv3"></span>Alta</span></div>
+          <div class="table-wrap" style="margin-top:10px"><table id="riskTable"></table></div>
+          <p class="tiny" id="riskOthers"></p>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Fuente: Terránea S.A. / Equipo 5, Grupo 004, Avance II, DN-0111, II Semestre 2026. Pendiente: validación con Gerencia Comercial y prueba con datos reales de al menos cuatro semanas.</p>
+    <p class="tiny">Datos del informe: matriz ponderada, recursos y riesgos de C, indicadores, fórmula y reglas de clasificación. Todo lo demás es simulado y se calcula en el navegador.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+'use strict';
+
+/* ================= DATOS FIJOS DEL INFORME ================= */
+const KEYS = ['A','B','C','D'];
+const CRITERIOS = [
+  {id:'efi', nombre:'Alineación con la prioridad de eficiencia', peso:25, s:{A:4,B:3,C:5,D:3}},
+  {id:'sos', nombre:'Sostenibilidad en el tiempo (instala un hábito)', peso:25, s:{A:1,B:2,C:5,D:3}},
+  {id:'inf', nombre:'Uso de infraestructura existente y bajo costo', peso:20, s:{A:5,B:5,C:4,D:1}},
+  {id:'fac', nombre:'Factibilidad en el corto plazo', peso:15, s:{A:5,B:4,C:4,D:1}},
+  {id:'int', nombre:'Integra productos y clientes', peso:15, s:{A:2,B:3,C:5,D:2}}
+];
+const ESPERADOS = {A:3.30, B:3.30, C:4.65, D:2.15};
+
+const RECURSOS_C = { construccion:16, actualMin:2, actualMax:3, sesionMin:90, personas:5, mesesEntreSesiones:2 };
+
+const INDICADORES = [
+  {id:'ses', nombre:'Cumplimiento de sesiones', meta:'100 %'},
+  {id:'cob', nombre:'Cobertura de decisiones en alerta', meta:'100 %'},
+  {id:'eje', nombre:'Ejecución de decisiones en plazo', meta:'≥ 80 %'},
+  {id:'tp',  nombre:'Throughput por hora de la cartera', meta:'Tendencia creciente'},
+  {id:'hrs', nombre:'Horas de línea en productos de bajo aporte', meta:'Tendencia decreciente'}
+];
+
+const NIVEL = {baja:1, bajo:1, media:2, medio:2, alta:3, alto:3};
+const RIESGOS_C = [
+  {id:'R1', nombre:'Costo variable incompleto', p:'media', i:'alto'},
+  {id:'R2', nombre:'Baja adopción: sesiones que se posponen', p:'alta', i:'alto'},
+  {id:'R3', nombre:'Dependencia de una sola persona', p:'media', i:'alto'},
+  {id:'R4', nombre:'Resistencia comercial a descontinuar productos de clientes importantes', p:'media', i:'medio'},
+  {id:'R5', nombre:'Decidir con un solo indicador', p:'baja', i:'medio'}
+];
+
+const ALT = {
+  A:{nombre:'Depuración única de la cartera', glyph:'▲', point:'triangle', dash:[],
+     ficha:{hace:'Revisa una sola vez todos los productos y retira los de menor margen.',
+            noHace:'No instala una rutina de revisión; integra poco el análisis de clientes (2 de 5 en la matriz).',
+            decide:'No especificado en el informe.', frecuencia:'Una sola vez.',
+            recursos:'No cuantificado en el informe.',
+            riesgo:'El efecto inicial se pierde sin un hábito de revisión (sostenibilidad: 1 de 5 en la matriz).'}},
+  B:{nombre:'Alertas en el tablero centralizado', glyph:'■', point:'rect', dash:[2,3],
+     ficha:{hace:'Marca en el tablero centralizado los productos y clientes de bajo aporte.',
+            noHace:'No establece una rutina ni responsables de decisión; las alertas no se convierten por sí solas en decisiones.',
+            decide:'Sin responsables de decisión definidos.', frecuencia:'Sin rutina definida (alertas visibles en el tablero).',
+            recursos:'No cuantificado en el informe.',
+            riesgo:'Mejora la visibilidad pero no genera decisiones (sostenibilidad: 2 de 5 en la matriz).'}},
+  C:{nombre:'Sistema de Revisión Periódica de Cartera (RPC)', glyph:'●', point:'circle', dash:[],
+     ficha:{hace:'Aplica un instrumento multicriterio a productos y clientes, lo discute en un comité bimestral y registra cada decisión en una bitácora.',
+            noHace:'No rediseña el costeo: trabaja con el costeo por producto, SICLA y el tablero centralizado que ya existen.',
+            decide:'Comité de revisión (sesiones con 5 personas).', frecuencia:'Bimestral: una sesión de 90 min cada dos meses.',
+            recursos:'≈ 16 h para construir el tablero; 2 a 3 h de actualización antes de cada sesión; ≈ 45 horas-persona al año en sesiones.',
+            riesgo:'Baja adopción, con sesiones que se posponen (probabilidad alta, impacto alto).'}},
+  D:{nombre:'Costeo basado en actividades (ABC) previo', glyph:'◆', point:'rectRot', dash:[7,4],
+     ficha:{hace:'Rediseña primero el costeo con un modelo basado en actividades (ABC) y luego decide sobre la cartera.',
+            noHace:'No toma decisiones de cartera hasta cerrar el ABC.',
+            decide:'No especificado en el informe.', frecuencia:'No definida; la fecha de cierre del ABC no está definida en el informe.',
+            recursos:'No cuantificado en el informe (uso de infraestructura y bajo costo: 1 de 5 en la matriz).',
+            riesgo:'Difiere las decisiones: baja factibilidad en el corto plazo (1 de 5 en la matriz).'}}
+};
+
+/* ================= DATOS SIMULADOS (FICTICIOS) ================= */
+// p: precio ₡/kg · cv: costo variable ₡/kg · kgh: kg producidos por hora · vol: kg/mes · pct: % del volumen en el cliente principal
+const PRODUCTOS = [
+  {id:'P1', nombre:'Pita mediterránea', corto:'Pita', cat:'Especialidades mediterráneas', p:2400, cv:1300, kgh:120, vol:9000, pct:35, ancla:false, tend:false},
+  {id:'P2', nombre:'Falafel congelado', corto:'Falafel', cat:'Especialidades mediterráneas', p:3800, cv:2300, kgh:60, vol:2500, pct:40, ancla:false, tend:false},
+  {id:'P3', nombre:'Pasta hojaldre', corto:'Hojaldre', cat:'Masas y hojaldres', p:2600, cv:1700, kgh:90, vol:7000, pct:30, ancla:false, tend:false},
+  {id:'P4', nombre:'Pan sin gluten', corto:'Sin gluten', cat:'Saludable (alineada con tendencias)', p:4200, cv:3300, kgh:35, vol:1200, pct:25, ancla:false, tend:true},
+  {id:'P5', nombre:'Pan artesanal de masa madre', corto:'Artesanal', cat:'Artesanal', p:3000, cv:1600, kgh:70, vol:3200, pct:45, ancla:false, tend:false},
+  {id:'P6', nombre:'Repostería congelada', corto:'Repostería', cat:'Congelados', p:5200, cv:3600, kgh:45, vol:6500, pct:50, ancla:false, tend:false},
+  {id:'P7', nombre:'Pan multigrano', corto:'Multigrano', cat:'Saludable (alineada con tendencias)', p:2200, cv:1350, kgh:110, vol:8000, pct:30, ancla:false, tend:true},
+  {id:'P8', nombre:'Pan de hamburguesa', corto:'Hamburguesa', cat:'Servicio de alimentos', p:1500, cv:1100, kgh:140, vol:2800, pct:78, ancla:true, tend:false},
+  {id:'P9', nombre:'Bollería dulce', corto:'Bollería', cat:'Repostería', p:2800, cv:2150, kgh:80, vol:1500, pct:20, ancla:false, tend:false},
+  {id:'P10', nombre:'Pan de molde blanco', corto:'Molde', cat:'Consumo diario', p:1400, cv:950, kgh:150, vol:11000, pct:55, ancla:false, tend:false}
+];
+
+const SUP_DEF = {
+  A:{modo:'unica',    k:0.70, E:60, r:8, t0:1},
+  B:{modo:'continua', k:0.10, E:15, r:0, t0:1},
+  C:{modo:'sesiones', k:0.35, E:80, r:8, t0:2},
+  D:{modo:'unica',    k:0.60, E:75, r:3, t0:12}
+};
+const EXTRA_DEF = {constancia:100, decSesion:4, corteA:27};
+
+/* ================= ESTADO (solo en memoria) ================= */
+const clone = o => JSON.parse(JSON.stringify(o));
+const state = {
+  sel:'C',
+  pesos: Object.fromEntries(CRITERIOS.map(c=>[c.id,c.peso])),
+  sup: clone(SUP_DEF),
+  extra: clone(EXTRA_DEF),
+  editAlt:'C',
+  metrica:'horas',
+  prod:'P4',
+  theme:'auto'
+};
+
+/* ================= UTILIDADES ================= */
+const $ = id => document.getElementById(id);
+const nf = (n, d=0) => Number(n).toLocaleString('es-CR', {minimumFractionDigits:d, maximumFractionDigits:d});
+const pct = (n, d=0) => nf(n,d) + ' %';
+const col = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const altColor = k => col('--alt-' + k.toLowerCase());
+const withAlpha = (hex, a) => { const h = hex.replace('#',''); const n = parseInt(h.length===3 ? h.split('').map(x=>x+x).join('') : h, 16); return `rgba(${(n>>16)&255},${(n>>8)&255},${n&255},${a})`; };
+const badge = k => `<span class="alt"><span class="g g-${k}" aria-hidden="true">${ALT[k].glyph}</span>${k}</span>`;
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const median = arr => { const a=[...arr].sort((x,y)=>x-y); const m=a.length>>1; return a.length%2 ? a[m] : (a[m-1]+a[m])/2; };
+
+/* ================= MATRIZ ================= */
+function puntajes(pesos){
+  const total = CRITERIOS.reduce((s,c)=>s+pesos[c.id],0) || 1;
+  const out = {};
+  KEYS.forEach(k=>{ out[k] = CRITERIOS.reduce((s,c)=>s + (pesos[c.id]/total)*c.s[k], 0); });
+  return out;
+}
+const r2 = x => Math.round(x*100)/100;
+function verificarInforme(){
+  const base = puntajes(Object.fromEntries(CRITERIOS.map(c=>[c.id,c.peso])));
+  const res = {}; let ok = true;
+  KEYS.forEach(k=>{ const v=r2(base[k]); res[k]={v, ok: Math.abs(v-ESPERADOS[k])<0.005}; if(!res[k].ok) ok=false; });
+  console.assert(ok, 'Los puntajes calculados no coinciden con el informe', res);
+  return {res, ok};
+}
+function ranking(sc){
+  const sorted = KEYS.map(k=>({k, v:r2(sc[k])})).sort((a,b)=>b.v-a.v);
+  const pos = {};
+  sorted.forEach(o=>{ const p = sorted.findIndex(x=>x.v===o.v)+1; const tie = sorted.filter(x=>x.v===o.v).length>1; pos[o.k]={p,tie}; });
+  return {sorted,pos};
+}
+
+/* ================= CLASIFICACIÓN DE PRODUCTOS ================= */
+function clasificar(){
+  const prods = PRODUCTOS.map(p=>{
+    const margen = p.p - p.cv;
+    return {...p, margenKg:margen, margenPct: margen/p.p*100, tp: margen*p.kgh, horas: p.vol/p.kgh};
+  });
+  const medTP = median(prods.map(p=>p.tp));
+  const medVol = median(prods.map(p=>p.vol));
+  prods.forEach(p=>{
+    const tpAlto = p.tp >= medTP, volAlto = p.vol >= medVol;
+    p.cuadrante = tpAlto ? (volAlto ? 'Mantener' : 'Revisar') : (volAlto ? 'Ajustar' : 'Descontinuar');
+    p.final = p.cuadrante; p.filtro = '';
+    if(p.cuadrante==='Descontinuar' && (p.ancla || p.tend)){
+      p.final = 'Revisar';
+      p.filtro = p.ancla ? 'cliente ancla' : 'categoría alineada con tendencias';
+    }
+    p.lecturaA = p.margenPct < state.extra.corteA ? 'Retirar' : 'Mantener';
+    p.lecturaB = p.tp < medTP ? 'Alerta' : 'Sin alerta';
+    p.lecturaC = p.final + (p.filtro ? ' (filtro)' : '');
+    p.lecturaD = 'Pendiente del ABC';
+  });
+  const totalHoras = prods.reduce((s,p)=>s+p.horas,0);
+  const bajo = prods.filter(p=>p.final==='Ajustar'||p.final==='Descontinuar');
+  const mant = prods.filter(p=>p.final==='Mantener');
+  const horasBajo = bajo.reduce((s,p)=>s+p.horas,0);
+  const tpCartera = prods.reduce((s,p)=>s+p.margenKg*p.vol,0)/totalHoras;
+  const tpBajo = bajo.reduce((s,p)=>s+p.margenKg*p.vol,0)/horasBajo;
+  const tpMant = mant.reduce((s,p)=>s+p.margenKg*p.vol,0)/mant.reduce((s,p)=>s+p.horas,0);
+  const H0 = horasBajo/totalHoras;                       // fracción de horas en bajo aporte (base)
+  const G = H0*(tpMant - tpBajo)/tpCartera;              // ganancia potencial si se reasignan esas horas
+  return {prods, medTP, medVol, H0, G, tpCartera, tpBajo, tpMant, totalHoras, horasBajo,
+          nA: prods.filter(p=>p.lecturaA==='Retirar').length, nD: bajo.length};
+}
+
+/* ================= SIMULACIÓN ================= */
+function simular(cl){
+  const out = {};
+  const c = state.extra.constancia/100;
+  KEYS.forEach(k=>{
+    const p = state.sup[k], E = p.E/100, r = p.r/100;
+    const e=[0], dec=[0], sp=[0], sr=[0];
+    let lastHeld = true, idx = 0;
+    for(let t=1;t<=24;t++){
+      const prev = e[t-1]; let v = prev, d = 0, prog = 0, held = 0;
+      if(t >= p.t0){
+        if(p.modo==='unica'){
+          if(t===p.t0){ v = prev + p.k*(E-prev); d = (k==='A' ? cl.nA : cl.nD); }
+          else v = prev*(1-r);
+        } else if(p.modo==='continua'){
+          v = prev + p.k*(E-prev);
+        } else { // sesiones bimestrales
+          if((t-p.t0)%2===0){
+            idx++; prog = 1;
+            const ok = Math.floor(idx*c + 1e-9) > Math.floor((idx-1)*c + 1e-9);
+            if(ok){ held = 1; v = prev + p.k*(E-prev); d = state.extra.decSesion; lastHeld = true; }
+            else { v = prev*(1-r); lastHeld = false; }
+          } else {
+            v = lastHeld ? prev : prev*(1-r);
+          }
+        }
+      }
+      e.push(v); dec.push(dec[t-1]+d); sp.push(sp[t-1]+prog); sr.push(sr[t-1]+held);
+    }
+    out[k] = { e, dec, sp, sr,
+      horas: e.map(x=> cl.H0*100*(1-x)),
+      tp: e.map(x=> 100*(1 + cl.G*x)) };
+  });
+  return out;
+}
+
+/* ================= RENDER: TABS ================= */
+const tabs = [...document.querySelectorAll('[role="tab"]')];
+function selectTab(alt, focus){
+  state.sel = alt;
+  tabs.forEach(t=>{
+    const on = t.dataset.alt===alt;
+    t.setAttribute('aria-selected', on ? 'true':'false');
+    t.tabIndex = on ? 0 : -1;
+    if(on && focus) t.focus();
+  });
+  $('panel').setAttribute('aria-labelledby', 'tab-'+alt);
+  renderAll();
+}
+tabs.forEach((t,i)=>{
+  t.addEventListener('click', ()=>selectTab(t.dataset.alt));
+  t.addEventListener('keydown', ev=>{
+    let j = null;
+    if(ev.key==='ArrowRight') j=(i+1)%tabs.length;
+    else if(ev.key==='ArrowLeft') j=(i-1+tabs.length)%tabs.length;
+    else if(ev.key==='Home') j=0; else if(ev.key==='End') j=tabs.length-1;
+    if(j!==null){ ev.preventDefault(); selectTab(tabs[j].dataset.alt, true); }
+  });
+});
+
+/* ================= RENDER: KPIs ================= */
+function horasC(){
+  const ses = 12 / RECURSOS_C.mesesEntreSesiones;
+  const sesiones = ses * (RECURSOS_C.sesionMin/60) * RECURSOS_C.personas;
+  return {ses, sesiones, actMin: ses*RECURSOS_C.actualMin, actMax: ses*RECURSOS_C.actualMax, constr: RECURSOS_C.construccion};
+}
+function renderKPIs(ctx){
+  const {sc, rk, sim, cl} = ctx;
+  const hc = horasC();
+  const recursoTxt = k => k==='C' ? `≈ ${nf(hc.sesiones)} h-persona/año` : 'No cuantificado en el informe';
+  if(state.sel==='todas'){
+    $('kpiTitleText').textContent = 'Comparación de las cuatro alternativas';
+    const rows = KEYS.map(k=>`<tr${k==='C'?' class="colC"':''}>
+      <th scope="row">${badge(k)} <span class="tiny">${esc(ALT[k].nombre)}</span>${k==='C'?' <span class="rec-badge">Recomendada</span>':''}</th>
+      <td class="num">${nf(sc[k],2)}</td>
+      <td class="num">${rk.pos[k].p}.º${rk.pos[k].tie?' (empate)':''}</td>
+      <td class="num">${pct(sim[k].horas[24],1)}</td>
+      <td class="num">${nf(sim[k].tp[24],1)}</td>
+      <td class="num">${nf(sim[k].dec[24])}</td>
+      <td>${recursoTxt(k)}</td></tr>`).join('');
+    $('kpis').innerHTML = `<div class="card"><div class="table-wrap"><table>
+      <caption>Puntaje con los pesos actuales; demás columnas simuladas al mes 24.</caption>
+      <thead><tr><th scope="col">Alternativa</th><th scope="col" class="num">Puntaje</th><th scope="col" class="num">Ranking</th><th scope="col" class="num">% horas bajo aporte</th><th scope="col" class="num">Throughput (índice)</th><th scope="col" class="num">Decisiones</th><th scope="col">Recursos</th></tr></thead>
+      <tbody>${rows}</tbody></table></div></div>`;
+    return;
+  }
+  const k = state.sel, s = sim[k];
+  $('kpiTitleText').innerHTML = `Resumen de la alternativa ${badge(k)}`;
+  $('kpis').innerHTML = `<div class="kpis">
+    <div class="kpi"><div class="lbl">Puntaje ponderado (pesos actuales)</div><div class="val">${nf(sc[k],2)}</div><div class="sub">${rk.pos[k].p}.º de 4${rk.pos[k].tie?' · empate':''} · dato del informe</div></div>
+    <div class="kpi"><div class="lbl">% de horas en Ajustar o Descontinuar · mes 24</div><div class="val">${pct(s.horas[24],1)}</div><div class="sub">Base simulada: ${pct(cl.H0*100,1)}</div></div>
+    <div class="kpi"><div class="lbl">Throughput por hora · índice mes 24</div><div class="val">${nf(s.tp[24],1)}</div><div class="sub">Base 100 · simulado</div></div>
+    <div class="kpi"><div class="lbl">Decisiones documentadas · acumuladas</div><div class="val">${nf(s.dec[24])}</div><div class="sub">A 24 meses · simulado</div></div>
+    <div class="kpi"><div class="lbl">Recursos</div><div class="val txt">${recursoTxt(k)}</div><div class="sub">${k==='C'?'En sesiones; más tablero y actualización':'Según el informe'}</div></div>
+  </div>`;
+}
+
+/* ================= RENDER: FICHA ================= */
+function fichaHTML(k, mini){
+  const f = ALT[k].ficha;
+  const rows = [['Qué hace',f.hace],['Qué no hace',f.noHace],['Quién decide',f.decide],['Frecuencia',f.frecuencia],['Recursos',f.recursos],['Riesgo principal',f.riesgo]]
+    .map(([a,b])=>`<dt>${a}</dt><dd>${esc(b)}</dd>`).join('');
+  return `<div class="card ficha ${mini?'ficha-mini':''} ${k==='C'?'rec':''}">
+    <h3>${badge(k)} · ${esc(ALT[k].nombre)} ${k==='C'?'<span class="rec-badge">Recomendada</span>':''}</h3>
+    <dl>${rows}</dl></div>`;
+}
+function renderFicha(){
+  $('ficha').innerHTML = state.sel==='todas'
+    ? `<div class="grid g4">${KEYS.map(k=>fichaHTML(k,true)).join('')}</div>`
+    : fichaHTML(state.sel,false);
+}
+
+/* ================= RENDER: MATRIZ ================= */
+function buildMatriz(){
+  $('matBody').innerHTML = CRITERIOS.map(c=>`<tr>
+    <td class="crit"><label for="w-${c.id}">${esc(c.nombre)}</label>
+      <div class="wrow"><input type="range" id="w-${c.id}" min="0" max="60" step="1" value="${state.pesos[c.id]}"><output id="wo-${c.id}" for="w-${c.id}"></output></div></td>
+    ${KEYS.map(k=>`<td class="sc${k==='C'?' colC':''}">${c.s[k]}</td>`).join('')}</tr>`).join('');
+  CRITERIOS.forEach(c=>{
+    $('w-'+c.id).addEventListener('input', ev=>{ state.pesos[c.id] = +ev.target.value; renderAll(); });
+  });
+}
+function renderMatriz(sc, rk){
+  CRITERIOS.forEach(c=>{ $('w-'+c.id).value = state.pesos[c.id]; $('wo-'+c.id).textContent = pct(state.pesos[c.id]); });
+  const best = rk.sorted[0].v;
+  $('matFoot').innerHTML = `<td>Puntaje ponderado</td>` + KEYS.map(k=>`<td class="sc${k==='C'?' colC':''}${r2(sc[k])===best?' best':''}">${nf(sc[k],2)}</td>`).join('');
+  const sum = CRITERIOS.reduce((s,c)=>s+state.pesos[c.id],0);
+  $('sumMsg').innerHTML = sum===100
+    ? `<span class="okline">✓ Suma de pesos: 100 %</span>`
+    : `<span class="alert" role="alert">⚠ Los pesos suman ${pct(sum)}; deben sumar 100 %. Mientras tanto se normalizan para calcular el ranking.</span>`;
+  $('rank').innerHTML = rk.sorted.map(o=>{
+    const top = o.v===best;
+    return `<div class="rank-row${top?' top':''}">
+      <span>${badge(o.k)}${top?' <span class="sr-only">(mayor puntaje)</span>':''}</span>
+      <div class="bar-track" aria-hidden="true"><div class="bar-fill" style="width:${o.v/5*100}%;background:${altColor(o.k)};${top?'':'opacity:.55'}"></div></div>
+      <span class="v">${nf(o.v,2)}</span></div>`;
+  }).join('') + `<p class="tiny">${rk.sorted.filter(o=>o.v===best).map(o=>'Mayor puntaje: '+o.k).join(' · ')}${rk.pos.A.tie&&rk.pos.B.tie&&rk.pos.A.p===rk.pos.B.p?' · A y B empatan':''}</p>`;
+  const v = verificarInforme();
+  $('verif').innerHTML = `Verificación con los pesos del informe: ` + KEYS.map(k=>`${k} ${nf(v.res[k].v,2)} ${v.res[k].ok?'✓':'✗'}`).join(' · ')
+    + (v.ok ? ` — <strong class="okline">coincide con el informe</strong>` : ` — <strong>no coincide</strong>`);
+}
+$('btnNorm').addEventListener('click', ()=>{
+  const sum = CRITERIOS.reduce((s,c)=>s+state.pesos[c.id],0);
+  if(sum===0){ CRITERIOS.forEach(c=>state.pesos[c.id]=c.peso); renderAll(); return; }
+  const raw = CRITERIOS.map(c=>({id:c.id, x: state.pesos[c.id]*100/sum}));
+  raw.forEach(o=>o.f=Math.floor(o.x));
+  let rest = 100 - raw.reduce((s,o)=>s+o.f,0);
+  raw.sort((a,b)=>(b.x-b.f)-(a.x-a.f)).forEach(o=>{ if(rest>0){o.f++;rest--;} });
+  raw.forEach(o=>state.pesos[o.id]=Math.min(60,o.f));
+  renderAll();
+});
+$('btnResetW').addEventListener('click', ()=>{ CRITERIOS.forEach(c=>state.pesos[c.id]=c.peso); renderAll(); });
+
+/* ================= RENDER: SUPUESTOS ================= */
+function buildSupuestos(){
+  $('editRadios').innerHTML = KEYS.map(k=>`<label><input type="radio" name="editAlt" value="${k}" ${k===state.editAlt?'checked':''}> ${badge(k)}</label>`).join('');
+  document.querySelectorAll('input[name="editAlt"]').forEach(r=>r.addEventListener('change', ev=>{ state.editAlt = ev.target.value; renderSupuestos(); }));
+  const bind = (id, fn) => $(id).addEventListener('input', ev=>{ fn(+ev.target.value); renderAll(); });
+  bind('s-k', v=>state.sup[state.editAlt].k=v);
+  bind('s-E', v=>state.sup[state.editAlt].E=v);
+  bind('s-r', v=>state.sup[state.editAlt].r=v);
+  bind('s-t0', v=>state.sup[state.editAlt].t0=v);
+  bind('s-const', v=>state.extra.constancia=v);
+  bind('s-dec', v=>state.extra.decSesion=v);
+  bind('s-corte', v=>state.extra.corteA=v);
+  $('btnResetS').addEventListener('click', ()=>{ state.sup=clone(SUP_DEF); state.extra=clone(EXTRA_DEF); renderAll(); });
+}
+const MODO_TXT = {unica:'acción única en el mes de inicio y luego reversión', continua:'acción continua desde el mes de inicio', sesiones:'acción en cada sesión bimestral realizada'};
+function renderSupuestos(cl){
+  const k = state.editAlt, p = state.sup[k];
+  document.querySelectorAll('input[name="editAlt"]').forEach(r=>r.checked = r.value===k);
+  $('supLegend').innerHTML = `Parámetros de ${badge(k)} · ${MODO_TXT[p.modo]}`;
+  $('s-k').value = p.k; $('o-k').textContent = nf(p.k,2);
+  $('s-E').value = p.E; $('o-E').textContent = pct(p.E);
+  $('s-r').value = p.r; $('o-r').textContent = pct(p.r) ;
+  const noR = p.modo==='continua';
+  $('s-r').disabled = noR;
+  $('h-r').textContent = noR ? 'No aplica a B: el modelo supone que las alertas están siempre visibles (acción continua de bajo efecto).' : 'Pérdida mensual del efecto cuando no hay rutina que lo sostenga.';
+  $('s-t0').value = p.t0; $('o-t0').textContent = 'Mes ' + p.t0;
+  $('h-t0').textContent = k==='D' ? 'Supuesto: el informe no define cuándo cerraría el ABC.' : 'Primer mes en que la alternativa actúa.';
+  $('s-const').value = state.extra.constancia; $('o-const').textContent = pct(state.extra.constancia);
+  $('s-dec').value = state.extra.decSesion; $('o-dec').textContent = nf(state.extra.decSesion);
+  $('s-corte').value = state.extra.corteA; $('o-corte').textContent = pct(state.extra.corteA);
+  if(cl){
+    $('formula').innerHTML =
+      `e(t) = efecto logrado (0 a 1) · e(0) = 0<br>`+
+      `Mes con acción: e(t) = e(t−1) + k × (E − e(t−1))<br>`+
+      `Mes sin rutina: e(t) = e(t−1) × (1 − r)<br>`+
+      `C: entre sesiones el efecto se sostiene si la última sesión se realizó; si se pospuso, revierte.<br>`+
+      `% horas bajo aporte(t) = H₀ × (1 − e(t)) · H₀ = ${pct(cl.H0*100,1)}<br>`+
+      `Throughput índice(t) = 100 × (1 + g × e(t)) · g = ${pct(cl.G*100,1)}<br>`+
+      `g = H₀ × (TP Mantener − TP bajo aporte) / TP cartera = ${nf(cl.H0,3)} × (${nf(cl.tpMant)} − ${nf(cl.tpBajo)}) / ${nf(cl.tpCartera)}<br>`+
+      `Decisiones: A registra ${cl.nA} (productos bajo el corte) y D ${cl.nD} (productos en Ajustar o Descontinuar) en su mes de inicio; C registra ${state.extra.decSesion} por sesión realizada; B no genera decisiones.<br>`+
+      `H₀, g y los conteos salen de los productos ficticios del mapa.`;
+  }
+}
+
+/* ================= RENDER: SIMULACIÓN ================= */
+const METRICAS = {
+  horas:{titulo:'% de horas de línea en productos Ajustar o Descontinuar', eje:'% de horas de línea', unidad:' %', dec:1, hint:'Decreciente es deseable.'},
+  tp:{titulo:'Throughput por hora de la cartera (índice, base 100)', eje:'Índice (base 100)', unidad:'', dec:1, hint:'Creciente es deseable.'},
+  dec:{titulo:'Decisiones documentadas y trazables (acumuladas)', eje:'Decisiones acumuladas', unidad:'', dec:0, hint:'Cuenta las decisiones registradas que se pueden rastrear.'},
+  ses:{titulo:'Sesiones de comité (acumuladas)', eje:'Sesiones acumuladas', unidad:'', dec:0, hint:'La constancia de las sesiones es el factor crítico de C.'}
+};
+let simChart = null, mapChart = null;
+
+const crosshair = {
+  id:'crosshair',
+  afterDatasetsDraw(chart){
+    const a = chart.tooltip && chart.tooltip.getActiveElements();
+    if(!a || !a.length) return;
+    const x = a[0].element.x, {top,bottom} = chart.chartArea, c = chart.ctx;
+    c.save(); c.strokeStyle = col('--text-3'); c.lineWidth = 1; c.setLineDash([3,3]);
+    c.beginPath(); c.moveTo(x,top); c.lineTo(x,bottom); c.stroke(); c.restore();
+  }
+};
+
+function simDatasets(sim){
+  const m = state.metrica, all = state.sel==='todas';
+  const style = k => {
+    const on = all || state.sel===k;
+    const base = altColor(k);
+    const c = on ? base : withAlpha(base, .35);
+    return { borderColor:c, backgroundColor:c, borderWidth: on ? (k==='C'?3.5:2.5) : 1.5,
+      borderDash: ALT[k].dash, pointStyle: ALT[k].point,
+      pointRadius: ctx => (ctx.dataIndex%4===0 || ctx.dataIndex===24) ? (on?5:3.5) : 0,
+      pointHoverRadius: 6, pointBorderColor: col('--surface'), pointBorderWidth: 1.5,
+      tension: 0, order: on ? 0 : 1 };
+  };
+  if(m==='ses'){
+    return [
+      {label:'C · realizadas', data: sim.C.sr, ...style('C'), borderWidth:3},
+      {label:'C · programadas', data: sim.C.sp, borderColor: col('--text-3'), backgroundColor: col('--text-3'), borderWidth:2, borderDash:[6,4], pointStyle:'line', pointRadius:0, tension:0}
+    ];
+  }
+  return KEYS.map(k=>({label:`${k} · ${ALT[k].nombre}`, data: sim[k][m], ...style(k)}));
+}
+
+function renderSim(sim){
+  const M = METRICAS[state.metrica];
+  $('metricSel').value = state.metrica;
+  $('metricHint').textContent = M.titulo + '. ' + M.hint;
+  const notes = {
+    horas: 'A cae al inicio y regresa sin hábito; B baja poco; C baja de forma gradual y se sostiene si hay sesiones; D no se mueve hasta cerrar el ABC.',
+    tp: 'El índice sube cuando las horas de bajo aporte se reasignan a productos de mayor throughput.',
+    dec: 'B no genera decisiones: solo visibilidad. A y D registran un lote único; C acumula en cada sesión.',
+    ses: 'A, B y D no contemplan un comité: 0 sesiones. Si baja la constancia, la brecha entre programadas y realizadas crece.'
+  };
+  $('simNote').textContent = notes[state.metrica];
+  const labels = Array.from({length:25},(_,i)=>i);
+  const ds = simDatasets(sim);
+  const text2 = col('--text-2'), grid = col('--grid');
+  const cfg = {
+    type:'line',
+    data:{labels, datasets:ds},
+    options:{
+      responsive:true, maintainAspectRatio:false, animation:false,
+      interaction:{mode:'index', intersect:false},
+      plugins:{
+        legend:{position:'bottom', labels:{usePointStyle:true, color:text2, boxWidth:10, padding:12, font:{size:11}}},
+        tooltip:{callbacks:{
+          title: it => 'Mes ' + it[0].label,
+          label: it => ` ${it.dataset.label}: ${nf(it.parsed.y, M.dec)}${M.unidad}`
+        }}
+      },
+      scales:{
+        x:{title:{display:true, text:'Mes', color:text2}, grid:{color:grid}, ticks:{color:text2, maxRotation:0, autoSkip:true, callback:(v,i)=> i%4===0 ? i : ''}},
+        y:{title:{display:true, text:M.eje, color:text2, font:{size:11}}, grid:{color:grid}, ticks:{color:text2, precision:0, callback:v=>nf(v)+(state.metrica==='horas'?' %':'')},
+           beginAtZero: state.metrica!=='tp'}
+      }
+    },
+    plugins:[crosshair]
+  };
+  if(simChart){ simChart.destroy(); }
+  simChart = new Chart($('simChart'), cfg);
+  $('simChart').setAttribute('aria-label', `Gráfico de líneas: ${M.titulo} durante 24 meses. Los datos están en la tabla siguiente.`);
+  // tabla accesible
+  const head = ds.map(d=>`<th scope="col" class="num">${esc(d.label.split(' · ')[0] + (state.metrica==='ses' ? ' ' + d.label.split(' · ')[1] : ''))}</th>`).join('');
+  const body = labels.map(i=>`<tr><th scope="row">Mes ${i}</th>${ds.map(d=>`<td class="num">${nf(d.data[i],M.dec)}</td>`).join('')}</tr>`).join('');
+  $('simTable').innerHTML = `<table><caption>${esc(M.titulo)} · simulado</caption><thead><tr><th scope="col">Mes</th>${head}</tr></thead><tbody>${body}</tbody></table>`;
+}
+$('metricSel').addEventListener('change', ev=>{ state.metrica = ev.target.value; renderAll(); });
+
+function renderIndicadores(sim){
+  const c = sim.C;
+  const cumpl = c.sp[24] ? c.sr[24]/c.sp[24]*100 : 0;
+  const trend = (arr, up) => { const d = arr[24]-arr[12]; if(Math.abs(d)<0.05) return 'Estable (meses 12–24)'; return (d>0) === up ? (up?'Creciente ✓':'Decreciente ✓') : (up?'Decreciente ✗':'Creciente ✗'); };
+  const vals = {
+    ses: `${pct(cumpl)} (${c.sr[24]} de ${c.sp[24]})`,
+    cob: 'No simulado',
+    eje: 'No simulado',
+    tp: trend(c.tp, true),
+    hrs: trend(c.horas, false)
+  };
+  $('indList').innerHTML = INDICADORES.map(i=>`<li><span>${esc(i.nombre)}</span><span class="sv">${esc(vals[i.id])}</span><span class="meta">Meta preliminar: ${esc(i.meta)}</span></li>`).join('');
+}
+
+/* ================= RENDER: MAPA DE PRODUCTOS ================= */
+function lensKey(){ return state.sel==='todas' ? 'C' : state.sel; }
+
+const quadPlugin = {
+  id:'quad',
+  beforeDatasetsDraw(chart, _a, opts){
+    const L = opts.lens, cl = opts.cl; if(!cl) return;
+    const {ctx, chartArea:{left,right,top,bottom}, scales:{x,y}} = chart;
+    const mx = x.getPixelForValue(cl.medVol), my = y.getPixelForValue(cl.medTP);
+    ctx.save();
+    if(L==='C'){
+      ctx.fillStyle = col('--quad-a');
+      ctx.fillRect(mx, top, right-mx, my-top);           // Mantener
+      ctx.fillRect(left, my, mx-left, bottom-my);        // Descontinuar
+      ctx.fillStyle = col('--quad-b');
+      ctx.fillRect(left, top, mx-left, my-top);
+      ctx.fillRect(mx, my, right-mx, bottom-my);
+      ctx.fillStyle = col('--text-2'); ctx.font = '600 11px system-ui, sans-serif';
+      ctx.textAlign='right'; ctx.fillText('MANTENER', right-6, top+14); ctx.fillText('AJUSTAR', right-6, bottom-6);
+      ctx.textAlign='left'; ctx.fillText('REVISAR', left+6, top+14); ctx.fillText('DESCONTINUAR', left+6, bottom-6);
+    }
+    ctx.strokeStyle = col('--text-3'); ctx.lineWidth = 1; ctx.setLineDash([4,4]);
+    if(L==='C' || L==='B'){ ctx.beginPath(); ctx.moveTo(left,my); ctx.lineTo(right,my); ctx.stroke(); }
+    if(L==='C'){ ctx.beginPath(); ctx.moveTo(mx,top); ctx.lineTo(mx,bottom); ctx.stroke(); }
+    if(L==='B'){ ctx.setLineDash([]); ctx.fillStyle = col('--text-2'); ctx.font='11px system-ui, sans-serif'; ctx.textAlign='right'; ctx.fillText('Mediana de throughput/h', right-6, my-6); }
+    ctx.restore();
+  },
+  afterDatasetsDraw(chart, _a, opts){
+    const cl = opts.cl; if(!cl) return;
+    const meta = chart.getDatasetMeta(0), ctx = chart.ctx, narrow = chart.width < 480;
+    ctx.save(); ctx.font = (narrow?'10px':'11px') + ' system-ui, sans-serif'; ctx.fillStyle = col('--text');
+    cl.prods.forEach((p,i)=>{
+      const el = meta.data[i]; if(!el) return;
+      const label = narrow ? p.id : p.corto;
+      const w = ctx.measureText(label).width;
+      const toLeft = el.x + 10 + w > chart.chartArea.right;
+      ctx.textAlign = toLeft ? 'right' : 'left';
+      ctx.fillText(label, el.x + (toLeft ? -10 : 10), el.y + 4);
+    });
+    ctx.restore();
+  }
+};
+
+function renderMap(cl){
+  const L = lensKey();
+  const neutral = col('--text-3'), accent = col('--accent'), surf = col('--surface');
+  const flagged = p => L==='A' ? p.lecturaA==='Retirar' : L==='B' ? p.lecturaB==='Alerta' : L==='C' ? (p.final==='Ajustar'||p.final==='Descontinuar') : false;
+  const pts = cl.prods.map(p=>({x:p.vol, y:p.tp}));
+  const styleOf = p => {
+    const sel = p.id===state.prod;
+    let shape = 'circle', fill = neutral, border = surf, bw = 2, rad = 6;
+    if(L==='A' && flagged(p)){ shape='crossRot'; fill=altColor('A'); border=altColor('A'); bw=3; rad=8; }
+    if(L==='B' && flagged(p)){ shape='triangle'; fill=altColor('B'); rad=8; }
+    if(L==='C'){ if(flagged(p)){ fill=altColor('C'); } if(p.filtro){ shape='rectRot'; fill=surf; border=altColor('C'); bw=3; rad=8; } }
+    if(L==='D'){ fill = withAlpha(neutral,.5); }
+    if(sel){ rad += 3; border = col('--text'); bw = 3; }
+    return {shape, fill, border, bw, rad};
+  };
+  const st = cl.prods.map(styleOf);
+  const text2 = col('--text-2'), grid = col('--grid');
+  const cfg = {
+    type:'scatter',
+    data:{datasets:[{label:'Productos ficticios', data:pts,
+      pointStyle: st.map(s=>s.shape), backgroundColor: st.map(s=>s.fill), borderColor: st.map(s=>s.border),
+      borderWidth: st.map(s=>s.bw), pointRadius: st.map(s=>s.rad), pointHoverRadius: st.map(s=>s.rad+2), pointHitRadius: 14}]},
+    options:{
+      responsive:true, maintainAspectRatio:false, animation:false,
+      onClick:(ev, els)=>{ if(els.length){ state.prod = cl.prods[els[0].index].id; renderAll(); } },
+      onHover:(ev, els)=>{ ev.native && (ev.native.target.style.cursor = els.length ? 'pointer':'default'); },
+      plugins:{
+        legend:{display:false},
+        quad:{lens:L, cl},
+        tooltip:{callbacks:{
+          title: it => cl.prods[it[0].dataIndex].nombre + ' (ficticio)',
+          label: it => { const p = cl.prods[it.dataIndex]; return [` Throughput/h: ₡${nf(p.tp)}`, ` Volumen: ${nf(p.vol)} kg/mes`, ` Lectura ${L}: ${p['lectura'+L]}`]; }
+        }}
+      },
+      scales:{
+        x:{min:0, max:Math.ceil(Math.max(...cl.prods.map(p=>p.vol))*1.12/2000)*2000, title:{display:true, text:'Volumen (kg/mes, simulado)', color:text2}, grid:{color:grid}, ticks:{color:text2, callback:v=>nf(v/1000)+' mil'}},
+        y:{min:0, max:Math.ceil(Math.max(...cl.prods.map(p=>p.tp))*1.08/20000)*20000, title:{display:true, text:'Throughput por hora (₡/h, simulado)', color:text2}, grid:{color:grid}, ticks:{color:text2, callback:v=>nf(v/1000)+' mil'}}
+      }
+    },
+    plugins:[quadPlugin]
+  };
+  if(mapChart) mapChart.destroy();
+  mapChart = new Chart($('mapChart'), cfg);
+
+  const lensTxt = {
+    A:`Lectura de ${badge('A')}: solo mira el margen unitario con un corte (${pct(state.extra.corteA)}). No usa estos ejes ni filtro estratégico: ✕ = retirar.`,
+    B:`Lectura de ${badge('B')}: marca alertas (▲) para throughput/h bajo la mediana, sin asignar categoría ni decisión.`,
+    C:`Lectura de ${badge('C')}: cuadrantes por mediana de volumen y throughput/h, más filtro estratégico (◇ = pasó de Descontinuar a Revisar).`,
+    D:`Lectura de ${badge('D')}: no añade clasificación nueva hasta cerrar el ABC.`
+  };
+  $('lensText').innerHTML = (state.sel==='todas' ? 'Vista comparativa: el mapa muestra la lectura de C; la tabla compara las cuatro. ' : '') + lensTxt[L];
+  $('mapOverlay').hidden = L!=='D';
+  $('mapOverlayText').textContent = `Clasificación pendiente: el ABC cierra en el mes ${state.sup.D.t0} (supuesto editable; el informe no define la fecha).`;
+  const leg = {
+    A:`<span><span class="sw g-A">✕</span>Retirar (margen &lt; corte)</span><span><span class="sw muted">●</span>Mantener</span>`,
+    B:`<span><span class="sw g-B">▲</span>Alerta de bajo aporte</span><span><span class="sw muted">●</span>Sin alerta</span>`,
+    C:`<span><span class="sw g-C">●</span>Ajustar o Descontinuar</span><span><span class="sw muted">●</span>Mantener o Revisar</span><span><span class="sw g-C">◇</span>Filtro estratégico → Revisar</span>`,
+    D:`<span><span class="sw muted">●</span>Sin clasificar (pendiente del ABC)</span>`
+  };
+  $('mapLegend').innerHTML = leg[L] + `<span>Mediana volumen: ${nf(cl.medVol)} kg/mes · mediana throughput/h: ₡${nf(cl.medTP)}</span>`;
+
+  // selector de producto
+  const sel = $('prodSel');
+  if(!sel.options.length){
+    sel.innerHTML = cl.prods.map(p=>`<option value="${p.id}">${p.id} · ${esc(p.nombre)}</option>`).join('');
+    sel.addEventListener('change', ev=>{ state.prod = ev.target.value; renderAll(); });
+  }
+  sel.value = state.prod;
+
+  // ficha del producto
+  const p = cl.prods.find(x=>x.id===state.prod);
+  $('prodCard').innerHTML = `<h3>${p.id} · ${esc(p.nombre)}</h3><span class="tag sim">Producto ficticio · cifras simuladas</span>
+    <dl>
+      <dt>Throughput por hora</dt><dd>₡${nf(p.tp)}</dd>
+      <dt>Volumen</dt><dd>${nf(p.vol)} kg/mes</dd>
+      <dt>% en el cliente principal</dt><dd>${pct(p.pct)}${p.ancla?' · cliente ancla':''}</dd>
+      <dt>Categoría</dt><dd style="text-align:right">${esc(p.cat)}</dd>
+      <dt>Margen unitario</dt><dd>${pct(p.margenPct,1)}</dd>
+      <dt>Horas de línea</dt><dd>${nf(p.horas,1)} h/mes</dd>
+      <dt>Cuadrante (C)</dt><dd>${p.cuadrante}${p.filtro?` → ${p.final}`:''}</dd>
+    </dl>
+    <p class="formula" style="margin-top:10px">(₡${nf(p.p)} − ₡${nf(p.cv)}) × ${nf(p.kgh)} kg/h = ₡${nf(p.tp)} por hora</p>
+    ${p.filtro?`<p class="note">Filtro estratégico: ${p.filtro}. Pasa de Descontinuar a Revisar.</p>`:''}
+    <p class="tiny">Lectura según ${badge(L)}: <strong>${esc(p['lectura'+L])}</strong></p>`;
+
+  // tabla comparativa
+  $('lectTable').innerHTML = `<caption>Cómo lee cada alternativa el mismo producto.</caption><thead><tr><th scope="col">Producto</th>${KEYS.map(k=>`<th scope="col">${badge(k)}</th>`).join('')}</tr></thead><tbody>`
+    + cl.prods.map(q=>`<tr${q.id===state.prod?' style="font-weight:600"':''}><th scope="row" style="font-weight:inherit">${q.id} ${esc(q.corto)}</th>${KEYS.map(k=>`<td class="${k===L?'cur':''}">${esc(q['lectura'+k])}</td>`).join('')}</tr>`).join('') + `</tbody>`;
+}
+
+/* ================= RENDER: BITÁCORA ================= */
+function renderBitacora(cl){
+  const t0 = state.sup.C.t0;
+  const P = id => cl.prods.find(p=>p.id===id);
+  const fecha = n => { const m = t0 + 2*n; return m<=24 ? `Mes ${m} · sesión ${n+1}` : `Mes ${m}`; };
+  const justTP = p => `Throughput/h ₡${nf(p.tp)} ${p.tp<cl.medTP?'bajo':'sobre'} la mediana (₡${nf(cl.medTP)}); volumen ${p.vol<cl.medVol?'bajo':'alto'}.`;
+  const rows = [
+    {it:P('P9'), dec:'Descontinuar de forma gradual y reasignar horas de línea', just:p=>justTP(p)+' Sin cliente ancla ni categoría en tendencia.', resp:'Producción (rol ficticio)', seg:1},
+    {it:P('P6'), dec:'Revisar precio y tamaño de lote', just:p=>justTP(p)+' Alto volumen: conviene ajustar antes que retirar.', resp:'Comercial y Costos (roles ficticios)', seg:1},
+    {it:P('P10'), dec:'Renegociar precio o pedido mínimo', just:p=>justTP(p)+' Ocupa muchas horas de línea.', resp:'Comercial (rol ficticio)', seg:1},
+    {it:P('P8'), dec:'Mantener; revisar condiciones con el cliente ancla', just:p=>justTP(p)+` ${pct(p.pct)} lo compra un cliente ancla.`, resp:'Comercial (rol ficticio)', seg:2},
+    {it:P('P4'), dec:'Mantener en observación dos sesiones', just:p=>justTP(p)+' Categoría alineada con tendencias.', resp:'Producción (rol ficticio)', seg:2},
+    {cliente:true, nombre:'Cliente F · catering (ficticio)', cat:'Cliente de bajo aporte', dec:'Revisar frecuencia de entrega y pedido mínimo', just:'Ejemplo ilustrativo: el instrumento de C evalúa también clientes, no solo productos.', resp:'Comercial (rol ficticio)', seg:1}
+  ];
+  const body = rows.map(r=>{
+    const nombre = r.cliente ? r.nombre : `${r.it.id} · ${r.it.nombre}`;
+    const cat = r.cliente ? r.cat : (r.it.final + (r.it.filtro ? ` (filtro: ${r.it.filtro})` : ''));
+    const just = r.cliente ? r.just : r.just(r.it);
+    return `<tr><td>${esc(nombre)}</td><td>${esc(cat)}</td><td>${esc(r.dec)}</td><td>${esc(just)}</td><td>${esc(r.resp)}</td><td>${esc(fecha(r.seg))}</td></tr>`;
+  }).join('');
+  $('bitTable').innerHTML = `<caption>Registro de la primera sesión del comité (mes ${t0}). Categorías calculadas con los productos ficticios.</caption>
+    <thead><tr><th scope="col">Producto o cliente</th><th scope="col">Categoría</th><th scope="col">Decisión</th><th scope="col">Justificación</th><th scope="col">Responsable</th><th scope="col">Fecha de seguimiento</th></tr></thead><tbody>${body}</tbody>`;
+  const k = state.sel;
+  const isC = k==='C' || k==='todas';
+  $('bitTable').classList.toggle('dim', !isC);
+  $('bitNote').innerHTML = isC
+    ? `La bitácora es un componente de ${badge('C')}: cada decisión queda documentada con su responsable y fecha de seguimiento.`
+    : `La bitácora es un componente de ${badge('C')}; el informe no la describe para ${badge(k)}. Se muestra atenuada como referencia.`;
+}
+
+/* ================= RENDER: RECURSOS Y RIESGOS ================= */
+function renderRecursos(){
+  const h = horasC();
+  const actMid = (h.actMin+h.actMax)/2;
+  const total = h.sesiones + actMid + h.constr, maxT = h.sesiones + h.actMax + h.constr;
+  const seg = (v, cls, lbl) => `<div class="seg" style="width:${v/maxT*100}%;background:var(--seg-${cls});color:var(--seg-ink-${cls})" title="${lbl}">${nf(v)}</div>`;
+  $('resBars').innerHTML = KEYS.map(k=>`<div class="res-row"${state.sel===k?' style="font-weight:700"':''}>
+    <span>${badge(k)}${k==='C'?' <span class="rec-badge">Rec.</span>':''}</span>
+    ${k==='C'
+      ? `<div><div class="res-bar" role="img" aria-label="C: ${nf(h.sesiones)} horas-persona en sesiones, ${nf(h.actMin)} a ${nf(h.actMax)} horas de actualización y ${nf(h.constr)} horas de construcción del tablero">${seg(h.sesiones,1,'Sesiones')}${seg(actMid,2,'Actualización')}${seg(h.constr,3,'Construcción')}</div>
+         <div class="tiny" style="margin-top:4px">≈ ${nf(total)} h en el primer año (rango ${nf(h.sesiones+h.actMin+h.constr)}–${nf(maxT)}); desde el segundo año ≈ ${nf(h.sesiones+actMid)} h</div></div>`
+      : `<div class="res-none">No cuantificado en el informe</div>`}
+  </div>`).join('');
+  $('resLegend').innerHTML = `<span><span class="sq" style="background:var(--seg-1)"></span>Sesiones: ${nf(h.ses)} × ${nf(RECURSOS_C.sesionMin/60,1)} h × ${RECURSOS_C.personas} personas = ${nf(h.sesiones)} h-persona/año</span>
+    <span><span class="sq" style="background:var(--seg-2)"></span>Actualización: ${nf(h.ses)} × ${RECURSOS_C.actualMin}–${RECURSOS_C.actualMax} h = ${nf(h.actMin)}–${nf(h.actMax)} h/año</span>
+    <span><span class="sq" style="background:var(--seg-3)"></span>Construcción del tablero: ${nf(h.constr)} h (una vez)</span>`;
+  $('resNote').textContent = 'La barra usa el punto medio de la actualización y supone que la hace una sola persona (el informe da horas, no personas).';
+
+  // mapa de calor
+  const imp = ['bajo','medio','alto'], prob = ['alta','media','baja'];
+  let html = `<div class="hd"></div>` + imp.map(i=>`<div class="hd">Impacto ${i}</div>`).join('');
+  prob.forEach(p=>{
+    html += `<div class="hd rh">Prob. ${p}</div>`;
+    imp.forEach(i=>{
+      const sc = NIVEL[p]*NIVEL[i];
+      const lv = sc>=6 ? 3 : sc>=3 ? 2 : sc>=2 ? 1 : 0;
+      const rs = RIESGOS_C.filter(r=>r.p===p && r.i===i);
+      html += `<div class="cell lv${lv}" title="Probabilidad ${p}, impacto ${i}">${rs.map(r=>`<span class="chip">${r.id}</span>`).join('')}</div>`;
+    });
+  });
+  $('heat').innerHTML = html;
+  $('heat').setAttribute('aria-label', 'Mapa de calor de riesgos de C: ' + RIESGOS_C.map(r=>`${r.id} probabilidad ${r.p}, impacto ${r.i}`).join('; '));
+  $('riskTable').innerHTML = `<thead><tr><th scope="col">Riesgo de C</th><th scope="col">Probabilidad</th><th scope="col">Impacto</th></tr></thead><tbody>`
+    + RIESGOS_C.map(r=>`<tr><td><strong>${r.id}</strong> ${esc(r.nombre)}</td><td>${r.p}</td><td>${r.i}</td></tr>`).join('') + `</tbody>`;
+  $('riskOthers').innerHTML = ['A','B','D'].map(k=>`${badge(k)} riesgos: no cuantificado en el informe`).join(' · ');
+}
+
+/* ================= TEMA ================= */
+const THEMES = ['auto','light','dark'], THEME_TXT = {auto:'automático', light:'claro', dark:'oscuro'};
+$('themeBtn').addEventListener('click', ()=>{
+  state.theme = THEMES[(THEMES.indexOf(state.theme)+1)%3];
+  if(state.theme==='auto') document.documentElement.removeAttribute('data-theme');
+  else document.documentElement.setAttribute('data-theme', state.theme);
+  $('themeBtn').textContent = 'Tema: ' + THEME_TXT[state.theme];
+  renderAll();
+});
+if(window.matchMedia){ const mq = matchMedia('(prefers-color-scheme: dark)'); (mq.addEventListener ? mq.addEventListener('change', renderAll) : mq.addListener(renderAll)); }
+
+/* ================= ORQUESTACIÓN ================= */
+function renderAll(){
+  const sc = puntajes(state.pesos);
+  const rk = ranking(sc);
+  const cl = clasificar();
+  const sim = simular(cl);
+  renderKPIs({sc, rk, sim, cl});
+  renderFicha();
+  renderMatriz(sc, rk);
+  renderSupuestos(cl);
+  if(window.Chart){ renderSim(sim); renderMap(cl); }
+  else { $('simNote').textContent = 'No se pudo cargar Chart.js (se requiere conexión a internet para los gráficos).'; }
+  renderIndicadores(sim);
+  renderBitacora(cl);
+  renderRecursos();
+}
+
+if(window.Chart){
+  Chart.defaults.font.family = 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif';
+}
+buildMatriz();
+buildSupuestos();
+renderAll();
+window.__terranea = {state, puntajes, verificarInforme, clasificar, simular}; // para inspección en consola
+})();
+</script>
+</body>
+</html>
