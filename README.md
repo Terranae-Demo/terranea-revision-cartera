@@ -9,7 +9,9 @@ Curso DN-0111 Gestión de la Innovación y Estrategia Competitiva (UCR), Equipo 
 
 Informe por páginas con estilo de tablero BI:
 
+- **1 · Qué hace esta herramienta:** el problema y el flujo de C en tres pasos (clasificar cartera → evaluar pedidos → decidir y registrar).
 - **Resumen, Matriz, Simulación, Productos y clientes, Bitácora, Recursos y riesgos.**
+- **Evaluador de pedidos:** aplica la herramienta de C a un pedido de un cliente ficticio (cuatro escenarios o pedido personalizado). Lo ubica en una matriz de pedidos, recomienda la mezcla que más rinde en las horas de línea disponibles y permite registrar la decisión en la bitácora.
 - **Datos:** tablas ficticias de productos y clientes, editables; todo se recalcula al instante.
 - **Documentación:** contexto, modelo de datos, medidas, parámetros, indicadores y riesgos.
 - **Panel ⚙ Parámetros:** pesos de la matriz y supuestos de la simulación, configurables en vivo.

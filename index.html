@@ -162,7 +162,7 @@ body.pane-open .pane{display:block}
 .card-kpi .sub{font-size:.74rem;color:var(--text-2)}
 
 /* Tablas */
-.table-wrap{overflow-x:auto;max-width:100%}
+.table-wrap{overflow-x:auto;max-width:100%;position:relative}
 table{border-collapse:collapse;width:100%;font-size:.84rem}
 th,td{padding:6px 8px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}
 thead th{font-weight:600;color:var(--text-2);font-size:.76rem;background:var(--surface-2)}
@@ -285,6 +285,37 @@ legend{font-size:.8rem;font-weight:600;padding:0 4px}
 .toc a{color:var(--accent-ink)}
 .doc table{margin:6px 0 10px}
 
+/* Página 1: qué hace */
+.lead{font-size:.95rem;max-width:78ch}
+.flow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;margin-top:12px}
+.step{position:relative;background:var(--surface-2);border-radius:4px;padding:14px;display:flex;flex-direction:column;gap:6px}
+.step .num{font-size:.72rem;font-weight:700;color:var(--accent-ink);text-transform:uppercase;letter-spacing:.05em}
+.step svg{width:38px;height:38px;color:var(--accent-ink)}
+.step + .step::before{content:'→';position:absolute;left:-11px;top:50%;transform:translate(-50%,-50%);color:var(--text-2);font-size:1.15rem;font-weight:700}
+.step .btn{margin-top:auto;align-self:flex-start}
+@media (max-width:760px){ .flow{grid-template-columns:1fr} .step + .step::before{content:'↓';left:50%;top:-11px} }
+.cta{font-size:.95rem;padding:9px 16px;min-height:42px}
+.pagenav .pn{min-width:1.5em;color:var(--text-2);font-variant-numeric:tabular-nums;font-weight:600}
+
+/* Evaluador de pedidos */
+.scen{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr))}
+.scen button{border:1px solid var(--border);background:var(--surface);border-radius:4px;padding:8px 10px;cursor:pointer;text-align:left;font-size:.78rem;color:var(--text-2);min-height:44px}
+.scen button strong{display:block;font-size:.86rem;color:var(--text)}
+.scen button:hover{background:var(--surface-2)}
+.scen button[aria-pressed="true"]{border-color:var(--accent-ink);box-shadow:inset 0 0 0 1px var(--accent-ink);background:var(--accent-soft)}
+.ped-controls{display:grid;gap:4px 18px;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));margin-top:10px;border-top:1px solid var(--border);padding-top:6px}
+.chk{display:flex;gap:8px;align-items:flex-start;font-size:.84rem;margin:8px 0;cursor:pointer}
+.chk input{margin-top:3px}
+.score-line{display:flex;align-items:baseline;gap:8px;margin-top:10px}
+.score-val{font-size:1.8rem;font-weight:600;font-variant-numeric:tabular-nums}
+.verdict{border-left:4px solid var(--accent-ink);background:var(--accent-soft);padding:8px 12px;border-radius:0 4px 4px 0;margin:4px 0 8px}
+.verdict .q{font-size:1.05rem;font-weight:700;display:block;margin-bottom:2px}
+.data-table select{font-size:.82rem;padding:4px;max-width:8.6em}
+#pedTable th{white-space:normal}
+.icon-btn{border:1px solid var(--border);background:var(--surface);border-radius:3px;cursor:pointer;width:32px;height:32px}
+.icon-btn:disabled{opacity:.4;cursor:default}
+.data-table tfoot td,.data-table tfoot th{font-weight:700;border-bottom:none}
+
 footer{border-top:1px solid var(--border);padding:14px 16px 24px;font-size:.8rem;color:var(--text-2);background:var(--surface)}
 @media (prefers-reduced-motion: reduce){ *{transition:none!important;animation:none!important} }
 </style>
@@ -315,7 +346,7 @@ footer{border-top:1px solid var(--border);padding:14px 16px 24px;font-size:.8rem
         <h2 id="pageTitle">Resumen</h2>
         <p class="tiny" id="pageSub"></p>
       </div>
-      <div class="slicer">
+      <div class="slicer" id="slicer">
         <div class="lbl" id="slicerLbl">Alternativa</div>
         <div role="tablist" id="tablist" aria-labelledby="slicerLbl">
           <button role="tab" id="tab-A" aria-controls="canvas" aria-selected="false" tabindex="-1" data-alt="A"><span class="alt"><span class="g g-A" aria-hidden="true">▲</span>A</span></button>
@@ -327,8 +358,55 @@ footer{border-top:1px solid var(--border);padding:14px 16px 24px;font-size:.8rem
       </div>
     </div>
 
+    <!-- PÁGINA 1: QUÉ HACE ESTA HERRAMIENTA -->
+    <section class="page" id="page-inicio" aria-label="Qué hace esta herramienta">
+      <div class="tiles">
+        <div class="tile">
+          <p class="lead">Terránea ya tiene costeo por producto y datos en SICLA y en un tablero centralizado, pero no una rutina que convierta esos datos en decisiones. El resultado: <strong>horas de línea ocupadas en productos y clientes de bajo aporte</strong>, sin que nadie decida con regularidad qué mantener, ajustar o dejar.</p>
+          <p class="lead">Esta demo muestra cómo funcionaría la alternativa recomendada, <strong>C · Revisión Periódica de Cartera</strong>, en tres pasos y con datos ficticios.</p>
+          <div class="flow">
+            <div class="step">
+              <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><rect x="5" y="5" width="13" height="13" rx="2"/><rect x="22" y="5" width="13" height="13" rx="2"/><rect x="5" y="22" width="13" height="13" rx="2"/><rect x="22" y="22" width="13" height="13" rx="2" fill="currentColor"/></svg>
+              <span class="num">Paso 1</span>
+              <h3>Clasificar la cartera</h3>
+              <p class="tiny">Cada producto se ubica por throughput por hora y volumen frente a la mediana: Mantener, Revisar, Ajustar o Descontinuar, con un filtro estratégico.</p>
+              <button type="button" class="btn" data-goto="prod">Ver el mapa de productos</button>
+            </div>
+            <div class="step">
+              <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="6" width="24" height="30" rx="2"/><path d="M15 6v-2h10v2"/><path d="M13 16h14M13 22h14M13 28h8"/><path d="M26 29l3 3 6-7"/></svg>
+              <span class="num">Paso 2</span>
+              <h3>Evaluar pedidos</h3>
+              <p class="tiny">Un pedido concreto se compara con la mediana de la cartera y con el valor estratégico del cliente, y se propone la mezcla que más rinde en las horas de línea disponibles.</p>
+              <button type="button" class="btn primary" data-goto="pedido">Probar con un pedido</button>
+            </div>
+            <div class="step">
+              <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6h20l4 4v24H8z"/><path d="M13 14h14M13 20h14M13 26h6"/><circle cx="29" cy="29" r="6" fill="var(--surface-2)"/><path d="M26.5 29l2 2 3.5-4"/></svg>
+              <span class="num">Paso 3</span>
+              <h3>Decidir y registrar</h3>
+              <p class="tiny">El comité bimestral decide y deja cada decisión en la bitácora, con responsable y fecha de seguimiento.</p>
+              <button type="button" class="btn" data-goto="bit">Ver la bitácora</button>
+            </div>
+          </div>
+          <div class="btns" style="margin-top:14px"><button type="button" class="btn primary cta" data-goto="pedido">▶ Probar con un pedido</button></div>
+        </div>
+        <div class="tile s6">
+          <div class="tile-head"><h3>Cómo recorrer la demo</h3></div>
+          <ul class="tiny" style="padding-left:1.2em;margin:0">
+            <li><strong>Páginas 2 a 4:</strong> comparan las alternativas A, B, C y D con la segmentación superior.</li>
+            <li><strong>Páginas 5 a 7:</strong> muestran la herramienta de C en uso: cartera, pedidos y bitácora.</li>
+            <li><strong>⚙ Parámetros:</strong> cambia pesos y supuestos en vivo.</li>
+            <li><strong>Datos y Documentación:</strong> tablas ficticias editables y explicación del modelo.</li>
+          </ul>
+        </div>
+        <div class="tile s6">
+          <div class="tile-head"><h3>Por qué C</h3><span class="tag">Matriz del informe</span></div>
+          <div class="rank" id="rankInicio"></div>
+        </div>
+      </div>
+    </section>
+
     <!-- PÁGINA: RESUMEN -->
-    <section class="page" id="page-resumen" aria-label="Resumen">
+    <section class="page" id="page-resumen" aria-label="Resumen" hidden>
       <div class="tiles">
         <div class="kpi" id="kpis" aria-live="polite"></div>
         <div class="tile s8" id="fichaTile"></div>
@@ -426,6 +504,55 @@ footer{border-top:1px solid var(--border);padding:14px 16px 24px;font-size:.8rem
       </div>
     </section>
 
+    <!-- PÁGINA: EVALUADOR DE PEDIDOS -->
+    <section class="page" id="page-pedido" aria-label="Evaluador de pedidos" hidden>
+      <div class="tiles">
+        <div class="tile">
+          <div class="tile-head"><h3>① Elija un pedido</h3><span class="tag sim">Clientes y pedidos ficticios · herramienta de C</span></div>
+          <div class="scen" id="scenBtns" role="group" aria-label="Escenarios de pedido"></div>
+        </div>
+        <div class="tile s8">
+          <div class="tile-head"><h3 id="pedTitle">② Revise el pedido</h3><span class="tag sim">Editable</span></div>
+          <div class="table-wrap"><table class="data-table" id="pedTable"></table></div>
+          <p class="tiny">↓ = throughput por hora bajo la mediana de la cartera. «Precio para la mediana» = precio por kg que lleva esa línea a la mediana.</p>
+          <div class="btns"><button type="button" class="btn" id="pedAdd">+ Agregar línea</button></div>
+          <div class="ped-controls">
+            <div class="slider"><label for="pedHoras">Horas de línea disponibles esta semana</label><input type="range" id="pedHoras" min="4" max="60" step="1"><output for="pedHoras" id="pedHoras-o"></output></div>
+            <div>
+              <label class="chk"><input type="checkbox" id="pedSust"> El cliente acepta sustitutos de la misma categoría</label>
+              <div class="slider"><label for="pedMax">Máximo sustituible por línea</label><input type="range" id="pedMax" min="10" max="100" step="10"><output for="pedMax" id="pedMax-o"></output></div>
+            </div>
+          </div>
+        </div>
+        <div class="tile s4">
+          <div class="tile-head"><h3>Valor estratégico del cliente</h3><span class="tag sim">Puntaje editable</span></div>
+          <label class="chk"><input type="checkbox" id="pedAncla"> Cliente ancla (+2)</label>
+          <label class="chk"><input type="checkbox" id="pedTend"> Compra categorías en tendencia (+1)</label>
+          <label for="pedRec">Volumen recurrente</label><br>
+          <select id="pedRec"><option value="0">Ocasional (+0)</option><option value="1">Mensual (+1)</option><option value="2">Semanal (+2)</option></select>
+          <div class="score-line"><span class="score-val" id="pedScore"></span><span class="tiny">de 5 · <span id="pedScoreTxt"></span></span></div>
+          <p class="tiny">Desde 3 puntos el cliente se considera estratégico.</p>
+        </div>
+        <div class="kpi" id="pedKpis" aria-live="polite"></div>
+        <div class="tile s7">
+          <div class="tile-head"><h3>③ Matriz de pedidos</h3><span class="tag sim">Simulado</span></div>
+          <div class="chart-box"><canvas id="pedChart" role="img" aria-label="Matriz de pedidos: valor estratégico del cliente frente a throughput por hora del pedido"></canvas></div>
+          <p class="tiny">Eje Y: throughput por hora del pedido; la línea punteada es la mediana de la cartera. Eje X: valor estratégico del cliente (0 a 5); la línea punteada separa al cliente estratégico (3 o más).</p>
+        </div>
+        <div class="tile s5">
+          <div class="tile-head"><h3>Recomendación</h3></div>
+          <div id="pedVerdict" aria-live="polite"></div>
+          <div class="btns"><button type="button" class="btn primary" id="pedReg">Registrar en la bitácora</button></div>
+          <p class="tiny" id="pedRegMsg" aria-live="polite"></p>
+        </div>
+        <div class="tile">
+          <div class="tile-head"><h3>Mezcla recomendada para las horas disponibles</h3><span class="tag sim">Simulado</span></div>
+          <p class="tiny">Regla: si el cliente acepta sustitutos, parte de cada línea pasa al producto de la misma categoría con mayor throughput por hora. Después se reparten las horas: primero las líneas protegidas (producto de cliente ancla en un cliente estratégico) y luego de mayor a menor throughput por hora. Lo que no cabe se difiere.</p>
+          <div class="table-wrap"><table id="mixTable"></table></div>
+        </div>
+      </div>
+    </section>
+
     <!-- PÁGINA: BITÁCORA -->
     <section class="page" id="page-bit" aria-label="Bitácora de decisiones" hidden>
       <div class="tiles">
@@ -488,7 +615,7 @@ footer{border-top:1px solid var(--border);padding:14px 16px 24px;font-size:.8rem
       <div class="tiles">
         <article class="tile doc">
           <nav class="toc" aria-label="Contenido de la documentación">
-            <a href="#d-proposito">Propósito</a><a href="#d-contexto">Contexto</a><a href="#d-alt">Alternativas</a><a href="#d-matriz">Matriz</a><a href="#d-modelo">Modelo de datos</a><a href="#d-medidas">Medidas</a><a href="#d-param">Parámetros</a><a href="#d-ind">Indicadores</a><a href="#d-riesgos">Riesgos</a><a href="#d-fuentes">Dato vs. supuesto</a><a href="#d-uso">Uso y edición</a><a href="#d-pend">Pendientes</a>
+            <a href="#d-proposito">Propósito</a><a href="#d-contexto">Contexto</a><a href="#d-alt">Alternativas</a><a href="#d-matriz">Matriz</a><a href="#d-modelo">Modelo de datos</a><a href="#d-medidas">Medidas</a><a href="#d-pedidos">Evaluador de pedidos</a><a href="#d-param">Parámetros</a><a href="#d-ind">Indicadores</a><a href="#d-riesgos">Riesgos</a><a href="#d-fuentes">Dato vs. supuesto</a><a href="#d-uso">Uso y edición</a><a href="#d-pend">Pendientes</a>
           </nav>
 
           <h3 id="d-proposito">1. Propósito</h3>
@@ -518,6 +645,7 @@ footer{border-top:1px solid var(--border);padding:14px 16px 24px;font-size:.8rem
               <tr><td>Criterios</td><td>Informe</td><td>Criterio, peso, puntaje de A, B, C y D</td></tr>
               <tr><td>Supuestos</td><td>Simulados, configurables</td><td>k, E, r y mes de inicio por alternativa; constancia, decisiones por sesión, corte de margen</td></tr>
               <tr><td>Riesgos C</td><td>Informe</td><td>Riesgo, probabilidad, impacto</td></tr>
+              <tr><td>Pedido</td><td>Ficticio, editable</td><td>Cliente, líneas (producto, kg, precio negociado), horas disponibles, acepta sustitutos, máximo sustituible, cliente ancla, tendencia, recurrencia</td></tr>
               <tr><td>Bitácora</td><td>Calculada</td><td>Producto o cliente, categoría, decisión, justificación, responsable, fecha de seguimiento</td></tr>
             </tbody></table></div>
           <p>Relaciones: la Bitácora toma sus filas de Productos (los que quedan en Ajustar, Descontinuar o pasan por el filtro estratégico) y de Clientes (el de menor aporte por hora que no es ancla). La Simulación toma H₀ y g de Productos.</p>
@@ -540,25 +668,38 @@ footer{border-top:1px solid var(--border);padding:14px 16px 24px;font-size:.8rem
               <tr><td>Aporte por hora de cliente</td><td><code>kg/mes × margen/kg / horas de línea asignadas</code></td></tr>
             </tbody></table></div>
 
-          <h3 id="d-param">7. Parámetros configurables</h3>
+          <h3 id="d-pedidos">7. Evaluador de pedidos</h3>
+          <p>Aplica la herramienta de C a un pedido concreto de un cliente ficticio. Las reglas de esta sección son <strong>supuestos de la demo</strong>, no del informe; solo reutilizan la fórmula de throughput y la mediana de la cartera.</p>
+          <ul>
+            <li><strong>Por línea:</strong> margen = precio negociado − costo variable; horas = kg ÷ kg por hora; throughput/h = margen × kg por hora; contribución = margen × kg.</li>
+            <li><strong>Pedido:</strong> throughput/h ponderado = contribución total ÷ horas totales.</li>
+            <li><strong>Valor estratégico del cliente (0 a 5):</strong> cliente ancla +2; compra categorías en tendencia +1; volumen recurrente +0 (ocasional), +1 (mensual) o +2 (semanal). Es estratégico desde 3 puntos.</li>
+            <li><strong>Matriz de pedidos:</strong> Aceptar (throughput ≥ mediana y cliente estratégico); Aceptar y proteger (bajo la mediana, estratégico: negociar); Aceptar si hay capacidad ociosa (sobre la mediana, cliente ocasional); Renegociar o redirigir (bajo la mediana, no estratégico).</li>
+            <li><strong>Mezcla recomendada:</strong> si el cliente acepta sustitutos, hasta el porcentaje configurado de cada línea pasa al producto de la misma categoría con mayor throughput/h; las líneas protegidas no se sustituyen. Luego se reparten las horas disponibles: primero las líneas protegidas (producto de cliente ancla en un cliente estratégico) y después de mayor a menor throughput/h. Lo que no cabe se difiere; una línea con margen negativo no se produce.</li>
+            <li><strong>Precio para la mediana:</strong> costo variable + mediana de throughput/h ÷ kg por hora.</li>
+            <li><strong>Registrar en la bitácora:</strong> agrega la decisión del pedido como una fila nueva (★), solo en esta pestaña.</li>
+          </ul>
+
+          <h3 id="d-param">8. Parámetros configurables</h3>
           <p>Se editan en el panel <strong>⚙ Parámetros</strong> y se aplican en vivo a todas las páginas. Valores actuales:</p>
           <div class="table-wrap" id="docParams"></div>
 
-          <h3 id="d-ind">8. Indicadores de seguimiento (metas preliminares)</h3>
+          <h3 id="d-ind">9. Indicadores de seguimiento (metas preliminares)</h3>
           <div class="table-wrap" id="docInd"></div>
 
-          <h3 id="d-riesgos">9. Riesgos de C</h3>
+          <h3 id="d-riesgos">10. Riesgos de C</h3>
           <div class="table-wrap" id="docRiesgos"></div>
 
-          <h3 id="d-fuentes">10. Qué es dato del informe y qué es supuesto</h3>
+          <h3 id="d-fuentes">11. Qué es dato del informe y qué es supuesto</h3>
           <ul>
             <li><strong>Dato del informe:</strong> matriz de criterios, pesos y puntajes; recursos de C (≈ 16 h de tablero, 2 a 3 h por sesión, sesiones de 90 min con 5 personas cada dos meses, ≈ 45 horas-persona al año); indicadores y metas; riesgos de C; fórmula del throughput; reglas de cuadrantes y filtro estratégico.</li>
             <li><strong>No cuantificado en el informe:</strong> recursos y riesgos de A, B y D; fecha de cierre del ABC.</li>
-            <li><strong>Supuesto simulado:</strong> productos, clientes, precios, costos, volúmenes, curvas a 24 meses, decisiones por sesión, filas de la bitácora y roles responsables.</li>
+            <li><strong>Supuesto simulado:</strong> productos, clientes, precios, costos, volúmenes, curvas a 24 meses, decisiones por sesión, filas de la bitácora, roles responsables, pedidos de ejemplo, puntaje estratégico, matriz de pedidos y regla de mezcla.</li>
           </ul>
 
-          <h3 id="d-uso">11. Uso y edición</h3>
+          <h3 id="d-uso">12. Uso y edición</h3>
           <ol>
+            <li>Empiece en la página 1 y pulse «Probar con un pedido».</li>
             <li>Elija la alternativa en la segmentación superior (A, B, C, D o Comparar todas).</li>
             <li>Abra <strong>⚙ Parámetros</strong> para cambiar pesos y supuestos; todo se recalcula al instante.</li>
             <li>En la página <strong>Datos</strong> edite precios, costos, volúmenes y clientes ficticios.</li>
@@ -566,7 +707,7 @@ footer{border-top:1px solid var(--border);padding:14px 16px 24px;font-size:.8rem
             <li>Para cambiar los valores iniciales, edite <code>index.html</code> en GitHub: constantes <code>PRODUCTOS</code>, <code>CLIENTES</code>, <code>SUP_DEF</code> y <code>EXTRA_DEF</code>.</li>
           </ol>
 
-          <h3 id="d-pend">12. Pendientes</h3>
+          <h3 id="d-pend">13. Pendientes</h3>
           <p>Validación con Gerencia Comercial y prueba con datos reales de al menos cuatro semanas.</p>
         </article>
       </div>
@@ -678,14 +819,14 @@ const ALT = {
 const PRODUCTOS = [
   {id:'P1', nombre:'Pita mediterránea', corto:'Pita', cat:'Especialidades mediterráneas', p:2400, cv:1300, kgh:120, vol:9000, pct:35, ancla:false, tend:false},
   {id:'P2', nombre:'Falafel congelado', corto:'Falafel', cat:'Especialidades mediterráneas', p:3800, cv:2300, kgh:60, vol:2500, pct:40, ancla:false, tend:false},
-  {id:'P3', nombre:'Pasta hojaldre', corto:'Hojaldre', cat:'Masas y hojaldres', p:2600, cv:1700, kgh:90, vol:7000, pct:30, ancla:false, tend:false},
+  {id:'P3', nombre:'Pasta hojaldre', corto:'Hojaldre', cat:'Repostería y masas', p:2600, cv:1700, kgh:90, vol:7000, pct:30, ancla:false, tend:false},
   {id:'P4', nombre:'Pan sin gluten', corto:'Sin gluten', cat:'Saludable (alineada con tendencias)', p:4200, cv:3300, kgh:35, vol:1200, pct:25, ancla:false, tend:true},
   {id:'P5', nombre:'Pan artesanal de masa madre', corto:'Artesanal', cat:'Artesanal', p:3000, cv:1600, kgh:70, vol:3200, pct:45, ancla:false, tend:false},
-  {id:'P6', nombre:'Repostería congelada', corto:'Repostería', cat:'Congelados', p:5200, cv:3600, kgh:45, vol:6500, pct:50, ancla:false, tend:false},
+  {id:'P6', nombre:'Repostería congelada', corto:'Repostería', cat:'Repostería y masas', p:5200, cv:3600, kgh:45, vol:6500, pct:50, ancla:false, tend:false},
   {id:'P7', nombre:'Pan multigrano', corto:'Multigrano', cat:'Saludable (alineada con tendencias)', p:2200, cv:1350, kgh:110, vol:8000, pct:30, ancla:false, tend:true},
-  {id:'P8', nombre:'Pan de hamburguesa', corto:'Hamburguesa', cat:'Servicio de alimentos', p:1500, cv:1100, kgh:140, vol:2800, pct:78, ancla:true, tend:false},
-  {id:'P9', nombre:'Bollería dulce', corto:'Bollería', cat:'Repostería', p:2800, cv:2150, kgh:80, vol:1500, pct:20, ancla:false, tend:false},
-  {id:'P10', nombre:'Pan de molde blanco', corto:'Molde', cat:'Consumo diario', p:1400, cv:950, kgh:150, vol:11000, pct:55, ancla:false, tend:false}
+  {id:'P8', nombre:'Pan de hamburguesa', corto:'Hamburguesa', cat:'Panes de mesa', p:1500, cv:1100, kgh:140, vol:2800, pct:78, ancla:true, tend:false},
+  {id:'P9', nombre:'Bollería dulce', corto:'Bollería', cat:'Repostería y masas', p:2800, cv:2150, kgh:80, vol:1500, pct:20, ancla:false, tend:false},
+  {id:'P10', nombre:'Pan de molde blanco', corto:'Molde', cat:'Panes de mesa', p:1400, cv:950, kgh:150, vol:11000, pct:55, ancla:false, tend:false}
 ];
 // kg: kg/mes · m: margen ₡/kg · h: horas de línea asignadas por mes
 const CLIENTES = [
@@ -704,6 +845,25 @@ const SUP_DEF = {
 };
 const EXTRA_DEF = {constancia:100, decSesion:4, corteA:27};
 
+/* Escenarios de pedido (clientes ficticios). precio omitido = precio de lista */
+const ESCENARIOS = [
+  {id:'super', nombre:'Supermercado regional', corto:'Supermercado', cliente:'Supermercado regional (ficticio)', desc:'Mucho Molde blanco y Hamburguesa: alto volumen, bajo throughput.',
+   lineas:[{id:'P10',kg:3000,precio:1350},{id:'P8',kg:1200},{id:'P7',kg:600}], horas:24, ancla:false, tend:false, rec:2},
+  {id:'cafe', nombre:'Cafetería de especialidad', corto:'Cafetería', cliente:'Cafetería de especialidad (ficticia)', desc:'Artesanal, Repostería y Pita: alto throughput.',
+   lineas:[{id:'P5',kg:400},{id:'P6',kg:300},{id:'P1',kg:500}], horas:20, ancla:false, tend:false, rec:1},
+  {id:'ancla', nombre:'Cliente ancla de servicio de alimentos', corto:'Cliente ancla', cliente:'Servicio de alimentos ancla (ficticio)', desc:'Hamburguesa al 78 %: pone a prueba el filtro estratégico.',
+   lineas:[{id:'P8',kg:2200},{id:'P10',kg:400},{id:'P1',kg:220}], horas:18, ancla:true, tend:false, rec:2},
+  {id:'salud', nombre:'Tienda saludable', corto:'Saludable', cliente:'Tienda saludable (ficticia)', desc:'Sin gluten y Multigrano: categoría en tendencia, throughput bajo o medio.',
+   lineas:[{id:'P4',kg:300},{id:'P7',kg:700}], horas:16, ancla:false, tend:true, rec:2}
+];
+const UMBRAL_ESTR = 3;
+const CUADRANTE_TXT = {
+  'Aceptar':'Aceptar el pedido: rinde sobre la mediana y el cliente es estratégico.',
+  'Aceptar y proteger':'Aceptar y proteger la relación: el throughput está bajo la mediana, pero el cliente es estratégico. Negociar precio o mezcla en la próxima revisión.',
+  'Aceptar si hay capacidad ociosa':'Aceptar solo con horas libres: rinde bien, pero el cliente es ocasional. No desplazar pedidos de clientes estratégicos.',
+  'Renegociar o redirigir':'Renegociar precio o mezcla, o redirigir el volumen: rinde bajo la mediana y el cliente no es estratégico.'
+};
+
 /* Definición única de parámetros: genera los controles y la documentación */
 const SUP_PARAMS = [
   {key:'k', label:'Velocidad del efecto (k)', min:0.05, max:1, step:0.05, fmt:v=>nf(v,2), hint:'Fracción de la brecha hasta el efecto máximo que se cierra en cada mes con acción.'},
@@ -720,24 +880,27 @@ const EXT_PARAMS = [
 /* ================= ESTADO (solo en memoria) ================= */
 const clone = o => JSON.parse(JSON.stringify(o));
 const state = {
-  sel:'C', page:'resumen',
+  sel:'C', page:'inicio', pedido:null, bitExtra:[],
   pesos: Object.fromEntries(CRITERIOS.map(c=>[c.id,c.peso])),
   sup: clone(SUP_DEF), extra: clone(EXTRA_DEF),
   productos: clone(PRODUCTOS), clientes: clone(CLIENTES),
   editAlt:'C', metrica:'horas', prod:'P4', theme:'auto',
-  paneOpen: window.innerWidth > 1100
+  paneOpen: false
 };
 
 const PAGES = [
-  {id:'resumen', ic:'▦', nombre:'Resumen', sub:'Indicadores clave y ficha de la alternativa seleccionada.'},
-  {id:'matriz', ic:'▤', nombre:'Matriz de selección', sub:'Puntajes del informe; pesos configurables en vivo.'},
-  {id:'sim', ic:'⌇', nombre:'Simulación', sub:'Lógica del modelo a 24 meses con supuestos editables.'},
-  {id:'prod', ic:'◎', nombre:'Productos y clientes', sub:'Clasificación de la cartera ficticia según cada alternativa.'},
-  {id:'bit', ic:'☰', nombre:'Bitácora', sub:'Formato de registro de decisiones de C.'},
-  {id:'res', ic:'◧', nombre:'Recursos y riesgos', sub:'Horas-persona y riesgos según el informe.'},
-  {id:'datos', ic:'▥', nombre:'Datos', sub:'Tablas ficticias editables; todo se recalcula al instante.'},
-  {id:'doc', ic:'ⓘ', nombre:'Documentación', sub:'Documentación del proyecto, modelo de datos y parámetros.'}
+  {id:'inicio', nombre:'Qué hace esta herramienta', sub:'El problema, el flujo de trabajo de C y por dónde empezar.'},
+  {id:'resumen', nombre:'Resumen', sub:'Indicadores clave y ficha de la alternativa seleccionada.'},
+  {id:'matriz', nombre:'Matriz de selección', sub:'Puntajes del informe; pesos configurables en vivo.'},
+  {id:'sim', nombre:'Simulación', sub:'Lógica del modelo a 24 meses con supuestos editables.'},
+  {id:'prod', nombre:'Productos y clientes', sub:'Paso 1 · Clasificación de la cartera ficticia según cada alternativa.'},
+  {id:'pedido', nombre:'Evaluador de pedidos', sub:'Paso 2 · La herramienta de C aplicada a un pedido concreto de un cliente ficticio.'},
+  {id:'bit', nombre:'Bitácora', sub:'Paso 3 · Registro de decisiones de C.'},
+  {id:'res', nombre:'Recursos y riesgos', sub:'Horas-persona y riesgos según el informe.'},
+  {id:'datos', nombre:'Datos', sub:'Tablas ficticias editables; todo se recalcula al instante.'},
+  {id:'doc', nombre:'Documentación', sub:'Documentación del proyecto, modelo de datos y parámetros.'}
 ];
+const SIN_SEGMENTACION = ['inicio','pedido','datos','doc'];
 
 /* ================= UTILIDADES ================= */
 const $ = id => document.getElementById(id);
@@ -854,7 +1017,7 @@ function horasC(){
 
 /* ================= NAVEGACIÓN ================= */
 function buildPages(){
-  $('pageList').innerHTML = PAGES.map(p=>`<li><button type="button" data-page="${p.id}"><span class="ic" aria-hidden="true">${p.ic}</span>${p.nombre}</button></li>`).join('');
+  $('pageList').innerHTML = PAGES.map((p,i)=>`<li><button type="button" data-page="${p.id}"><span class="pn">${i+1}</span>${p.nombre}</button></li>`).join('');
   $('pageList').addEventListener('click', ev=>{ const b = ev.target.closest('button[data-page]'); if(b) goPage(b.dataset.page); });
   document.addEventListener('click', ev=>{
     const g = ev.target.closest('[data-goto]'); if(g){ goPage(g.dataset.goto); if(window.innerWidth<=1100) setPane(false); }
@@ -871,8 +1034,9 @@ function renderPages(){
   const P = PAGES.find(p=>p.id===state.page);
   document.querySelectorAll('#pageList button').forEach(b=> b.dataset.page===state.page ? b.setAttribute('aria-current','page') : b.removeAttribute('aria-current'));
   PAGES.forEach(p=> $('page-'+p.id).hidden = p.id!==state.page);
-  $('pageTitle').textContent = P.nombre;
+  $('pageTitle').textContent = `${PAGES.indexOf(P)+1} · ${P.nombre}`;
   $('pageSub').textContent = P.sub;
+  $('slicer').hidden = SIN_SEGMENTACION.includes(state.page);
   $('pageTitle').setAttribute('tabindex','-1');
 }
 
@@ -932,7 +1096,8 @@ function buildPane(){
     CRITERIOS.forEach(c=>state.pesos[c.id]=c.peso);
     state.sup = clone(SUP_DEF); state.extra = clone(EXTRA_DEF);
     state.productos = clone(PRODUCTOS); state.clientes = clone(CLIENTES);
-    buildDatos(); renderAll();
+    state.pedido = pedidoDesde(ESCENARIOS[0]); state.bitExtra = [];
+    buildDatos(); buildPedido(); renderAll();
   });
 }
 const MODO_TXT = {unica:'Acción única en el mes de inicio y luego reversión.', continua:'Acción continua de bajo efecto desde el mes de inicio.', sesiones:'Acción en cada sesión bimestral realizada; si una sesión se pospone, el efecto revierte.'};
@@ -1226,6 +1391,247 @@ function renderProdText(cl){
   $('cliNote').innerHTML = `Aporte por hora = kg/mes × margen/kg ÷ horas de línea. Línea punteada: mediana (₡${nf(cl.medCli)}). ⚓ = cliente ancla. ⚠ = en alerta según ${badge(L)}.`;
 }
 
+/* ================= PÁGINA: EVALUADOR DE PEDIDOS ================= */
+const listPrice = id => (state.productos.find(p=>p.id===id) || {p:0}).p;
+const money = v => (Math.abs(v) >= 1e6 ? '₡' + nf(v/1e6, 2) + ' M' : '₡' + nf(v));
+function pedidoDesde(e){
+  return {esc:e.id, cliente:e.cliente, lineas:e.lineas.map(l=>({id:l.id, kg:l.kg, precio: l.precio ?? listPrice(l.id)})),
+          horas:e.horas, sust:false, maxSust:50, ancla:e.ancla, tend:e.tend, rec:e.rec};
+}
+function pedidoPersonalizado(){
+  return {esc:'custom', cliente:'Pedido personalizado', lineas:[{id:'P1', kg:500, precio:listPrice('P1')}],
+          horas:20, sust:false, maxSust:50, ancla:false, tend:false, rec:0};
+}
+const puntajeCliente = ped => Math.min(5, (ped.ancla?2:0) + (ped.tend?1:0) + (+ped.rec||0));
+
+function evaluarPedido(cl, ped){
+  const P = Object.fromEntries(cl.prods.map(p=>[p.id,p]));
+  const score = puntajeCliente(ped), estrategico = score >= UMBRAL_ESTR;
+  const agg = {};
+  ped.lineas.forEach(l=>{ if(!P[l.id] || !(l.kg>0)) return; const a = agg[l.id] || (agg[l.id] = {kg:0, ing:0}); a.kg += l.kg; a.ing += l.kg*l.precio; });
+  const linea = (id, kg, precio) => { const p = P[id], m = precio - p.cv;
+    return {id, p, kg, precio, margen:m, horas:kg/p.kgh, tp:m*p.kgh, contrib:m*kg, protegido: estrategico && p.ancla}; };
+  const lines = Object.keys(agg).map(id=>linea(id, agg[id].kg, agg[id].ing/agg[id].kg));
+  const tot = lines.reduce((s,l)=>({kg:s.kg+l.kg, horas:s.horas+l.horas, contrib:s.contrib+l.contrib}), {kg:0, horas:0, contrib:0});
+  tot.tp = tot.horas>0 ? tot.contrib/tot.horas : 0;
+
+  // 1) Sustitución dentro de la misma categoría
+  const mix = {};
+  lines.forEach(l=>{ mix[l.id] = {...l, kgPed:l.kg, out:0, inn:0, desde:[], hacia:[]}; });
+  if(ped.sust){
+    lines.forEach(l=>{
+      if(l.protegido) return;
+      const best = cl.prods.filter(q=>q.cat===l.p.cat && q.id!==l.id)
+        .map(q=>{ const pr = agg[q.id] ? agg[q.id].ing/agg[q.id].kg : q.p; return {q, pr, tp:(pr-q.cv)*q.kgh}; })
+        .sort((a,b)=>b.tp-a.tp)[0];
+      if(!best || best.tp <= l.tp) return;
+      const move = l.kg*ped.maxSust/100;
+      mix[l.id].out += move; mix[l.id].hacia.push(best.q.id);
+      if(!mix[best.q.id]) mix[best.q.id] = {...linea(best.q.id, 0, best.pr), kgPed:0, out:0, inn:0, desde:[], hacia:[]};
+      mix[best.q.id].inn += move; mix[best.q.id].desde.push(l.id);
+    });
+  }
+  // 2) Asignación de horas: protegidas primero, luego mayor throughput/h
+  const entries = Object.values(mix).map(e=>{ const kg = e.kgPed - e.out + e.inn; return {...e, kg, horas:kg/e.p.kgh}; })
+    .sort((a,b)=>(b.protegido - a.protegido) || (b.tp - a.tp));
+  let rest = Math.max(0, ped.horas);
+  entries.forEach(e=>{
+    const h = e.tp > 0 ? Math.min(e.horas, rest) : 0;
+    rest -= h; e.hRec = h; e.kgRec = h*e.p.kgh; e.kgDif = Math.max(0, e.kg - e.kgRec); e.contribRec = e.kgRec*e.margen;
+  });
+  const mixTot = entries.reduce((s,e)=>({kg:s.kg+e.kgRec, horas:s.horas+e.hRec, contrib:s.contrib+e.contribRec, dif:s.dif+e.kgDif, need:s.need+e.horas}), {kg:0, horas:0, contrib:0, dif:0, need:0});
+  mixTot.tp = mixTot.horas>0 ? mixTot.contrib/mixTot.horas : 0;
+  const tpAlto = tot.tp >= cl.medTP;
+  const cuadrante = tpAlto ? (estrategico ? 'Aceptar' : 'Aceptar si hay capacidad ociosa') : (estrategico ? 'Aceptar y proteger' : 'Renegociar o redirigir');
+  return {score, estrategico, lines, tot, entries, mixTot, cuadrante, tpAlto};
+}
+
+function accionMezcla(e){
+  const parts = [];
+  if(e.protegido) parts.push('<strong>Protegida</strong> (producto de cliente ancla)');
+  if(e.out > 0) parts.push(`Sustituir ${nf(e.out)} kg por ${e.hacia.join(', ')}`);
+  if(e.inn > 0) parts.push(`Recibe ${nf(e.inn)} kg en sustitución de ${e.desde.join(', ')}`);
+  if(e.tp <= 0) parts.push('No producir: margen negativo; renegociar precio');
+  else if(e.kgDif < 0.5) parts.push('Producir completo');
+  else if(e.kgRec >= 0.5) parts.push(`Producir ${nf(e.kgRec)} kg; diferir ${nf(e.kgDif)} kg`);
+  else parts.push('Diferir o redirigir');
+  return parts.join(' · ');
+}
+
+function buildEscenarios(){
+  $('scenBtns').innerHTML = ESCENARIOS.map(e=>`<button type="button" data-esc="${e.id}" aria-pressed="false"><strong>${esc(e.nombre)}</strong>${esc(e.desc)}</button>`).join('')
+    + `<button type="button" data-esc="custom" aria-pressed="false"><strong>Pedido personalizado</strong>Arme su propio pedido línea por línea.</button>`;
+  $('scenBtns').addEventListener('click', ev=>{
+    const b = ev.target.closest('button[data-esc]'); if(!b) return;
+    state.pedido = b.dataset.esc==='custom' ? pedidoPersonalizado() : pedidoDesde(ESCENARIOS.find(e=>e.id===b.dataset.esc));
+    $('pedRegMsg').textContent = '';
+    buildPedido(); renderAll();
+  });
+  $('pedTable').addEventListener('input', ev=>{
+    const el = ev.target, f = el.dataset.pf; if(f!=='kg' && f!=='precio') return;
+    const v = parseFloat(el.value), ok = Number.isFinite(v) && v >= 0;
+    el.setAttribute('aria-invalid', ok ? 'false' : 'true'); if(!ok) return;
+    state.pedido.lineas[+el.dataset.pi][f] = v; renderAll();
+  });
+  $('pedTable').addEventListener('change', ev=>{
+    const el = ev.target; if(el.dataset.pf!=='id') return;
+    const l = state.pedido.lineas[+el.dataset.pi]; l.id = el.value; l.precio = listPrice(el.value);
+    buildPedido(); renderAll();
+  });
+  $('pedTable').addEventListener('click', ev=>{
+    const b = ev.target.closest('[data-pdel]'); if(!b || state.pedido.lineas.length<=1) return;
+    state.pedido.lineas.splice(+b.dataset.pdel, 1); buildPedido(); renderAll();
+  });
+  $('pedAdd').addEventListener('click', ()=>{
+    const usados = state.pedido.lineas.map(l=>l.id), libre = state.productos.find(p=>!usados.includes(p.id)) || state.productos[0];
+    state.pedido.lineas.push({id:libre.id, kg:100, precio:libre.p}); buildPedido(); renderAll();
+  });
+  const bindPed = (id, key, prop, num) => $(id).addEventListener(prop==='checked'?'change':'input', ev=>{ state.pedido[key] = prop==='checked' ? ev.target.checked : (num ? +ev.target.value : ev.target.value); renderAll(); });
+  bindPed('pedHoras','horas','value',true); bindPed('pedMax','maxSust','value',true);
+  bindPed('pedSust','sust','checked'); bindPed('pedAncla','ancla','checked'); bindPed('pedTend','tend','checked');
+  $('pedRec').addEventListener('change', ev=>{ state.pedido.rec = +ev.target.value; renderAll(); });
+  $('pedReg').addEventListener('click', ()=>{
+    const cl = clasificar(), ev = evaluarPedido(cl, state.pedido), ped = state.pedido;
+    const prod = ev.mixTot.dif >= 0.5 ? `producir ${nf(ev.mixTot.kg)} kg y diferir ${nf(ev.mixTot.dif)} kg` : 'producir completo';
+    state.bitExtra.unshift({n: ped.cliente, cat:`Pedido · ${ev.cuadrante}`, dec:`${ev.cuadrante}: ${prod}`,
+      just:`Throughput/h del pedido ₡${nf(ev.tot.tp)} frente a la mediana ₡${nf(cl.medTP)}; valor estratégico ${ev.score}/5; ${nf(ev.tot.horas,1)} h pedidas de ${nf(ped.horas)} disponibles.`,
+      resp:'Comercial (rol ficticio)', seg:1, extra:true});
+    $('pedRegMsg').innerHTML = `✓ Registrado. <button type="button" class="btn" data-goto="bit">Ver la bitácora</button>`;
+    renderAll();
+  });
+}
+
+function buildPedido(){
+  const ped = state.pedido;
+  const opts = sel => state.productos.map(p=>`<option value="${p.id}"${p.id===sel?' selected':''}>${p.id} · ${esc(p.corto)}</option>`).join('');
+  $('pedTable').innerHTML = `<thead><tr><th scope="col">Producto</th><th scope="col">kg</th><th scope="col">Precio ₡/kg</th><th scope="col" class="num">Margen ₡/kg</th><th scope="col" class="num">Horas</th><th scope="col" class="num">Throughput ₡/h</th><th scope="col" class="num">Contribución</th><th scope="col" class="num">Precio para la mediana</th><th scope="col"><span class="sr-only">Quitar línea</span></th></tr></thead><tbody>`
+    + ped.lineas.map((l,i)=>`<tr><td><select data-pi="${i}" data-pf="id" aria-label="Producto de la línea ${i+1}">${opts(l.id)}</select></td>
+      <td><input type="number" data-pi="${i}" data-pf="kg" min="0" step="50" value="${l.kg}" aria-label="kg de la línea ${i+1}"></td>
+      <td><input type="number" data-pi="${i}" data-pf="precio" min="0" step="10" value="${l.precio}" aria-label="Precio negociado de la línea ${i+1}"></td>
+      <td class="calc" id="pl-m-${i}"></td><td class="calc" id="pl-h-${i}"></td><td class="calc" id="pl-tp-${i}"></td><td class="calc" id="pl-c-${i}"></td><td class="calc" id="pl-o-${i}"></td>
+      <td><button type="button" class="icon-btn" data-pdel="${i}" aria-label="Quitar la línea ${i+1}"${ped.lineas.length<=1?' disabled':''}>✕</button></td></tr>`).join('')
+    + `</tbody><tfoot><tr><th scope="row">Total del pedido</th><td class="num" id="pt-kg"></td><td></td><td></td><td class="num" id="pt-h"></td><td class="num" id="pt-tp"></td><td class="num" id="pt-c"></td><td colspan="2"></td></tr></tfoot>`;
+  $('pedTitle').textContent = '② Revise el pedido · ' + ped.cliente;
+  $('pedHoras').value = ped.horas; $('pedMax').value = ped.maxSust; $('pedSust').checked = ped.sust;
+  $('pedAncla').checked = ped.ancla; $('pedTend').checked = ped.tend; $('pedRec').value = ped.rec;
+  document.querySelectorAll('#scenBtns button').forEach(b=>b.setAttribute('aria-pressed', b.dataset.esc===ped.esc ? 'true':'false'));
+}
+
+function renderPedido(cl){
+  const ped = state.pedido, ev = evaluarPedido(cl, ped);
+  const P = Object.fromEntries(cl.prods.map(p=>[p.id,p]));
+  ped.lineas.forEach((l,i)=>{
+    const p = P[l.id]; if(!p || !$('pl-m-'+i)) return;
+    const m = l.precio - p.cv, tp = m*p.kgh, bajo = tp < cl.medTP;
+    $('pl-m-'+i).textContent = nf(m);
+    $('pl-h-'+i).textContent = nf(l.kg/p.kgh, 1);
+    $('pl-tp-'+i).textContent = nf(tp) + (bajo ? ' ↓' : '');
+    $('pl-c-'+i).textContent = money(m*l.kg);
+    $('pl-o-'+i).textContent = bajo ? '₡' + nf(Math.ceil((p.cv + cl.medTP/p.kgh)/10)*10) : '—';
+  });
+  $('pt-kg').textContent = nf(ev.tot.kg); $('pt-h').textContent = nf(ev.tot.horas,1);
+  $('pt-tp').textContent = nf(ev.tot.tp); $('pt-c').textContent = money(ev.tot.contrib);
+  $('pedHoras-o').textContent = nf(ped.horas) + ' h'; $('pedMax-o').textContent = pct(ped.maxSust);
+  $('pedMax').disabled = !ped.sust;
+  $('pedScore').textContent = ev.score;
+  $('pedScoreTxt').textContent = ev.estrategico ? 'cliente estratégico' : 'cliente no estratégico';
+
+  const dTP = cl.medTP>0 ? (ev.tot.tp/cl.medTP - 1)*100 : 0;
+  const dMix = ev.tot.tp>0 ? (ev.mixTot.tp/ev.tot.tp - 1)*100 : 0;
+  $('pedKpis').innerHTML = `<div class="kpis">
+    <div class="card-kpi"><div class="val">₡${nf(ev.tot.tp/1000,1)} mil</div><div class="lbl">Throughput/h del pedido</div><div class="sub">${dTP>=0?'+':''}${pct(dTP,0)} frente a la mediana (₡${nf(cl.medTP/1000,1)} mil)</div></div>
+    <div class="card-kpi"><div class="val">${money(ev.tot.contrib)}</div><div class="lbl">Contribución del pedido completo</div><div class="sub">${nf(ev.tot.kg)} kg · simulado</div></div>
+    <div class="card-kpi"><div class="val">${nf(ev.tot.horas,1)} h</div><div class="lbl">Horas de línea pedidas</div><div class="sub">de ${nf(ped.horas)} h disponibles${ev.tot.horas>ped.horas?' · no cabe completo':''}</div></div>
+    <div class="card-kpi"><div class="val">${ev.score}/5</div><div class="lbl">Valor estratégico del cliente</div><div class="sub">${ev.estrategico?'Estratégico':'No estratégico'}</div></div>
+    <div class="card-kpi"><div class="val">₡${nf(ev.mixTot.tp/1000,1)} mil</div><div class="lbl">Throughput/h de la mezcla recomendada</div><div class="sub">${dMix>=0?'+':''}${pct(dMix,1)} frente al pedido</div></div>
+    <div class="card-kpi"><div class="val">${money(ev.mixTot.contrib)}</div><div class="lbl">Contribución de la mezcla</div><div class="sub">${nf(ev.mixTot.horas,1)} h usadas · ${nf(ev.mixTot.dif)} kg diferidos</div></div>
+  </div>`;
+
+  const cap = ev.mixTot.need <= ped.horas + 1e-9
+    ? `Caben las ${nf(ev.mixTot.need,1)} h que requiere la mezcla en las ${nf(ped.horas)} h disponibles; quedan ${nf(ped.horas - ev.mixTot.horas,1)} h libres.`
+    : `La mezcla requiere ${nf(ev.mixTot.need,1)} h y hay ${nf(ped.horas)} h: se recomienda producir ${nf(ev.mixTot.kg)} kg y diferir ${nf(ev.mixTot.dif)} kg${ev.entries.some(e=>e.protegido)?', protegiendo primero los productos del cliente ancla':''} y priorizando el mayor throughput por hora.`;
+  const bajas = ev.lines.filter(l=>l.tp < cl.medTP && l.tp > -Infinity).sort((a,b)=>a.tp-b.tp).slice(0,2);
+  const precios = bajas.map(l=>`${esc(l.p.corto)}: de ₡${nf(l.precio)} a ₡${nf(Math.ceil((l.p.cv + cl.medTP/l.p.kgh)/10)*10)} por kg`).join('; ');
+  const sust = ped.sust && ev.entries.some(e=>e.out>0) ? `<p class="tiny">Sustitutos aplicados: ${ev.entries.filter(e=>e.out>0).map(e=>`${esc(e.p.corto)} → ${e.hacia.map(id=>esc(cl.prods.find(p=>p.id===id).corto)).join(', ')}`).join('; ')}.</p>`
+    : ped.sust ? `<p class="tiny">No hay un sustituto de la misma categoría con más throughput por hora${ev.entries.some(e=>e.protegido)?' (las líneas protegidas no se sustituyen)':''}.</p>` : '';
+  $('pedVerdict').innerHTML = `<div class="verdict"><span class="q">${ev.cuadrante}</span>${esc(CUADRANTE_TXT[ev.cuadrante])}</div>
+    <p class="tiny">${cap}</p>${sust}
+    ${bajas.length ? `<p class="tiny">Precio para llegar a la mediana: ${precios}.</p>` : ''}`;
+
+  const filas = ev.entries.map(e=>`<tr><th scope="row">${e.id} · ${esc(e.p.corto)}</th>
+    <td class="num">${nf(e.kgPed)}</td><td class="num">${e.inn>0?'+'+nf(e.inn):e.out>0?'−'+nf(e.out):'—'}</td>
+    <td class="num"><strong>${nf(e.kgRec)}</strong></td><td class="num">${nf(e.kgDif)}</td><td class="num">${nf(e.hRec,1)}</td>
+    <td class="num">${nf(e.tp)}${e.tp<cl.medTP?' ↓':''}</td><td>${accionMezcla(e)}</td></tr>`).join('');
+  $('mixTable').innerHTML = `<caption>Pedido de ${esc(ped.cliente)} con ${nf(ped.horas)} h de línea disponibles.</caption>
+    <thead><tr><th scope="col">Producto</th><th scope="col" class="num">kg pedidos</th><th scope="col" class="num">Sustitución</th><th scope="col" class="num">kg a producir</th><th scope="col" class="num">kg a diferir</th><th scope="col" class="num">Horas</th><th scope="col" class="num">Throughput ₡/h</th><th scope="col">Acción</th></tr></thead>
+    <tbody>${filas}</tbody>
+    <tfoot><tr><th scope="row">Total</th><td class="num">${nf(ev.tot.kg)}</td><td></td><td class="num"><strong>${nf(ev.mixTot.kg)}</strong></td><td class="num">${nf(ev.mixTot.dif)}</td><td class="num">${nf(ev.mixTot.horas,1)}</td><td class="num">${nf(ev.mixTot.tp)}</td><td></td></tr></tfoot>`;
+  return ev;
+}
+
+let pedChart = null;
+const pedQuad = {
+  id:'pedQuad',
+  beforeDatasetsDraw(chart, _a, o){
+    if(!o.cl) return;
+    const {ctx, chartArea:{left,right,top,bottom}, scales:{x,y}} = chart;
+    const mx = x.getPixelForValue(UMBRAL_ESTR - 0.5), my = y.getPixelForValue(o.cl.medTP);
+    ctx.save();
+    ctx.fillStyle = col('--quad-a'); ctx.fillRect(mx, top, right-mx, my-top); ctx.fillRect(left, my, mx-left, bottom-my);
+    ctx.fillStyle = col('--quad-b'); ctx.fillRect(left, top, mx-left, my-top); ctx.fillRect(mx, my, right-mx, bottom-my);
+    ctx.strokeStyle = col('--text-3'); ctx.lineWidth = 1; ctx.setLineDash([4,4]);
+    ctx.beginPath(); ctx.moveTo(left,my); ctx.lineTo(right,my); ctx.moveTo(mx,top); ctx.lineTo(mx,bottom); ctx.stroke();
+    ctx.setLineDash([]); ctx.fillStyle = col('--text-2'); ctx.font = '600 10px "Segoe UI", system-ui, sans-serif';
+    const txt = (lines, xx, yy, align, down) => { ctx.textAlign = align; lines.forEach((t,i)=>ctx.fillText(t, xx, down ? yy + i*12 : yy - (lines.length-1-i)*12)); };
+    txt(['ACEPTAR'], right-6, top+13, 'right', true);
+    txt(['ACEPTAR SI HAY','CAPACIDAD OCIOSA'], left+6, top+13, 'left', true);
+    txt(['ACEPTAR Y','PROTEGER'], right-6, bottom-6, 'right', false);
+    txt(['RENEGOCIAR','O REDIRIGIR'], left+6, bottom-6, 'left', false);
+    ctx.restore();
+  },
+  afterDatasetsDraw(chart, _a, o){
+    if(!o.cl) return;
+    const ctx = chart.ctx;
+    ctx.save(); ctx.font = '11px "Segoe UI", system-ui, sans-serif'; ctx.fillStyle = col('--text-2'); ctx.textAlign = 'left';
+    const m0 = chart.getDatasetMeta(0);
+    (o.ref||[]).forEach((r,i)=>{ const el = m0.data[i]; if(!el) return;
+      const left = el.x + 8 + ctx.measureText(r.corto).width > chart.chartArea.right;
+      ctx.textAlign = left ? 'right' : 'left'; ctx.fillText(r.corto, el.x + (left ? -8 : 8), el.y + 4); });
+    const a = chart.getDatasetMeta(1).data[0], b = chart.getDatasetMeta(2).data[0];
+    const dx = b ? b.x - a.x : 0, dy = b ? b.y - a.y : 0, d = Math.hypot(dx, dy);
+    if(a && b && d > 26){
+      const ux = dx/d, uy = dy/d, x1 = a.x + ux*11, y1 = a.y + uy*11, x2 = b.x - ux*13, y2 = b.y - uy*13;
+      ctx.strokeStyle = col('--accent'); ctx.fillStyle = col('--accent'); ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(x2 + ux*3, y2 + uy*3); ctx.lineTo(x2 - ux*5 - uy*4, y2 - uy*5 + ux*4); ctx.lineTo(x2 - ux*5 + uy*4, y2 - uy*5 - ux*4); ctx.closePath(); ctx.fill();
+    }
+    ctx.restore();
+  }
+};
+function renderPedChart(cl, ev){
+  const ref = ESCENARIOS.filter(e=>e.id!==state.pedido.esc).map(e=>{ const r = evaluarPedido(cl, pedidoDesde(e)); return {x:r.score, y:r.tot.tp, corto:e.corto}; });
+  const accent = col('--alt-c'), surf = col('--surface'), text2 = col('--text-2'), grid = col('--grid');
+  const maxY = Math.max(cl.medTP*1.6, ev.tot.tp, ev.mixTot.tp, ...ref.map(r=>r.y));
+  if(pedChart) pedChart.destroy();
+  pedChart = new Chart($('pedChart'), {
+    type:'scatter',
+    data:{datasets:[
+      {label:'Otros escenarios', data:ref, pointStyle:'circle', backgroundColor: withAlpha(col('--text-3'),.5), borderColor: surf, borderWidth:1.5, pointRadius:6, pointHoverRadius:8},
+      {label:'Pedido evaluado', data:[{x:ev.score, y:ev.tot.tp}], pointStyle:'circle', backgroundColor:accent, borderColor:surf, borderWidth:2, pointRadius:9, pointHoverRadius:11},
+      {label:'Mezcla recomendada', data:[{x: ev.score + (ev.score >= 5 ? -0.22 : 0.22), y:ev.mixTot.tp}], pointStyle:'rectRot', backgroundColor:surf, borderColor:accent, borderWidth:3, pointRadius:9, pointHoverRadius:11}
+    ]},
+    options:{ responsive:true, maintainAspectRatio:false, animation:false,
+      plugins:{ legend:{position:'bottom', labels:{usePointStyle:true, color:text2, boxWidth:10, padding:12, font:{size:11}}},
+        pedQuad:{cl, ref},
+        tooltip:{callbacks:{ label: it=>` ${it.dataset.label}${it.datasetIndex===0?' · '+ref[it.dataIndex].corto:''}: ₡${nf(it.parsed.y)}/h · valor ${it.datasetIndex===0 ? it.parsed.x : ev.score}/5` }} },
+      scales:{
+        x:{min:0, max:5, title:{display:true, text:'Valor estratégico del cliente (0 a 5)', color:text2}, grid:{color:grid}, ticks:{color:text2, stepSize:1}},
+        y:{min:0, max:Math.ceil(maxY*1.08/20000)*20000, title:{display:true, text:'Throughput por hora (₡/h, simulado)', color:text2}, grid:{color:grid}, ticks:{color:text2, callback:v=>nf(v/1000)+' mil'}}
+      } },
+    plugins:[pedQuad]
+  });
+}
+
 /* ================= PÁGINA: BITÁCORA ================= */
 const ORDEN_CAT = {Descontinuar:0, Ajustar:1, Revisar:2};
 function renderBitacora(cl){
@@ -1242,9 +1648,10 @@ function renderBitacora(cl){
   });
   const cli = cl.clis.filter(c=>!c.ancla).sort((a,b)=>a.aporte-b.aporte)[0];
   if(cli) rows.push({n:cli.nombre, cat: cli.alerta ? 'Cliente de bajo aporte' : 'Cliente (sin alerta)', dec:'Revisar frecuencia de entrega y pedido mínimo', just:`Aporte/h ₡${nf(cli.aporte)} frente a la mediana de clientes (₡${nf(cl.medCli)}). El instrumento de C evalúa también clientes.`, resp:'Comercial (rol ficticio)', seg:1});
-  $('bitTable').innerHTML = `<caption>Registro de la primera sesión del comité (mes ${t0}). Filas generadas a partir de los datos ficticios: cambian si edita la página Datos.</caption>
+  const todas = [...state.bitExtra, ...rows];
+  $('bitTable').innerHTML = `<caption>Registro de la primera sesión del comité (mes ${t0}). Filas generadas a partir de los datos ficticios: cambian si edita la página Datos.${state.bitExtra.length?` Incluye ${state.bitExtra.length} decisión(es) registrada(s) desde el Evaluador de pedidos (★).`:''}</caption>
     <thead><tr><th scope="col">Producto o cliente</th><th scope="col">Categoría</th><th scope="col">Decisión</th><th scope="col">Justificación</th><th scope="col">Responsable</th><th scope="col">Fecha de seguimiento</th></tr></thead>
-    <tbody>${rows.map(r=>`<tr><td>${esc(r.n)}</td><td>${esc(r.cat)}</td><td>${esc(r.dec)}</td><td>${esc(r.just)}</td><td>${esc(r.resp)}</td><td>${esc(fecha(r.seg))}</td></tr>`).join('')}</tbody>`;
+    <tbody>${todas.map(r=>`<tr${r.extra?' class="colC"':''}><td>${r.extra?'★ ':''}${esc(r.n)}</td><td>${esc(r.cat)}</td><td>${esc(r.dec)}</td><td>${esc(r.just)}</td><td>${esc(r.resp)}</td><td>${esc(fecha(r.seg))}</td></tr>`).join('')}</tbody>`;
   const k = state.sel, isC = k==='C' || k==='todas';
   $('bitTable').classList.toggle('dim', !isC);
   $('bitNote').innerHTML = isC
@@ -1379,25 +1786,31 @@ function renderAll(){
   renderIndicadores(sim);
   renderFormula(cl);
   renderProdText(cl);
+  const ev = renderPedido(cl);
   renderBitacora(cl);
   renderRecursos();
   renderDatos(cl);
   renderDoc(sc);
+  $('rankInicio').innerHTML = rankHTML(rk);
   if(window.Chart){
     if(state.page==='sim') renderSim(sim); else if(simChart){ simChart.destroy(); simChart=null; }
     if(state.page==='prod') renderMap(cl); else if(mapChart){ mapChart.destroy(); mapChart=null; }
+    if(state.page==='pedido') renderPedChart(cl, ev); else if(pedChart){ pedChart.destroy(); pedChart=null; }
   } else {
     $('simNote').textContent = 'No se pudo cargar Chart.js (se requiere conexión a internet para los gráficos).';
   }
 }
 
 if(window.Chart) Chart.defaults.font.family = '"Segoe UI", system-ui, -apple-system, Roboto, sans-serif';
+state.pedido = pedidoDesde(ESCENARIOS[0]);
 buildPages();
 buildPane();
 buildDatos();
+buildEscenarios();
+buildPedido();
 setPane(state.paneOpen);
 renderAll();
-window.__terranea = {state, puntajes, verificarInforme, clasificar, simular, goPage};
+window.__terranea = {state, puntajes, verificarInforme, clasificar, simular, goPage, evaluarPedido, pedidoDesde, ESCENARIOS};
 })();
 </script>
 </body>
