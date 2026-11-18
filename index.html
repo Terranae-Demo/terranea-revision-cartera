@@ -5,124 +5,151 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Revisión de cartera · Terránea</title>
 <meta name="description" content="Informe interactivo de cuatro alternativas para la gestión de la cartera de productos y clientes de Terránea S.A. (DN-0111, UCR). Datos ficticios y parámetros configurables en vivo.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
+/* Tipografía y paleta del Tablero Terranea: HWT Artz (títulos, cifras, menú y botones), IBM Plex Sans (texto), IBM Plex Mono (etiquetas) · blanco con acento dorado */
+@font-face{font-family:"HWT Artz";src:url("fonts/HWT-Artz.ttf") format("truetype");font-weight:100 900;font-style:normal;font-display:swap}
 :root{
   color-scheme: light;
-  --bg:#ebebea; --surface:#ffffff; --surface-2:#f3f2f1; --surface-3:#e6e4de;
-  --border:#d6d4ce; --grid:#e8e6e1;
-  --text:#0b0b0b; --text-2:#4f4e4b; --text-3:#605f5b;
-  --bar-bg:#252423; --bar-ink:#ffffff; --bar-ink-2:#d4d2cc;
-  --nav-bg:#f3f2f1; --nav-active:#ffffff;
-  --accent:#2a78d6; --accent-ink:#1c5cab; --accent-soft:#e3eefc;
-  --tab-sel-bg:#1c5cab; --tab-sel-ink:#ffffff;
+  --display:"HWT Artz","Archivo",system-ui,sans-serif; --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif; --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Consolas,monospace;
+  --bg:#FFFFFF; --surface:#FFFFFF; --surface-2:#F7F7F5; --surface-3:#EFECE3;
+  --border:#E7E3D6; --line:#E7E3D6; --grid:#EEEBE2;
+  --text:#1A1A1A; --text-2:#4A4A4A; --text-3:#707070;
+  --gold:#C9A227; --gold-ink:#9A7A0C; --gold-soft:#F7EFCF; --gold-line:#C9A227; --brown:#8B5E34;
+  --nav-bg:#FFFFFF; --nav-active:#F7EFCF;
+  --accent:#C9A227; --accent-ink:#9A7A0C; --accent-soft:#F7EFCF;
+  --tab-sel-bg:#C9A227; --tab-sel-ink:#16130F;
   --alt-a:#eb6834; --alt-b:#1baf7a; --alt-c:#2a78d6; --alt-d:#7a7974;
-  --band-bg:#fff1c2; --band-text:#4d3800; --band-border:#d9ab2e;
-  --warn-bg:#fdecea; --warn-text:#8a1f1f; --warn-border:#e8a5a5;
-  --ok-text:#006300;
-  --heat-0:#f0efec; --heat-1:#cde2fb; --heat-2:#86b6ef; --heat-3:#256abf;
-  --heat-ink-0:#52514e; --heat-ink-1:#0b0b0b; --heat-ink-2:#0b0b0b; --heat-ink-3:#ffffff;
-  --seg-1:#1c5cab; --seg-2:#5598e7; --seg-3:#b7d3f6; --seg-ink-1:#ffffff; --seg-ink-2:#0b0b0b; --seg-ink-3:#0b0b0b;
-  --quad-a:#f3f2f1; --quad-b:#fafaf9;
-  --focus:#1c5cab;
+  --band-bg:#FDF1D3; --band-text:#5c4300; --band-border:#fab219;
+  --warn-bg:#FAE1E0; --warn-text:#b42d2d; --warn-border:#e8a5a5;
+  --ok-text:#0b7a0b;
+  --q-man:#0ca30c; --q-man-bg:#E5F4E3; --q-man-ink:#0b7a0b;
+  --q-rev:#2a78d6; --q-rev-bg:#E4EEFB; --q-rev-ink:#1d5aa8;
+  --q-aju:#fab219; --q-aju-bg:#FDF1D3; --q-aju-ink:#8a5f00;
+  --q-des:#d03b3b; --q-des-bg:#FAE1E0; --q-des-ink:#b42d2d;
+  --heat-0:#F7F7F5; --heat-1:#F7EFCF; --heat-2:#F6D3C2; --heat-3:#E9897A;
+  --heat-ink-0:#4A4A4A; --heat-ink-1:#1A1A1A; --heat-ink-2:#1A1A1A; --heat-ink-3:#1A1A1A;
+  --seg-1:#8B5E34; --seg-2:#C9A227; --seg-3:#F7EFCF; --seg-ink-1:#ffffff; --seg-ink-2:#16130F; --seg-ink-3:#16130F;
+  --quad-a:#FBF7EA; --quad-b:#FFFFFF;
+  --focus:#9A7A0C;
   --scrim:rgba(0,0,0,.35);
+  --shadow:0 1px 2px rgba(60,48,10,.06),0 2px 8px rgba(60,48,10,.05);
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     color-scheme: dark;
-    --bg:#111110; --surface:#1c1c1b; --surface-2:#262624; --surface-3:#2e2e2b;
-    --border:#3a3a37; --grid:#2e2e2b;
-    --text:#f0efec; --text-2:#c3c2b7; --text-3:#a9a89f;
-    --bar-bg:#000000; --bar-ink:#f0efec; --bar-ink-2:#c3c2b7;
-    --nav-bg:#181817; --nav-active:#262624;
-    --accent:#3987e5; --accent-ink:#86b6ef; --accent-soft:#1b2c44;
-    --tab-sel-bg:#86b6ef; --tab-sel-ink:#0b0b0b;
-    --alt-a:#d95926; --alt-b:#199e70; --alt-c:#3987e5; --alt-d:#8f8e88;
-    --band-bg:#3a2f0a; --band-text:#ffe08a; --band-border:#8a6d1a;
-    --warn-bg:#3d1b1b; --warn-text:#ffb4b4; --warn-border:#7a3434;
-    --ok-text:#6fdc6f;
-    --heat-0:#262624; --heat-1:#1c3556; --heat-2:#256abf; --heat-3:#86b6ef;
-    --heat-ink-0:#c3c2b7; --heat-ink-1:#f0efec; --heat-ink-2:#ffffff; --heat-ink-3:#0b0b0b;
-    --seg-1:#86b6ef; --seg-2:#3987e5; --seg-3:#1c3556; --seg-ink-1:#0b0b0b; --seg-ink-2:#0b0b0b; --seg-ink-3:#f0efec;
-    --quad-a:#262624; --quad-b:#202020;
-    --focus:#86b6ef;
+    --bg:#141311; --surface:#1C1B18; --surface-2:#24221E; --surface-3:#2E2B25;
+    --border:#3A362C; --line:#3A362C; --grid:#2E2B25;
+    --text:#F2EFE7; --text-2:#C9C4B6; --text-3:#A39E90;
+    --gold:#D4B03A; --gold-ink:#E2C45E; --gold-soft:#3A3115; --gold-line:#8C7524; --brown:#D3A374;
+    --nav-bg:#1C1B18; --nav-active:#3A3115;
+    --accent:#D4B03A; --accent-ink:#E2C45E; --accent-soft:#3A3115;
+    --tab-sel-bg:#D4B03A; --tab-sel-ink:#16130F;
+    --alt-a:#f07a49; --alt-b:#2cc48e; --alt-c:#4f97ec; --alt-d:#a3a29c;
+    --band-bg:#3A2F0A; --band-text:#FFE08A; --band-border:#8A6D1A;
+    --warn-bg:#3D1B1B; --warn-text:#FFB4B4; --warn-border:#7A3434;
+    --ok-text:#6FDC6F;
+    --q-man:#3fc43f; --q-man-bg:#16301A; --q-man-ink:#8BE58B;
+    --q-rev:#4f97ec; --q-rev-bg:#172A44; --q-rev-ink:#9CC4F5;
+    --q-aju:#f5c04a; --q-aju-bg:#3A2F0A; --q-aju-ink:#FFD877;
+    --q-des:#ec6060; --q-des-bg:#3D1B1B; --q-des-ink:#FFB4B4;
+    --heat-0:#24221E; --heat-1:#3A3115; --heat-2:#9a4a2a; --heat-3:#c43a3a;
+    --heat-ink-0:#C9C4B6; --heat-ink-1:#F2EFE7; --heat-ink-2:#ffffff; --heat-ink-3:#ffffff;
+    --seg-1:#D3A374; --seg-2:#D4B03A; --seg-3:#3A3115; --seg-ink-1:#16130F; --seg-ink-2:#16130F; --seg-ink-3:#F2EFE7;
+    --quad-a:#221F18; --quad-b:#1C1B18;
+    --focus:#E2C45E;
     --scrim:rgba(0,0,0,.6);
+    --shadow:none;
   }
 }
 :root[data-theme="dark"]{
   color-scheme: dark;
-  --bg:#111110; --surface:#1c1c1b; --surface-2:#262624; --surface-3:#2e2e2b;
-  --border:#3a3a37; --grid:#2e2e2b;
-  --text:#f0efec; --text-2:#c3c2b7; --text-3:#a9a89f;
-  --bar-bg:#000000; --bar-ink:#f0efec; --bar-ink-2:#c3c2b7;
-  --nav-bg:#181817; --nav-active:#262624;
-  --accent:#3987e5; --accent-ink:#86b6ef; --accent-soft:#1b2c44;
-  --tab-sel-bg:#86b6ef; --tab-sel-ink:#0b0b0b;
-  --alt-a:#d95926; --alt-b:#199e70; --alt-c:#3987e5; --alt-d:#8f8e88;
-  --band-bg:#3a2f0a; --band-text:#ffe08a; --band-border:#8a6d1a;
-  --warn-bg:#3d1b1b; --warn-text:#ffb4b4; --warn-border:#7a3434;
-  --ok-text:#6fdc6f;
-  --heat-0:#262624; --heat-1:#1c3556; --heat-2:#256abf; --heat-3:#86b6ef;
-  --heat-ink-0:#c3c2b7; --heat-ink-1:#f0efec; --heat-ink-2:#ffffff; --heat-ink-3:#0b0b0b;
-  --seg-1:#86b6ef; --seg-2:#3987e5; --seg-3:#1c3556; --seg-ink-1:#0b0b0b; --seg-ink-2:#0b0b0b; --seg-ink-3:#f0efec;
-  --quad-a:#262624; --quad-b:#202020;
-  --focus:#86b6ef;
+  --bg:#141311; --surface:#1C1B18; --surface-2:#24221E; --surface-3:#2E2B25;
+  --border:#3A362C; --line:#3A362C; --grid:#2E2B25;
+  --text:#F2EFE7; --text-2:#C9C4B6; --text-3:#A39E90;
+  --gold:#D4B03A; --gold-ink:#E2C45E; --gold-soft:#3A3115; --gold-line:#8C7524; --brown:#D3A374;
+  --nav-bg:#1C1B18; --nav-active:#3A3115;
+  --accent:#D4B03A; --accent-ink:#E2C45E; --accent-soft:#3A3115;
+  --tab-sel-bg:#D4B03A; --tab-sel-ink:#16130F;
+  --alt-a:#f07a49; --alt-b:#2cc48e; --alt-c:#4f97ec; --alt-d:#a3a29c;
+  --band-bg:#3A2F0A; --band-text:#FFE08A; --band-border:#8A6D1A;
+  --warn-bg:#3D1B1B; --warn-text:#FFB4B4; --warn-border:#7A3434;
+  --ok-text:#6FDC6F;
+  --q-man:#3fc43f; --q-man-bg:#16301A; --q-man-ink:#8BE58B;
+  --q-rev:#4f97ec; --q-rev-bg:#172A44; --q-rev-ink:#9CC4F5;
+  --q-aju:#f5c04a; --q-aju-bg:#3A2F0A; --q-aju-ink:#FFD877;
+  --q-des:#ec6060; --q-des-bg:#3D1B1B; --q-des-ink:#FFB4B4;
+  --heat-0:#24221E; --heat-1:#3A3115; --heat-2:#9a4a2a; --heat-3:#c43a3a;
+  --heat-ink-0:#C9C4B6; --heat-ink-1:#F2EFE7; --heat-ink-2:#ffffff; --heat-ink-3:#ffffff;
+  --seg-1:#D3A374; --seg-2:#D4B03A; --seg-3:#3A3115; --seg-ink-1:#16130F; --seg-ink-2:#16130F; --seg-ink-3:#F2EFE7;
+  --quad-a:#221F18; --quad-b:#1C1B18;
+  --focus:#E2C45E;
   --scrim:rgba(0,0,0,.6);
+  --shadow:none;
 }
 
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
-body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 "Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;overflow-x:hidden}
-h1,h2,h3{line-height:1.25;margin:0}
-h1{font-size:1.05rem;font-weight:600}
-h2{font-size:1.25rem;font-weight:600}
-h3{font-size:.95rem;font-weight:600}
+body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 var(--body);overflow-x:hidden}
+h1,h2,h3{line-height:1.2;margin:0;text-wrap:balance}
+h1{font-family:var(--display);font-weight:800;font-size:20px;letter-spacing:.06em;color:var(--gold-ink)}
+h2{font-family:var(--display);font-weight:800;font-size:clamp(24px,3vw,32px);color:var(--gold-ink);line-height:1.05}
+h3{font-family:var(--display);font-weight:700;font-size:16px;color:var(--text)}
 p{margin:.4em 0}
-.tiny{font-size:.8rem;color:var(--text-2)}
+.tiny{font-size:12.5px;color:var(--text-2)}
 .muted{color:var(--text-2)}
-:focus-visible{outline:3px solid var(--focus);outline-offset:2px;border-radius:3px}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--brown)}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:3px}
 button{font:inherit;color:inherit}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
 
-/* Barra superior */
-.topbar{background:var(--bar-bg);color:var(--bar-ink);padding:10px 16px;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:space-between}
-.topbar .sub{color:var(--bar-ink-2);font-size:.78rem}
-.topbar .actions{display:flex;gap:8px;flex-wrap:wrap}
-.tbtn{border:1px solid rgba(255,255,255,.35);background:transparent;color:var(--bar-ink);border-radius:4px;padding:6px 10px;cursor:pointer;font-size:.82rem;white-space:nowrap;min-height:34px}
-.tbtn:hover{background:rgba(255,255,255,.1)}
-.tbtn[aria-expanded="true"]{background:rgba(255,255,255,.16)}
-.band{background:var(--band-bg);color:var(--band-text);border-bottom:1px solid var(--band-border);padding:6px 16px;font-weight:700;font-size:.8rem;letter-spacing:.03em;text-align:center}
-
-/* Estructura */
-.app{display:grid;grid-template-columns:190px minmax(0,1fr);min-height:calc(100vh - 90px)}
-body.pane-open .app{grid-template-columns:190px minmax(0,1fr) 330px}
-.pagenav{background:var(--nav-bg);border-right:1px solid var(--border);padding:12px 0}
-.pagenav h2{font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-2);padding:0 14px 6px;font-weight:600}
-.pagenav ul{list-style:none;margin:0;padding:0}
-.pagenav button{display:flex;gap:8px;align-items:center;width:100%;text-align:left;border:0;background:transparent;padding:9px 14px;cursor:pointer;border-left:4px solid transparent;font-size:.88rem;min-height:40px}
-.pagenav button:hover{background:var(--nav-active)}
-.pagenav button[aria-current="page"]{background:var(--nav-active);border-left-color:var(--accent-ink);font-weight:600}
-.pagenav .ic{width:1.2em;text-align:center;color:var(--text-2)}
-.canvas{padding:16px;min-width:0}
-.pane{background:var(--surface);border-left:1px solid var(--border);padding:12px 14px 20px;display:none;min-width:0;overflow-y:auto}
+/* Estructura: barra lateral blanca con borde dorado (como el Tablero) */
+.app{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:100vh}
+body.pane-open .app{grid-template-columns:240px minmax(0,1fr) 340px}
+.side{background:var(--nav-bg);border-right:2px solid var(--gold-line);padding:22px 14px;display:flex;flex-direction:column;gap:18px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.brand{padding:0 8px}
+.brand .w{font-family:var(--display);font-weight:800;font-size:22px;letter-spacing:.08em;color:var(--gold-ink);line-height:1}
+.brand .s{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--brown);margin-top:6px}
+.pagenav ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.pagenav .grp{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-3);padding:12px 10px 6px}
+.pagenav .grp:first-child{padding-top:0}
+.pagenav button{display:flex;gap:10px;align-items:center;width:100%;text-align:left;border:0;background:transparent;padding:8px 10px;cursor:pointer;border-radius:7px;font-family:var(--display);font-size:15px;letter-spacing:.02em;color:var(--text);min-height:38px;line-height:1.2}
+.pagenav button:hover{background:var(--gold-soft)}
+.pagenav button[aria-current="page"]{background:var(--gold);color:#16130F}
+.pagenav .pn{min-width:1.6em;font-family:var(--mono);font-size:11px;color:var(--text-3);font-variant-numeric:tabular-nums}
+.pagenav button[aria-current="page"] .pn{color:#16130F}
+.side .foot{margin-top:auto;font-size:11.5px;color:var(--text-3);padding:0 8px;line-height:1.45}
+.canvas{padding:22px 32px 48px;min-width:0}
+.toprow{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;justify-content:space-between;margin-bottom:18px}
+.demo-pill{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--band-text);background:var(--band-bg);border:1px solid var(--band-border);padding:5px 11px;border-radius:999px}
+.demo-pill::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--band-border)}
+.toprow .actions{display:flex;gap:8px;flex-wrap:wrap}
+.tbtn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--gold-line);background:var(--surface);color:var(--text);border-radius:8px;padding:6px 12px;cursor:pointer;font-family:var(--display);font-size:14px;letter-spacing:.02em;white-space:nowrap;min-height:36px}
+.tbtn:hover{background:var(--gold-soft)}
+.tbtn[aria-expanded="true"]{background:var(--gold);color:#16130F;border-color:var(--gold)}
+.pane{background:var(--surface);border-left:2px solid var(--gold-line);padding:16px 16px 20px;display:none;min-width:0;overflow-y:auto}
 body.pane-open .pane{display:block}
 .pane-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px}
-.pane-close{border:1px solid var(--border);background:var(--surface);border-radius:4px;padding:4px 9px;cursor:pointer}
+.pane-head h2{font-size:20px}
+.pane-close{border:1px solid var(--border);background:var(--surface);border-radius:6px;padding:4px 9px;cursor:pointer}
 .scrim{display:none}
-@media (min-width:1101px){ .pane{position:sticky;top:0;max-height:100vh;align-self:start} }
+@media (min-width:1101px){ .pane{position:sticky;top:0;height:100vh;align-self:start} }
 @media (max-width:1100px){
-  body.pane-open .app{grid-template-columns:190px minmax(0,1fr)}
+  body.pane-open .app{grid-template-columns:240px minmax(0,1fr)}
   .pane{position:fixed;top:0;right:0;bottom:0;width:min(360px,92vw);z-index:60;box-shadow:-6px 0 24px rgba(0,0,0,.25)}
   body.pane-open .scrim{display:block;position:fixed;inset:0;background:var(--scrim);z-index:55}
 }
-@media (max-width:760px){
+@media (max-width:820px){
   .app, body.pane-open .app{grid-template-columns:minmax(0,1fr)}
-  .pagenav{border-right:0;border-bottom:1px solid var(--border);padding:8px 16px}
-  .pagenav h2{display:none}
-  .pagenav ul{display:flex;flex-wrap:wrap;gap:4px}
-  .pagenav button{border-left:0;border-bottom:3px solid transparent;padding:6px 8px;font-size:.8rem;min-height:36px;width:auto}
-  .pagenav button[aria-current="page"]{border-bottom-color:var(--accent-ink)}
-  .pagenav .ic{display:none}
+  .side{position:sticky;top:0;z-index:20;height:auto;flex-direction:row;align-items:center;gap:12px;padding:10px 16px;border-right:0;border-bottom:2px solid var(--gold-line);overflow-x:auto;overflow-y:hidden}
+  .brand .s,.side .foot,.pagenav .grp{display:none}
+  .brand .w{font-size:17px}
+  .pagenav ul{flex-direction:row;gap:4px}
+  .pagenav button{white-space:nowrap;padding:7px 10px;font-size:14px;min-height:36px}
+  .canvas{padding:16px 16px 40px}
 }
 
 /* Encabezado de página y segmentación */
@@ -318,35 +345,167 @@ legend{font-size:.8rem;font-weight:600;padding:0 4px}
 
 footer{border-top:1px solid var(--border);padding:14px 16px 24px;font-size:.8rem;color:var(--text-2);background:var(--surface)}
 @media (prefers-reduced-motion: reduce){ *{transition:none!important;animation:none!important} }
+
+/* ===== Estilo Tablero Terranea: tarjetas, tablas, botones y cifras ===== */
+.page-head{align-items:flex-end;margin-bottom:18px}
+.page-head .eyebrow{display:block;margin-bottom:4px}
+#pageSub{font-size:13px;color:var(--text-2);margin-top:6px}
+.slicer{border:1px solid var(--gold-line);border-radius:10px;padding:8px 10px}
+.slicer .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--text-3)}
+[role="tab"]{border-radius:8px;font-family:var(--display);font-size:14px;letter-spacing:.02em}
+[role="tab"]:hover{background:var(--gold-soft)}
+[role="tab"][aria-selected="true"]{background:var(--gold);color:#16130F;border-color:var(--gold)}
+[role="tab"][aria-selected="true"] .rec-badge{background:#16130F;color:var(--gold)}
+.rec-badge{font-family:var(--mono);background:var(--gold-soft);color:var(--gold-ink);letter-spacing:.06em}
+.tiles{gap:16px}
+.tile{border:1px solid var(--gold-line);border-radius:12px;padding:16px 18px;box-shadow:var(--shadow)}
+.tile.rec{border-color:var(--alt-c);box-shadow:0 0 0 1px var(--alt-c) inset}
+.tile-head{margin-bottom:10px}
+.tile-head h3{color:var(--text)}
+.tag{font-family:var(--mono);font-size:10.5px;font-weight:500;letter-spacing:.04em;border-color:var(--line);color:var(--text-3)}
+.tag.sim{border-style:dashed}
+@media (max-width:640px){ .tag{white-space:normal;max-width:100%} }
+.note{font-size:13px;border-left:3px solid var(--gold)}
+.kpis{gap:12px}
+.card-kpi{border:1px solid var(--gold-line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow);border-top:4px solid var(--gold)}
+.card-kpi .val{font-family:var(--display);font-weight:800;font-size:clamp(26px,2.6vw,34px);line-height:1.05;letter-spacing:-.005em}
+.card-kpi .val.txt{font-size:18px;line-height:1.2}
+.card-kpi .lbl{font-size:13px;font-weight:600;color:var(--text-2);margin-top:6px}
+.card-kpi .sub{font-size:12px;color:var(--text-3);margin-top:2px}
+table{font-size:13.5px}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line)}
+thead th{font-family:var(--display);font-size:12px;font-weight:700;letter-spacing:.04em;color:var(--text);background:var(--gold-soft);border-bottom:2px solid var(--gold)}
+tbody tr:nth-child(even){background:var(--surface-2)}
+caption{font-size:12.5px;color:var(--text-2)}
+.colC{background:color-mix(in srgb, var(--alt-c) 12%, transparent)}
+tbody tr:nth-child(even) .colC{background:color-mix(in srgb, var(--alt-c) 16%, transparent)}
+.lect td.cur{background:color-mix(in srgb, var(--alt-c) 12%, transparent)}
+.matriz tfoot td{font-family:var(--display);font-size:16px}
+.matriz td.best{outline-color:var(--alt-c)}
+.wbar{background:var(--gold)}
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--gold-line);background:var(--surface);color:var(--text);border-radius:8px;padding:7px 12px;font-family:var(--display);font-size:14px;letter-spacing:.02em;min-height:36px}
+.btn:hover{background:var(--gold-soft)}
+.btn.primary{background:var(--gold);color:#16130F;border-color:var(--gold)}
+.btn.primary:hover{background:color-mix(in srgb, var(--gold) 85%, #000)}
+.cta{font-size:16px;padding:10px 18px;min-height:44px}
+select,input[type=text],input[type=date],textarea{font:inherit;font-size:13.5px;padding:7px 10px;border-radius:8px;border:1px solid var(--gold-line);background:var(--surface);color:var(--text);max-width:100%}
+.data-table input[type=number]{border-radius:6px;border-color:var(--line);font-family:var(--mono);font-size:12.5px}
+.data-table td.calc{font-family:var(--mono);font-size:12.5px}
+.formula{font-family:var(--mono);background:var(--surface-2);border:1px solid var(--line)}
+details summary{color:var(--gold-ink);font-weight:600}
+.pane details > summary{font-family:var(--display);font-size:15px;letter-spacing:.02em}
+input[type=range]{accent-color:var(--gold-ink)}
+.slider output{font-family:var(--mono);font-weight:500}
+.rank-row .v{font-family:var(--display);font-size:16px}
+.rank-row.top .v{color:var(--alt-c)}
+.score-val{font-family:var(--display);font-weight:800;font-size:40px;line-height:1}
+.verdict{border-left:4px solid var(--gold);background:var(--gold-soft);border-radius:0 10px 10px 0;padding:10px 14px}
+.verdict .q{font-family:var(--display);font-size:20px;letter-spacing:.01em}
+.scen button{border-radius:10px;border-color:var(--line);font-size:12.5px;padding:10px 12px}
+.scen button strong{font-family:var(--display);font-size:15px;font-weight:700;letter-spacing:.02em;margin-bottom:2px}
+.scen button:hover{background:var(--gold-soft);border-color:var(--gold-line)}
+.scen button[aria-pressed="true"]{border-color:var(--gold);box-shadow:inset 0 0 0 2px var(--gold);background:var(--gold-soft)}
+.step{background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:16px}
+.step .num{font-family:var(--mono);font-weight:500;letter-spacing:.14em;color:var(--brown)}
+.step h3{font-size:18px;color:var(--gold-ink)}
+.step svg{color:var(--gold-ink)}
+.lead{font-size:15px;line-height:1.55}
+.alert{border-radius:8px}
+.heat .cell{border-radius:6px}
+.heat .chip{font-family:var(--mono);font-weight:500;background:var(--surface);color:var(--text);border-color:var(--line)}
+.res-bar .seg{font-family:var(--mono);font-weight:500}
+footer{border-top:1px solid var(--line);font-size:12px;color:var(--text-3);background:var(--surface);padding:14px 32px 24px}
+.ind-list .sv{font-family:var(--mono);font-weight:500}
+.doc h3{font-size:18px;color:var(--gold-ink);margin-top:22px}
+.toc a{color:var(--gold-ink)}
+
+/* Pastillas de categoría (cuadrantes de productos y clientes) */
+.qpill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:2px 9px;border-radius:999px;white-space:nowrap}
+.qpill::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.q-man{background:var(--q-man-bg);color:var(--q-man-ink)} .q-rev{background:var(--q-rev-bg);color:var(--q-rev-ink)}
+.q-aju{background:var(--q-aju-bg);color:var(--q-aju-ink)} .q-des{background:var(--q-des-bg);color:var(--q-des-ink)}
+
+/* Matriz de clientes (Tabla 7) */
+.cmx{display:grid;grid-template-columns:auto minmax(0,1fr) minmax(0,1fr);grid-template-rows:auto auto auto;gap:8px}
+.cmx .ax{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3);display:flex;align-items:center;justify-content:center;text-align:center}
+.cmx .ax.v{writing-mode:vertical-rl;transform:rotate(180deg);padding:0 2px}
+.cmx .q{border-radius:12px;padding:12px 14px;min-height:150px;display:flex;flex-direction:column;gap:8px;border:1px solid transparent}
+.cmx .q h4{margin:0;font-family:var(--display);font-size:17px;letter-spacing:.02em}
+.cmx .q p{margin:0;font-size:12px;color:var(--text-2)}
+.cmx .q.q-man{border-color:color-mix(in srgb, var(--q-man) 40%, transparent)} .cmx .q.q-rev{border-color:color-mix(in srgb, var(--q-rev) 40%, transparent)}
+.cmx .q.q-aju{border-color:color-mix(in srgb, var(--q-aju) 55%, transparent)} .cmx .q.q-des{border-color:color-mix(in srgb, var(--q-des) 40%, transparent)}
+.cmx .who{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto}
+.cmx .who span{background:var(--surface);color:var(--text);border:1px solid var(--line);border-radius:999px;padding:3px 10px;font-size:12.5px;font-weight:600}
+.cmx .who em{font-style:normal;font-size:12px;color:var(--text-3)}
+@media (max-width:560px){ .cmx{grid-template-columns:auto minmax(0,1fr)} .cmx .ax.h{display:none} .cmx .ax.v{display:none} .cmx{grid-template-columns:minmax(0,1fr)} }
+.jl{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.jl li{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:10px;background:var(--surface-2);border:1px solid var(--line);font-size:13px}
+.jl .ic{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;color:#fff;background:var(--q-aju)}
+.jl .ic.ok{background:var(--q-man)}
+
+/* Comité: agenda, roles y calendario */
+.agenda{list-style:none;margin:0;padding:0;counter-reset:ag;display:flex;flex-direction:column;gap:8px}
+.agenda li{counter-increment:ag;display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;align-items:start;font-size:13.5px}
+.agenda li::before{content:counter(ag);width:28px;height:28px;border-radius:50%;background:var(--gold-soft);color:var(--gold-ink);border:1px solid var(--gold-line);display:grid;place-items:center;font-family:var(--display);font-weight:800}
+.agenda b{font-weight:600}
+.roles{display:grid;gap:8px}
+.roles div{display:grid;grid-template-columns:minmax(0,10em) minmax(0,1fr);gap:10px;font-size:13px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.roles div:last-child{border-bottom:0;padding-bottom:0}
+.roles b{font-family:var(--display);font-weight:700;letter-spacing:.02em}
+.roles .own{color:var(--gold-ink)}
+@media (max-width:480px){ .roles div{grid-template-columns:1fr;gap:2px} }
+.cal{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:4px;margin-top:6px}
+.cal .m{display:flex;flex-direction:column;align-items:center;gap:6px;font-family:var(--mono);font-size:10.5px;color:var(--text-3)}
+.cal .d{width:100%;height:34px;border-radius:7px;background:var(--surface-2);border:1px solid var(--line);display:grid;place-items:center;font-family:var(--display);font-size:13px;color:var(--text)}
+.cal .d.ok{background:var(--gold);border-color:var(--gold);color:#16130F}
+.cal .d.miss{background:var(--q-des-bg);border:1px dashed var(--q-des);color:var(--q-des-ink)}
+.cal-leg{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--text-2);margin-top:10px}
+.cal-leg i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.bit-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:10px 12px;align-items:end;margin-top:4px}
+.bit-form[hidden]{display:none}
+.bit-form label{display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:600;color:var(--text-2)}
+.bit-form .wide{grid-column:1 / -1}
+.bit-form input,.bit-form select{width:100%}
+
+/* Hoja de ruta (Tabla 9) */
+.gantt{display:grid;grid-template-columns:minmax(12em,1.4fr) minmax(0,3fr);gap:0;font-size:13px;min-width:620px}
+.gantt .gh{font-family:var(--mono);font-size:10.5px;color:var(--text-3);letter-spacing:.06em;padding:0 0 6px;border-bottom:2px solid var(--gold)}
+.gantt .months{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));text-align:center}
+.gantt .nm{padding:8px 10px 8px 0;border-bottom:1px solid var(--line);line-height:1.3}
+.gantt .nm small{display:block;color:var(--text-3);font-size:11.5px}
+.gantt .tr{position:relative;border-bottom:1px solid var(--line);background:repeating-linear-gradient(90deg,transparent 0 calc(12.5% - 1px),var(--grid) calc(12.5% - 1px) 12.5%)}
+.gantt .bar{position:absolute;top:50%;transform:translateY(-50%);height:18px;border-radius:5px;background:var(--gold);display:flex;align-items:center;padding:0 6px;font-family:var(--mono);font-size:10.5px;color:#16130F;white-space:nowrap;overflow:hidden}
+.gantt .bar.ses{background:var(--brown);color:#fff}
+.gantt .bar.cont{background:repeating-linear-gradient(45deg,var(--gold-soft) 0 6px,color-mix(in srgb,var(--gold) 45%,transparent) 6px 12px);color:var(--text);border:1px solid var(--gold-line)}
+.gantt-leg{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--text-2);margin-top:10px}
+.gantt-leg i{display:inline-block;width:14px;height:10px;border-radius:3px;margin-right:5px;vertical-align:0}
 </style>
 </head>
 <body>
 
-<header class="topbar">
-  <div>
-    <h1>Revisión periódica de cartera · Terránea S.A.</h1>
-    <div class="sub">Informe interactivo · UCR · DN-0111 Gestión de la Innovación y Estrategia Competitiva</div>
-  </div>
-  <div class="actions">
-    <button type="button" class="tbtn" id="paneBtn" aria-controls="pane" aria-expanded="false">⚙ Parámetros</button>
-    <button type="button" class="tbtn" id="themeBtn" aria-label="Cambiar tema de color">Tema: automático</button>
-  </div>
-</header>
-<div class="band" role="note">DEMO ILUSTRATIVA · datos simulados, no son cifras reales de Terránea</div>
-
+<h1 class="sr-only">Revisión periódica de cartera · Terránea S.A.</h1>
 <div class="app">
-  <nav class="pagenav" aria-label="Páginas del informe">
-    <h2>Páginas</h2>
+  <nav class="side pagenav" aria-label="Páginas del informe">
+    <div class="brand"><div class="w">TERRANEA</div><div class="s">Revisión de cartera</div></div>
     <ul id="pageList"></ul>
+    <div class="foot">Informe interactivo · DN-0111 Gestión de la Innovación y Estrategia Competitiva · UCR<br>Equipo 5 · Grupo 004 · II Semestre 2026</div>
   </nav>
 
   <main class="canvas" id="canvas" role="tabpanel" aria-labelledby="tab-C">
+    <div class="toprow">
+      <span class="demo-pill" role="note">Demo ilustrativa · datos simulados, no son cifras reales de Terránea</span>
+      <div class="actions">
+        <button type="button" class="tbtn" id="paneBtn" aria-controls="pane" aria-expanded="false">⚙ Parámetros</button>
+        <button type="button" class="tbtn" id="themeBtn" aria-label="Cambiar tema de color">Tema: automático</button>
+      </div>
+    </div>
     <div class="page-head">
       <div>
+        <span class="eyebrow" id="pageEyebrow"></span>
         <h2 id="pageTitle">Resumen</h2>
-        <p class="tiny" id="pageSub"></p>
+        <p id="pageSub"></p>
       </div>
-      <div class="slicer" id="slicer">
+    <div class="slicer" id="slicer">
         <div class="lbl" id="slicerLbl">Alternativa</div>
         <div role="tablist" id="tablist" aria-labelledby="slicerLbl">
           <button role="tab" id="tab-A" aria-controls="canvas" aria-selected="false" tabindex="-1" data-alt="A"><span class="alt"><span class="g g-A" aria-hidden="true">▲</span>A</span></button>
@@ -369,8 +528,8 @@ footer{border-top:1px solid var(--border);padding:14px 16px 24px;font-size:.8rem
               <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><rect x="5" y="5" width="13" height="13" rx="2"/><rect x="22" y="5" width="13" height="13" rx="2"/><rect x="5" y="22" width="13" height="13" rx="2"/><rect x="22" y="22" width="13" height="13" rx="2" fill="currentColor"/></svg>
               <span class="num">Paso 1</span>
               <h3>Clasificar la cartera</h3>
-              <p class="tiny">Cada producto se ubica por throughput por hora y volumen frente a la mediana: Mantener, Revisar, Ajustar o Descontinuar, con un filtro estratégico.</p>
-              <button type="button" class="btn" data-goto="prod">Ver el mapa de productos</button>
+              <p class="tiny">Cada producto se ubica por throughput por hora y volumen frente a la mediana (Mantener, Revisar, Ajustar o Descontinuar) y cada cliente por su contribución y la calidad de su mezcla (Fidelizar, Desarrollar, Ajustar condiciones o Redefinir).</p>
+              <div class="btns" style="margin-top:auto"><button type="button" class="btn" data-goto="prod">Productos</button><button type="button" class="btn" data-goto="cli">Clientes</button></div>
             </div>
             <div class="step">
               <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="6" width="24" height="30" rx="2"/><path d="M15 6v-2h10v2"/><path d="M13 16h14M13 22h14M13 28h8"/><path d="M26 29l3 3 6-7"/></svg>
@@ -383,8 +542,8 @@ footer{border-top:1px solid var(--border);padding:14px 16px 24px;font-size:.8rem
               <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6h20l4 4v24H8z"/><path d="M13 14h14M13 20h14M13 26h6"/><circle cx="29" cy="29" r="6" fill="var(--surface-2)"/><path d="M26.5 29l2 2 3.5-4"/></svg>
               <span class="num">Paso 3</span>
               <h3>Decidir y registrar</h3>
-              <p class="tiny">El comité bimestral decide y deja cada decisión en la bitácora, con responsable y fecha de seguimiento.</p>
-              <button type="button" class="btn" data-goto="bit">Ver la bitácora</button>
+              <p class="tiny">El comité sesiona cada dos meses con una agenda fija, decide y deja cada decisión en la bitácora, con responsable y fecha de seguimiento.</p>
+              <button type="button" class="btn" data-goto="bit">Ver el comité y la bitácora</button>
             </div>
           </div>
           <div class="btns" style="margin-top:14px"><button type="button" class="btn primary cta" data-goto="pedido">▶ Probar con un pedido</button></div>
@@ -392,8 +551,9 @@ footer{border-top:1px solid var(--border);padding:14px 16px 24px;font-size:.8rem
         <div class="tile s6">
           <div class="tile-head"><h3>Cómo recorrer la demo</h3></div>
           <ul class="tiny" style="padding-left:1.2em;margin:0">
-            <li><strong>Páginas 2 a 4:</strong> comparan las alternativas A, B, C y D con la segmentación superior.</li>
-            <li><strong>Páginas 5 a 7:</strong> muestran la herramienta de C en uso: cartera, pedidos y bitácora.</li>
+            <li><strong>La propuesta (2 a 4):</strong> compara las alternativas A, B, C y D con la segmentación superior.</li>
+            <li><strong>Herramienta C (5 a 8):</strong> la herramienta en uso: productos, clientes, pedidos, comité y bitácora.</li>
+            <li><strong>Viabilidad (9):</strong> hoja de ruta, horas-persona y riesgos con su mitigación.</li>
             <li><strong>⚙ Parámetros:</strong> cambia pesos y supuestos en vivo.</li>
             <li><strong>Datos y Documentación:</strong> tablas ficticias editables y explicación del modelo.</li>
           </ul>
@@ -491,15 +651,31 @@ footer{border-top:1px solid var(--border);padding:14px 16px 24px;font-size:.8rem
           <p class="tiny">Throughput por hora = (precio por kg − costo variable por kg) × kg producidos por hora. Alto o bajo según la mediana de la cartera. Haga clic en un punto o use el selector.</p>
         </div>
         <div class="tile s5 prod-card" id="prodCard" aria-live="polite"></div>
-        <div class="tile s6">
+        <div class="tile">
           <div class="tile-head"><h3>Lectura de cada producto según la alternativa</h3></div>
           <div class="table-wrap"><table class="lect" id="lectTable"></table></div>
         </div>
-        <div class="tile s6">
-          <div class="tile-head"><h3>Aporte por hora de clientes</h3><span class="tag sim">Clientes ficticios</span></div>
-          <p class="tiny" id="cliLens"></p>
-          <div id="cliBars"></div>
-          <p class="tiny" id="cliNote"></p>
+      </div>
+    </section>
+
+    <!-- PÁGINA: CLIENTES -->
+    <section class="page" id="page-cli" aria-label="Clientes" hidden>
+      <div class="tiles">
+        <div class="kpi" id="cliKpis" aria-live="polite"></div>
+        <div class="tile s7">
+          <div class="tile-head"><h3>Matriz de clasificación de clientes</h3><span class="tag sim">Clientes ficticios · regla de la Tabla 7</span></div>
+          <p class="tiny">Cruza la contribución total del cliente en el mes con el throughput por hora de la mezcla que compra. Alto o bajo según la mediana de la cartera de clientes.</p>
+          <div class="cmx" id="cliMatrix"></div>
+        </div>
+        <div class="tile s5">
+          <div class="tile-head"><h3>Lectura conjunta productos × clientes</h3><span class="tag sim">Ficticio</span></div>
+          <p class="tiny">Si un producto candidato a salir lo compra sobre todo un cliente que conviene fidelizar, la decisión se toma pensando en esa relación.</p>
+          <ul class="jl" id="cliJoint"></ul>
+        </div>
+        <div class="tile">
+          <div class="tile-head"><h3>Detalle por cliente</h3><span class="tag sim">Editable en Datos</span></div>
+          <div class="table-wrap"><table id="cliTable"></table></div>
+          <p class="tiny">Contribución = kg/mes × margen/kg. Throughput/h de la mezcla = contribución ÷ horas de línea asignadas. El costo de servir (descuentos, entregas, pedidos pequeños, devoluciones) lo ajusta la Gerencia Comercial de forma cualitativa.</p>
         </div>
       </div>
     </section>
@@ -553,34 +729,82 @@ footer{border-top:1px solid var(--border);padding:14px 16px 24px;font-size:.8rem
       </div>
     </section>
 
-    <!-- PÁGINA: BITÁCORA -->
-    <section class="page" id="page-bit" aria-label="Bitácora de decisiones" hidden>
+    <!-- PÁGINA: COMITÉ Y BITÁCORA -->
+    <section class="page" id="page-bit" aria-label="Comité y bitácora" hidden>
       <div class="tiles">
+        <div class="tile s4">
+          <div class="tile-head"><h3>Agenda fija de cada sesión</h3><span class="tag">Sección 9.6</span></div>
+          <ol class="agenda">
+            <li><span><b>Seguimiento</b> de las decisiones tomadas en la sesión anterior.</span></li>
+            <li><span><b>Revisión</b> de los productos y clientes que cambiaron de categoría o están en alerta.</span></li>
+            <li><span><b>Decisión</b> sobre cada caso: mantener, ajustar, revisar o descontinuar.</span></li>
+            <li><span><b>Registro</b> de decisiones, responsables y fechas en la bitácora.</span></li>
+          </ol>
+          <p class="tiny" style="margin-top:10px">Sesión de 60 a 90 minutos cada dos meses. Antes, el Analista de Datos actualiza el tablero y marca los cambios de categoría.</p>
+        </div>
+        <div class="tile s4">
+          <div class="tile-head"><h3>Integrantes del comité</h3><span class="tag">Tabla 8</span></div>
+          <div class="roles">
+            <div><b>Gerencia General</b><span>Decide y aprueba.</span></div>
+            <div><b>Gerencia Comercial</b><span>Aporta el contexto de clientes y canales, define clientes ancla y ejecuta los ajustes comerciales.</span></div>
+            <div><b>Administración</b><span>Valida la información de costos y márgenes.</span></div>
+            <div><b>Producción</b><span>Valida tiempos de línea y complejidad operativa; ejecuta los ajustes de proceso.</span></div>
+            <div><b class="own">Analista de Datos</b><span>Dueño del proceso: prepara el tablero, convoca las sesiones y mantiene la bitácora.</span></div>
+          </div>
+        </div>
+        <div class="tile s4">
+          <div class="tile-head"><h3>Calendario del primer año</h3><span class="tag sim">Simulado</span></div>
+          <p class="tiny" id="calTxt"></p>
+          <div class="cal" id="cal" role="img"></div>
+          <div class="cal-leg" aria-hidden="true"><span><i style="background:var(--gold)"></i>Sesión realizada</span><span><i style="background:var(--q-des-bg);border:1px dashed var(--q-des)"></i>Sesión pospuesta</span></div>
+          <div class="btns"><button type="button" class="btn" data-openpane="ext">⚙ Cambiar la constancia</button></div>
+        </div>
         <div class="tile">
-          <div class="tile-head"><h3>Bitácora de decisiones · vista de C</h3><span class="tag sim">Filas generadas con datos ficticios · formato de la Tabla C2</span></div>
-          <p class="note" id="bitNote"></p>
+          <div class="tile-head"><h3>Bitácora de decisiones</h3><span class="tag sim">Formato de la Tabla C2 · filas generadas con datos ficticios</span></div>
           <div class="table-wrap"><table id="bitTable"></table></div>
+          <div class="btns">
+            <button type="button" class="btn primary" id="bitAddBtn" aria-expanded="false" aria-controls="bitForm">+ Registrar una decisión</button>
+            <button type="button" class="btn" id="bitCsv">Descargar CSV</button>
+          </div>
+          <form class="bit-form" id="bitForm" hidden>
+            <label>Producto o cliente<select id="bfItem"></select></label>
+            <label>Decisión<select id="bfDec"><option>Mantener</option><option>Ajustar</option><option>Revisar</option><option>Descontinuar</option><option>Fidelizar</option><option>Desarrollar</option><option>Ajustar condiciones</option><option>Redefinir la relación</option></select></label>
+            <label>Responsable<select id="bfResp"><option>Gerencia General</option><option selected>Gerencia Comercial</option><option>Administración</option><option>Producción</option><option>Analista de Datos</option></select></label>
+            <label>Seguimiento<select id="bfSeg"></select></label>
+            <label class="wide">Justificación<input type="text" id="bfJust" maxlength="200" placeholder="Por qué se toma la decisión (dato que la respalda)"></label>
+            <div class="btns wide" style="margin-top:0"><button type="submit" class="btn primary">Guardar en la bitácora</button><button type="button" class="btn" id="bfCancel">Cancelar</button></div>
+          </form>
+          <p class="tiny" id="bitMsg" aria-live="polite"></p>
         </div>
       </div>
     </section>
 
-    <!-- PÁGINA: RECURSOS Y RIESGOS -->
-    <section class="page" id="page-res" aria-label="Recursos y riesgos" hidden>
+    <!-- PÁGINA: PLAN, RECURSOS Y RIESGOS -->
+    <section class="page" id="page-res" aria-label="Plan, recursos y riesgos" hidden>
       <div class="tiles">
-        <div class="tile s6">
+        <div class="tile">
+          <div class="tile-head"><h3>Hoja de ruta de implementación de C</h3><span class="tag">Tabla 9 del informe</span></div>
+          <p class="tiny">Adopción gradual: primero productos, clientes desde la segunda sesión y evaluación del sistema tras tres ciclos.</p>
+          <div class="table-wrap"><div class="gantt" id="gantt" role="table" aria-label="Hoja de ruta: acciones por mes"></div></div>
+          <div class="gantt-leg" aria-hidden="true"><span><i style="background:var(--gold)"></i>Acción</span><span><i style="background:var(--brown)"></i>Sesión del comité</span><span><i style="background:repeating-linear-gradient(45deg,var(--gold-soft) 0 4px,var(--gold) 4px 8px)"></i>Continuo</span></div>
+        </div>
+        <div class="tile s5">
           <div class="tile-head"><h3>Horas-persona estimadas · primer año</h3><span class="tag">Datos del informe</span></div>
-          <p class="tiny">Solo C está cuantificado en el informe.</p>
+          <p class="tiny">Solo C está cuantificado en el informe. No requiere software ni contratación.</p>
           <div id="resBars"></div>
           <div class="res-legend" id="resLegend"></div>
           <p class="tiny" id="resNote"></p>
         </div>
-        <div class="tile s6">
-          <div class="tile-head"><h3>Mapa de calor de riesgos de C</h3><span class="tag">Datos del informe</span></div>
+        <div class="tile s7">
+          <div class="tile-head"><h3>Mapa de calor de riesgos de C</h3><span class="tag">Tabla 10 del informe</span></div>
           <p class="tiny">Probabilidad × impacto. Para A, B y D: no cuantificado en el informe.</p>
           <div class="heat" id="heat" role="img"></div>
           <p class="axis-cap">Impacto →</p>
           <div class="res-legend" aria-hidden="true">Severidad: <span><span class="sq lv0"></span>Muy baja</span><span><span class="sq lv1"></span>Baja</span><span><span class="sq lv2"></span>Media</span><span><span class="sq lv3"></span>Alta</span></div>
-          <div class="table-wrap" style="margin-top:10px"><table id="riskTable"></table></div>
+        </div>
+        <div class="tile">
+          <div class="tile-head"><h3>Riesgos y mitigación</h3><span class="tag">Tabla 10 del informe</span></div>
+          <div class="table-wrap"><table id="riskTable"></table></div>
           <p class="tiny" id="riskOthers"></p>
         </div>
       </div>
@@ -640,15 +864,15 @@ footer{border-top:1px solid var(--border);padding:14px 16px 24px;font-size:.8rem
           <div class="table-wrap"><table>
             <thead><tr><th scope="col">Tabla</th><th scope="col">Origen</th><th scope="col">Campos principales</th></tr></thead>
             <tbody>
-              <tr><td>Productos</td><td>Ficticia, editable</td><td>Id, nombre, categoría, precio/kg, costo variable/kg, kg/h, volumen kg/mes, % cliente principal, cliente ancla, categoría en tendencia</td></tr>
+              <tr><td>Productos</td><td>Ficticia, editable</td><td>Id, nombre, categoría, precio/kg, costo variable/kg, kg/h, volumen kg/mes, cliente principal, % en el cliente principal, cliente ancla, categoría en tendencia</td></tr>
               <tr><td>Clientes</td><td>Ficticia, editable</td><td>Id, nombre, segmento, kg/mes, margen/kg, horas de línea asignadas, cliente ancla</td></tr>
               <tr><td>Criterios</td><td>Informe</td><td>Criterio, peso, puntaje de A, B, C y D</td></tr>
               <tr><td>Supuestos</td><td>Simulados, configurables</td><td>k, E, r y mes de inicio por alternativa; constancia, decisiones por sesión, corte de margen</td></tr>
-              <tr><td>Riesgos C</td><td>Informe</td><td>Riesgo, probabilidad, impacto</td></tr>
+              <tr><td>Riesgos C</td><td>Informe</td><td>Riesgo, probabilidad, impacto, mitigación</td></tr>
               <tr><td>Pedido</td><td>Ficticio, editable</td><td>Cliente, líneas (producto, kg, precio negociado), horas disponibles, acepta sustitutos, máximo sustituible, cliente ancla, tendencia, recurrencia</td></tr>
               <tr><td>Bitácora</td><td>Calculada</td><td>Producto o cliente, categoría, decisión, justificación, responsable, fecha de seguimiento</td></tr>
             </tbody></table></div>
-          <p>Relaciones: la Bitácora toma sus filas de Productos (los que quedan en Ajustar, Descontinuar o pasan por el filtro estratégico) y de Clientes (el de menor aporte por hora que no es ancla). La Simulación toma H₀ y g de Productos.</p>
+          <p>Relaciones: cada producto apunta a su cliente principal en Clientes. La Bitácora toma sus filas de Productos (los que quedan en Ajustar, Descontinuar o pasan por el filtro estratégico) y de Clientes (los dos de menor aporte por hora en Ajustar condiciones o Redefinir la relación), más las decisiones que se registren a mano o desde el Evaluador de pedidos. La Simulación toma H₀ y g de Productos; el calendario del comité toma la constancia de sesiones.</p>
 
           <h3 id="d-medidas">6. Medidas calculadas</h3>
           <div class="table-wrap"><table>
@@ -665,7 +889,10 @@ footer{border-top:1px solid var(--border);padding:14px 16px 24px;font-size:.8rem
               <tr><td>Efecto e(t)</td><td>Mes con acción: <code>e(t−1) + k × (E − e(t−1))</code>; mes sin rutina: <code>e(t−1) × (1 − r)</code></td></tr>
               <tr><td>% horas bajo aporte(t)</td><td><code>H₀ × (1 − e(t))</code></td></tr>
               <tr><td>Índice de throughput(t)</td><td><code>100 × (1 + g × e(t))</code></td></tr>
-              <tr><td>Aporte por hora de cliente</td><td><code>kg/mes × margen/kg / horas de línea asignadas</code></td></tr>
+              <tr><td>Contribución del cliente</td><td><code>kg/mes × margen/kg</code></td></tr>
+              <tr><td>Throughput/h de la mezcla del cliente</td><td><code>contribución / horas de línea asignadas</code></td></tr>
+              <tr><td>Categoría del cliente</td><td>Mezcla y contribución alta o baja según la mediana: Fidelizar (alta, alta), Desarrollar (mezcla alta, contribución baja), Ajustar condiciones (mezcla baja, contribución alta), Redefinir la relación (baja, baja) · regla de la Tabla 7</td></tr>
+              <tr><td>Lectura conjunta</td><td>Producto en Ajustar o Descontinuar cuyo cliente principal está en Fidelizar o es ancla → decidir considerando esa relación · sección 9.5</td></tr>
             </tbody></table></div>
 
           <h3 id="d-pedidos">7. Evaluador de pedidos</h3>
@@ -677,7 +904,7 @@ footer{border-top:1px solid var(--border);padding:14px 16px 24px;font-size:.8rem
             <li><strong>Matriz de pedidos:</strong> Aceptar (throughput ≥ mediana y cliente estratégico); Aceptar y proteger (bajo la mediana, estratégico: negociar); Aceptar si hay capacidad ociosa (sobre la mediana, cliente ocasional); Renegociar o redirigir (bajo la mediana, no estratégico).</li>
             <li><strong>Mezcla recomendada:</strong> si el cliente acepta sustitutos, hasta el porcentaje configurado de cada línea pasa al producto de la misma categoría con mayor throughput/h; las líneas protegidas no se sustituyen. Luego se reparten las horas disponibles: primero las líneas protegidas (producto de cliente ancla en un cliente estratégico) y después de mayor a menor throughput/h. Lo que no cabe se difiere; una línea con margen negativo no se produce.</li>
             <li><strong>Precio para la mediana:</strong> costo variable + mediana de throughput/h ÷ kg por hora.</li>
-            <li><strong>Registrar en la bitácora:</strong> agrega la decisión del pedido como una fila nueva (★), solo en esta pestaña.</li>
+            <li><strong>Registrar en la bitácora:</strong> agrega la decisión del pedido como una fila nueva (★), solo en esta pestaña. En «Comité y bitácora» también se registran decisiones a mano y se descarga la bitácora en CSV.</li>
           </ul>
 
           <h3 id="d-param">8. Parámetros configurables</h3>
@@ -702,7 +929,7 @@ footer{border-top:1px solid var(--border);padding:14px 16px 24px;font-size:.8rem
             <li>Empiece en la página 1 y pulse «Probar con un pedido».</li>
             <li>Elija la alternativa en la segmentación superior (A, B, C, D o Comparar todas).</li>
             <li>Abra <strong>⚙ Parámetros</strong> para cambiar pesos y supuestos; todo se recalcula al instante.</li>
-            <li>En la página <strong>Datos</strong> edite precios, costos, volúmenes y clientes ficticios.</li>
+            <li>En la página <strong>Datos</strong> edite precios, costos, volúmenes, el cliente principal de cada producto y los clientes ficticios.</li>
             <li>Los cambios viven solo en esta pestaña: al recargar la página vuelven los valores iniciales.</li>
             <li>Para cambiar los valores iniciales, edite <code>index.html</code> en GitHub: constantes <code>PRODUCTOS</code>, <code>CLIENTES</code>, <code>SUP_DEF</code> y <code>EXTRA_DEF</code>.</li>
           </ol>
@@ -782,11 +1009,24 @@ const INDICADORES = [
 ];
 const NIVEL = {baja:1, bajo:1, media:2, medio:2, alta:3, alto:3};
 const RIESGOS_C = [
-  {id:'R1', nombre:'Costo variable incompleto', p:'media', i:'alto'},
-  {id:'R2', nombre:'Baja adopción: sesiones que se posponen', p:'alta', i:'alto'},
-  {id:'R3', nombre:'Dependencia de una sola persona', p:'media', i:'alto'},
-  {id:'R4', nombre:'Resistencia comercial a descontinuar productos de clientes importantes', p:'media', i:'medio'},
-  {id:'R5', nombre:'Decidir con un solo indicador', p:'baja', i:'medio'}
+  {id:'R1', nombre:'Costo variable incompleto o impreciso', p:'media', i:'alto', m:'Usar el margen actual, calculado de forma manual, como valor provisional; identificarlo como tal, validarlo con Administración y reemplazarlo al concluir la mejora del costeo.'},
+  {id:'R2', nombre:'Baja adopción: sesiones que se posponen', p:'alta', i:'alto', m:'Calendario fijo, agenda corta, dueño del proceso definido y resultados visibles desde la primera sesión (Rogers, 2003).'},
+  {id:'R3', nombre:'Dependencia de una sola persona', p:'media', i:'alto', m:'Documentar el procedimiento y formar a una segunda persona como respaldo.'},
+  {id:'R4', nombre:'Resistencia comercial a descontinuar productos de clientes importantes', p:'media', i:'medio', m:'Filtro estratégico, decisión colegiada y registro de la justificación en la bitácora.'},
+  {id:'R5', nombre:'Decidir con un solo indicador', p:'baja', i:'medio', m:'Instrumento multicriterio y lectura conjunta de productos y clientes.'},
+  {id:'R6', nombre:'Errores de captura en los datos de productividad', p:'media', i:'medio', m:'Aplicar las reglas de depuración de anomalías de los reportes de productividad y promediar al menos cuatro semanas.'}
+];
+/* Hoja de ruta (Tabla 9): mes de inicio y fin, 'ses' = sesión del comité, 'cont' = continuo */
+const ACCIONES = [
+  {n:1, a:'Presentar y aprobar el RPC', r:'Gerencia General', d:1, h:1, rec:'Reunión de 1 h'},
+  {n:2, a:'Completar el costo variable por producto', r:'Analista de Datos y Administración', d:1, h:2, rec:'Horas del personal; datos de SICLA', dep:'1'},
+  {n:3, a:'Incorporar la clasificación al tablero centralizado', r:'Analista de Datos', d:2, h:2, rec:'Tablero existente; unas 16 h', dep:'2 (puede iniciar con el margen actual)'},
+  {n:4, a:'Definir clientes ancla y categorías estratégicas', r:'Gerencia Comercial', d:2, h:2, rec:'1 h', dep:'1'},
+  {n:5, a:'Primera sesión del comité: cartera de productos', r:'Comité', d:3, h:3, rec:'90 min, 5 personas', dep:'3 y 4', tipo:'ses'},
+  {n:6, a:'Documentar el procedimiento en una guía de una página', r:'Analista de Datos', d:3, h:3, rec:'4 h', dep:'5'},
+  {n:7, a:'Segunda sesión: se incorpora la cartera de clientes', r:'Comité', d:5, h:5, rec:'90 min, 5 personas', dep:'5', tipo:'ses'},
+  {n:8, a:'Ejecutar las decisiones y dar seguimiento en la bitácora', r:'Responsable de cada decisión; Analista de Datos', d:3, h:8, rec:'Horas del personal', dep:'5', tipo:'cont'},
+  {n:9, a:'Evaluar el sistema tras tres ciclos y ajustar criterios', r:'Gerencia General y Analista de Datos', d:8, h:8, rec:'1 h', dep:'7'}
 ];
 const ALT = {
   A:{nombre:'Depuración única de la cartera', glyph:'▲', point:'triangle', dash:[],
@@ -817,16 +1057,16 @@ const ALT = {
 
 /* ================= DATOS FICTICIOS (valores iniciales) ================= */
 const PRODUCTOS = [
-  {id:'P1', nombre:'Pita mediterránea', corto:'Pita', cat:'Especialidades mediterráneas', p:2400, cv:1300, kgh:120, vol:9000, pct:35, ancla:false, tend:false},
-  {id:'P2', nombre:'Falafel congelado', corto:'Falafel', cat:'Especialidades mediterráneas', p:3800, cv:2300, kgh:60, vol:2500, pct:40, ancla:false, tend:false},
-  {id:'P3', nombre:'Pasta hojaldre', corto:'Hojaldre', cat:'Repostería y masas', p:2600, cv:1700, kgh:90, vol:7000, pct:30, ancla:false, tend:false},
-  {id:'P4', nombre:'Pan sin gluten', corto:'Sin gluten', cat:'Saludable (alineada con tendencias)', p:4200, cv:3300, kgh:35, vol:1200, pct:25, ancla:false, tend:true},
-  {id:'P5', nombre:'Pan artesanal de masa madre', corto:'Artesanal', cat:'Artesanal', p:3000, cv:1600, kgh:70, vol:3200, pct:45, ancla:false, tend:false},
-  {id:'P6', nombre:'Repostería congelada', corto:'Repostería', cat:'Repostería y masas', p:5200, cv:3600, kgh:45, vol:6500, pct:50, ancla:false, tend:false},
-  {id:'P7', nombre:'Pan multigrano', corto:'Multigrano', cat:'Saludable (alineada con tendencias)', p:2200, cv:1350, kgh:110, vol:8000, pct:30, ancla:false, tend:true},
-  {id:'P8', nombre:'Pan de hamburguesa', corto:'Hamburguesa', cat:'Panes de mesa', p:1500, cv:1100, kgh:140, vol:2800, pct:78, ancla:true, tend:false},
-  {id:'P9', nombre:'Bollería dulce', corto:'Bollería', cat:'Repostería y masas', p:2800, cv:2150, kgh:80, vol:1500, pct:20, ancla:false, tend:false},
-  {id:'P10', nombre:'Pan de molde blanco', corto:'Molde', cat:'Panes de mesa', p:1400, cv:950, kgh:150, vol:11000, pct:55, ancla:false, tend:false}
+  {id:'P1', nombre:'Pita mediterránea', corto:'Pita', cat:'Especialidades mediterráneas', p:2400, cv:1300, kgh:120, vol:9000, pct:35, ancla:false, tend:false, cli:'K5'},
+  {id:'P2', nombre:'Falafel congelado', corto:'Falafel', cat:'Especialidades mediterráneas', p:3800, cv:2300, kgh:60, vol:2500, pct:40, ancla:false, tend:false, cli:'K2'},
+  {id:'P3', nombre:'Pasta hojaldre', corto:'Hojaldre', cat:'Repostería y masas', p:2600, cv:1700, kgh:90, vol:7000, pct:30, ancla:false, tend:false, cli:'K1'},
+  {id:'P4', nombre:'Pan sin gluten', corto:'Sin gluten', cat:'Saludable (alineada con tendencias)', p:4200, cv:3300, kgh:35, vol:1200, pct:25, ancla:false, tend:true, cli:'K3'},
+  {id:'P5', nombre:'Pan artesanal de masa madre', corto:'Artesanal', cat:'Artesanal', p:3000, cv:1600, kgh:70, vol:3200, pct:45, ancla:false, tend:false, cli:'K2'},
+  {id:'P6', nombre:'Repostería congelada', corto:'Repostería', cat:'Repostería y masas', p:5200, cv:3600, kgh:45, vol:6500, pct:50, ancla:false, tend:false, cli:'K4'},
+  {id:'P7', nombre:'Pan multigrano', corto:'Multigrano', cat:'Saludable (alineada con tendencias)', p:2200, cv:1350, kgh:110, vol:8000, pct:30, ancla:false, tend:true, cli:'K5'},
+  {id:'P8', nombre:'Pan de hamburguesa', corto:'Hamburguesa', cat:'Panes de mesa', p:1500, cv:1100, kgh:140, vol:2800, pct:78, ancla:true, tend:false, cli:'K1'},
+  {id:'P9', nombre:'Bollería dulce', corto:'Bollería', cat:'Repostería y masas', p:2800, cv:2150, kgh:80, vol:1500, pct:20, ancla:false, tend:false, cli:'K2'},
+  {id:'P10', nombre:'Pan de molde blanco', corto:'Molde', cat:'Panes de mesa', p:1400, cv:950, kgh:150, vol:11000, pct:55, ancla:false, tend:false, cli:'K1'}
 ];
 // kg: kg/mes · m: margen ₡/kg · h: horas de línea asignadas por mes
 const CLIENTES = [
@@ -889,18 +1129,19 @@ const state = {
 };
 
 const PAGES = [
-  {id:'inicio', nombre:'Qué hace esta herramienta', sub:'El problema, el flujo de trabajo de C y por dónde empezar.'},
-  {id:'resumen', nombre:'Resumen', sub:'Indicadores clave y ficha de la alternativa seleccionada.'},
-  {id:'matriz', nombre:'Matriz de selección', sub:'Puntajes del informe; pesos configurables en vivo.'},
-  {id:'sim', nombre:'Simulación', sub:'Lógica del modelo a 24 meses con supuestos editables.'},
-  {id:'prod', nombre:'Productos y clientes', sub:'Paso 1 · Clasificación de la cartera ficticia según cada alternativa.'},
-  {id:'pedido', nombre:'Evaluador de pedidos', sub:'Paso 2 · La herramienta de C aplicada a un pedido concreto de un cliente ficticio.'},
-  {id:'bit', nombre:'Bitácora', sub:'Paso 3 · Registro de decisiones de C.'},
-  {id:'res', nombre:'Recursos y riesgos', sub:'Horas-persona y riesgos según el informe.'},
-  {id:'datos', nombre:'Datos', sub:'Tablas ficticias editables; todo se recalcula al instante.'},
-  {id:'doc', nombre:'Documentación', sub:'Documentación del proyecto, modelo de datos y parámetros.'}
+  {id:'inicio', g:'La propuesta', nombre:'Qué hace esta herramienta', sub:'El problema, el flujo de trabajo de C y por dónde empezar.'},
+  {id:'resumen', g:'La propuesta', nombre:'Resumen', sub:'Indicadores clave y ficha de la alternativa seleccionada.'},
+  {id:'matriz', g:'La propuesta', nombre:'Matriz de selección', sub:'Puntajes del informe; pesos configurables en vivo.'},
+  {id:'sim', g:'La propuesta', nombre:'Simulación', sub:'Lógica del modelo a 24 meses con supuestos editables.'},
+  {id:'prod', g:'Herramienta C', nombre:'Productos', sub:'Paso 1 · Clasificación de la cartera de productos ficticia según cada alternativa.'},
+  {id:'cli', g:'Herramienta C', nombre:'Clientes', sub:'Paso 1 · Clasificación de la cartera de clientes y lectura conjunta con los productos.'},
+  {id:'pedido', g:'Herramienta C', nombre:'Evaluador de pedidos', sub:'Paso 2 · La herramienta de C aplicada a un pedido concreto de un cliente ficticio.'},
+  {id:'bit', g:'Herramienta C', nombre:'Comité y bitácora', sub:'Paso 3 · Cómo sesiona el comité y dónde queda registrada cada decisión.'},
+  {id:'res', g:'Viabilidad', nombre:'Plan, recursos y riesgos', sub:'Hoja de ruta, horas-persona y riesgos con su mitigación, según el informe.'},
+  {id:'datos', g:'Referencia', nombre:'Datos', sub:'Tablas ficticias editables; todo se recalcula al instante.'},
+  {id:'doc', g:'Referencia', nombre:'Documentación', sub:'Documentación del proyecto, modelo de datos y parámetros.'}
 ];
-const SIN_SEGMENTACION = ['inicio','pedido','datos','doc'];
+const SIN_SEGMENTACION = ['inicio','cli','pedido','bit','datos','doc'];
 
 /* ================= UTILIDADES ================= */
 const $ = id => document.getElementById(id);
@@ -968,15 +1209,19 @@ function clasificar(){
   const G = tpCartera>0 ? Math.max(0, H0*(tpMant - tpBajo)/tpCartera) : 0;
 
   const clis = state.clientes.map(c=>({...c, aporte: c.h>0 ? c.kg*c.m/c.h : 0}));
-  const medCli = median(clis.map(c=>c.aporte));
+  clis.forEach(c=>{ c.contrib = c.kg*c.m; });
+  const medCli = median(clis.map(c=>c.aporte)), medContrib = median(clis.map(c=>c.contrib));
   clis.forEach(c=>{
     c.alerta = c.aporte < medCli;
+    const mixAlta = !c.alerta, contAlta = c.contrib >= medContrib;
+    c.cat = mixAlta ? (contAlta ? 'Fidelizar' : 'Desarrollar') : (contAlta ? 'Ajustar condiciones' : 'Redefinir la relación');
     c.lecturaA = 'No revisa clientes';
     c.lecturaB = c.alerta ? 'Alerta' : 'Sin alerta';
-    c.lecturaC = c.alerta ? (c.ancla ? 'Revisar (cliente ancla)' : 'Revisar condiciones') : 'Mantener';
+    c.lecturaC = c.cat;
     c.lecturaD = 'Pendiente del ABC';
   });
-  return {prods, clis, medTP, medVol, medCli, H0, G, tpCartera, tpBajo, tpMant, totalHoras, horasBajo,
+  prods.forEach(p=>{ p.cliObj = clis.find(c=>c.id===p.cli) || null; });
+  return {prods, clis, medTP, medVol, medCli, medContrib, H0, G, tpCartera, tpBajo, tpMant, totalHoras, horasBajo,
           nA: prods.filter(p=>p.lecturaA==='Retirar').length, nD: bajo.length};
 }
 
@@ -1017,7 +1262,8 @@ function horasC(){
 
 /* ================= NAVEGACIÓN ================= */
 function buildPages(){
-  $('pageList').innerHTML = PAGES.map((p,i)=>`<li><button type="button" data-page="${p.id}"><span class="pn">${i+1}</span>${p.nombre}</button></li>`).join('');
+  $('pageList').innerHTML = PAGES.map((p,i)=>(i===0 || PAGES[i-1].g!==p.g ? `<li class="grp" aria-hidden="true">${p.g}</li>` : '')
+    + `<li><button type="button" data-page="${p.id}"><span class="pn">${String(i+1).padStart(2,'0')}</span>${p.nombre}</button></li>`).join('');
   $('pageList').addEventListener('click', ev=>{ const b = ev.target.closest('button[data-page]'); if(b) goPage(b.dataset.page); });
   document.addEventListener('click', ev=>{
     const g = ev.target.closest('[data-goto]'); if(g){ goPage(g.dataset.goto); if(window.innerWidth<=1100) setPane(false); }
@@ -1034,7 +1280,9 @@ function renderPages(){
   const P = PAGES.find(p=>p.id===state.page);
   document.querySelectorAll('#pageList button').forEach(b=> b.dataset.page===state.page ? b.setAttribute('aria-current','page') : b.removeAttribute('aria-current'));
   PAGES.forEach(p=> $('page-'+p.id).hidden = p.id!==state.page);
-  $('pageTitle').textContent = `${PAGES.indexOf(P)+1} · ${P.nombre}`;
+  $('pageTitle').textContent = P.nombre;
+  $('pageEyebrow').textContent = `${String(PAGES.indexOf(P)+1).padStart(2,'0')} · ${P.g}`;
+  document.title = `${P.nombre} · Revisión de cartera · Terránea`;
   $('pageSub').textContent = P.sub;
   $('slicer').hidden = SIN_SEGMENTACION.includes(state.page);
   $('pageTitle').setAttribute('tabindex','-1');
@@ -1264,6 +1512,10 @@ function renderFormula(cl){
 
 /* ================= PÁGINA: PRODUCTOS Y CLIENTES ================= */
 const lensKey = () => state.sel==='todas' ? 'C' : state.sel;
+const Q_CLASS = {'Mantener':'q-man','Revisar':'q-rev','Ajustar':'q-aju','Descontinuar':'q-des','Fidelizar':'q-man','Desarrollar':'q-rev','Ajustar condiciones':'q-aju','Redefinir la relación':'q-des'};
+const qColor = cat => col('--' + Q_CLASS[cat]);
+const qPill = cat => `<span class="qpill ${Q_CLASS[cat]||''}">${esc(cat)}</span>`;
+const FONT = '"IBM Plex Sans", system-ui, sans-serif', MONO = '"IBM Plex Mono", ui-monospace, monospace';
 const quadPlugin = {
   id:'quad',
   beforeDatasetsDraw(chart, _a, opts){
@@ -1274,20 +1526,20 @@ const quadPlugin = {
     if(L==='C'){
       ctx.fillStyle = col('--quad-a'); ctx.fillRect(mx, top, right-mx, my-top); ctx.fillRect(left, my, mx-left, bottom-my);
       ctx.fillStyle = col('--quad-b'); ctx.fillRect(left, top, mx-left, my-top); ctx.fillRect(mx, my, right-mx, bottom-my);
-      ctx.fillStyle = col('--text-2'); ctx.font = '600 11px "Segoe UI", system-ui, sans-serif';
-      ctx.textAlign='right'; ctx.fillText('MANTENER', right-6, top+14); ctx.fillText('AJUSTAR', right-6, bottom-6);
-      ctx.textAlign='left'; ctx.fillText('REVISAR', left+6, top+14); ctx.fillText('DESCONTINUAR', left+6, bottom-6);
+      ctx.font = '500 10.5px ' + MONO;
+      ctx.textAlign='right'; ctx.fillStyle = col('--q-man-ink'); ctx.fillText('MANTENER', right-6, top+14); ctx.fillStyle = col('--q-aju-ink'); ctx.fillText('AJUSTAR', right-6, bottom-6);
+      ctx.textAlign='left'; ctx.fillStyle = col('--q-rev-ink'); ctx.fillText('REVISAR', left+6, top+14); ctx.fillStyle = col('--q-des-ink'); ctx.fillText('DESCONTINUAR', left+6, bottom-6);
     }
     ctx.strokeStyle = col('--text-3'); ctx.lineWidth = 1; ctx.setLineDash([4,4]);
     if(L==='C' || L==='B'){ ctx.beginPath(); ctx.moveTo(left,my); ctx.lineTo(right,my); ctx.stroke(); }
     if(L==='C'){ ctx.beginPath(); ctx.moveTo(mx,top); ctx.lineTo(mx,bottom); ctx.stroke(); }
-    if(L==='B'){ ctx.setLineDash([]); ctx.fillStyle = col('--text-2'); ctx.font='11px "Segoe UI", system-ui, sans-serif'; ctx.textAlign='right'; ctx.fillText('Mediana de throughput/h', right-6, my-6); }
+    if(L==='B'){ ctx.setLineDash([]); ctx.fillStyle = col('--text-2'); ctx.font='11px ' + FONT; ctx.textAlign='right'; ctx.fillText('Mediana de throughput/h', right-6, my-6); }
     ctx.restore();
   },
   afterDatasetsDraw(chart, _a, opts){
     const cl = opts.cl; if(!cl) return;
     const meta = chart.getDatasetMeta(0), ctx = chart.ctx, narrow = chart.width < 480;
-    ctx.save(); ctx.font = (narrow?'10px':'11px') + ' "Segoe UI", system-ui, sans-serif'; ctx.fillStyle = col('--text');
+    ctx.save(); ctx.font = (narrow?'10px':'11px') + ' ' + FONT; ctx.fillStyle = col('--text');
     cl.prods.forEach((p,i)=>{
       const el = meta.data[i]; if(!el) return;
       const label = narrow ? p.id : p.corto, w = ctx.measureText(label).width, toLeft = el.x + 10 + w > chart.chartArea.right;
@@ -1303,7 +1555,7 @@ function renderMap(cl){
     let shape='circle', fill=neutral, border=surf, bw=2, rad=6;
     if(L==='A' && flagged(p)){ shape='crossRot'; fill=altColor('A'); border=altColor('A'); bw=3; rad=8; }
     if(L==='B' && flagged(p)){ shape='triangle'; fill=altColor('B'); rad=8; }
-    if(L==='C'){ if(flagged(p)) fill=altColor('C'); if(p.filtro){ shape='rectRot'; fill=surf; border=altColor('C'); bw=3; rad=8; } }
+    if(L==='C'){ fill = qColor(p.final); if(p.filtro){ shape='rectRot'; fill=surf; border=qColor('Revisar'); bw=3; rad=8; } }
     if(L==='D') fill = withAlpha(neutral,.5);
     if(p.id===state.prod){ rad+=3; border=col('--text'); bw=3; }
     return {shape, fill, border, bw, rad};
@@ -1344,7 +1596,7 @@ function renderProdText(cl){
   const leg = {
     A:`<span><span class="sw g-A">✕</span>Retirar (margen &lt; corte)</span><span><span class="sw muted">●</span>Mantener</span>`,
     B:`<span><span class="sw g-B">▲</span>Alerta de bajo aporte</span><span><span class="sw muted">●</span>Sin alerta</span>`,
-    C:`<span><span class="sw g-C">●</span>Ajustar o Descontinuar</span><span><span class="sw muted">●</span>Mantener o Revisar</span><span><span class="sw g-C">◇</span>Filtro estratégico → Revisar</span>`,
+    C:['Mantener','Revisar','Ajustar','Descontinuar'].map(c=>`<span><span class="sw" style="color:var(--${Q_CLASS[c]})">●</span>${c}</span>`).join('') + `<span><span class="sw" style="color:var(--q-rev)">◇</span>Filtro estratégico → Revisar</span>`,
     D:`<span><span class="sw muted">●</span>Sin clasificar (pendiente del ABC)</span>`
   };
   $('mapLegend').innerHTML = leg[L] + `<span>Mediana volumen: ${nf(cl.medVol)} kg/mes · mediana throughput/h: ₡${nf(cl.medTP)}</span>`;
@@ -1361,11 +1613,12 @@ function renderProdText(cl){
     <dl>
       <dt>Throughput por hora</dt><dd>₡${nf(p.tp)}</dd>
       <dt>Volumen</dt><dd>${nf(p.vol)} kg/mes</dd>
-      <dt>% en el cliente principal</dt><dd>${pct(p.pct)}${p.ancla?' · cliente ancla':''}</dd>
+      <dt>Cliente principal</dt><dd>${p.cliObj ? esc(p.cliObj.nombre.replace(' (ficticio)','')) : '—'} · ${pct(p.pct)}${p.ancla?' · ancla':''}</dd>
+      ${p.cliObj ? `<dt>Categoría del cliente</dt><dd>${qPill(p.cliObj.cat)}</dd>` : ''}
       <dt>Categoría</dt><dd style="text-align:right">${esc(p.cat)}</dd>
       <dt>Margen unitario</dt><dd>${pct(p.margenPct,1)}</dd>
       <dt>Horas de línea</dt><dd>${nf(p.horas,1)} h/mes</dd>
-      <dt>Cuadrante (C)</dt><dd>${p.cuadrante}${p.filtro?` → ${p.final}`:''}</dd>
+      <dt>Cuadrante (C)</dt><dd>${p.filtro?`${p.cuadrante} → `:''}${qPill(p.final)}</dd>
     </dl>
     <p class="formula" style="margin-top:10px">(₡${nf(p.p)} − ₡${nf(p.cv)}) × ${nf(p.kgh)} kg/h = ₡${nf(p.tp)} por hora</p>
     ${p.filtro?`<p class="note">Filtro estratégico: ${p.filtro}. Pasa de Descontinuar a Revisar.</p>`:''}
@@ -1375,20 +1628,47 @@ function renderProdText(cl){
   $('lectTable').innerHTML = `<caption>Cómo lee cada alternativa el mismo producto.</caption><thead><tr><th scope="col">Producto</th>${KEYS.map(k=>`<th scope="col">${badge(k)}</th>`).join('')}</tr></thead><tbody>`
     + cl.prods.map(q=>`<tr${q.id===state.prod?' style="font-weight:600"':''}><th scope="row" style="font-weight:inherit">${q.id} ${esc(q.corto)}</th>${KEYS.map(k=>`<td class="${k===L?'cur':''}">${esc(q['lectura'+k])}</td>`).join('')}</tr>`).join('') + `</tbody>`;
 
-  // Clientes
-  const maxA = Math.max(1, ...cl.clis.map(c=>c.aporte));
-  const cliLens = {
-    A:`${badge('A')} revisa solo productos: no evalúa clientes.`,
-    B:`${badge('B')} marca en alerta a los clientes con aporte por hora bajo la mediana, sin decisión.`,
-    C:`${badge('C')} integra clientes al instrumento: los de bajo aporte pasan a revisión en el comité.`,
-    D:`${badge('D')} revisaría clientes después de cerrar el ABC.`
-  };
-  $('cliLens').innerHTML = cliLens[L];
-  const flagCli = c => (L==='B'||L==='C') && c.alerta;
-  $('cliBars').innerHTML = cl.clis.map(c=>`<div class="cli-row"><span>${esc(c.nombre.replace(' (ficticio)',''))}${c.ancla?' ⚓':''}</span>
-    <div class="cli-track" aria-hidden="true"><div class="cli-fill" style="width:${Math.max(0,c.aporte)/maxA*100}%;background:${flagCli(c)?altColor(L):withAlpha(col('--text-3'),.55)}"></div><span class="cli-med" style="left:${cl.medCli/maxA*100}%"></span></div>
-    <span class="v">₡${nf(c.aporte/1000,1)} mil${flagCli(c)?' ⚠':''}</span></div>`).join('');
-  $('cliNote').innerHTML = `Aporte por hora = kg/mes × margen/kg ÷ horas de línea. Línea punteada: mediana (₡${nf(cl.medCli)}). ⚓ = cliente ancla. ⚠ = en alerta según ${badge(L)}.`;
+}
+
+/* ================= PÁGINA: CLIENTES ================= */
+const corto = c => c.nombre.replace(' (ficticio)','');
+function lecturaConjunta(cl){
+  return cl.prods.filter(p=>p.cliObj && (p.cuadrante==='Descontinuar' || p.final==='Ajustar'))
+    .map(p=>({p, c:p.cliObj, sensible: p.cliObj.cat==='Fidelizar' || p.cliObj.ancla}));
+}
+function renderClientes(cl){
+  const nCat = cat => cl.clis.filter(c=>c.cat===cat).length;
+  const contTot = cl.clis.reduce((s,c)=>s+c.contrib,0) || 1;
+  const fid = cl.clis.filter(c=>c.cat==='Fidelizar'), contFid = fid.reduce((s,c)=>s+c.contrib,0);
+  $('cliKpis').innerHTML = `<div class="kpis">
+    <div class="card-kpi"><div class="val">${nf(cl.clis.length)}</div><div class="lbl">Clientes evaluados</div><div class="sub">Ficticios · editables en Datos</div></div>
+    <div class="card-kpi" style="border-top-color:var(--q-man)"><div class="val">${pct(contFid/contTot*100)}</div><div class="lbl">Contribución en clientes a fidelizar</div><div class="sub">${nf(fid.length)} de ${nf(cl.clis.length)} clientes · Kaplan y Narayanan (2001)</div></div>
+    <div class="card-kpi" style="border-top-color:var(--q-aju)"><div class="val">${nf(nCat('Ajustar condiciones')+nCat('Redefinir la relación'))}</div><div class="lbl">Clientes con mezcla bajo la mediana</div><div class="sub">Mediana ₡${nf(cl.medCli)} por hora de línea</div></div>
+    <div class="card-kpi" style="border-top-color:var(--q-des)"><div class="val">${nf(lecturaConjunta(cl).filter(x=>x.sensible).length)}</div><div class="lbl">Decisiones de producto que tocan a un cliente clave</div><div class="sub">Lectura conjunta de ambas matrices</div></div>
+  </div>`;
+  const Q = [
+    {cat:'Desarrollar', t:'Buscar mayor volumen con los mismos productos.'},
+    {cat:'Fidelizar', t:'Proteger la relación y el nivel de servicio.'},
+    {cat:'Redefinir la relación', t:'Revisar condiciones o el nivel de atención.'},
+    {cat:'Ajustar condiciones', t:'Precio, mínimos de pedido, mezcla o frecuencia de entrega.'}
+  ];
+  const quad = q => { const cs = cl.clis.filter(c=>c.cat===q.cat);
+    return `<div class="q ${Q_CLASS[q.cat]}"><h4>${q.cat}</h4><p>${q.t}</p><div class="who">${cs.length ? cs.map(c=>`<span>${esc(corto(c))}${c.ancla?' ⚓':''}</span>`).join('') : '<em>Ningún cliente</em>'}</div></div>`; };
+  $('cliMatrix').innerHTML = `<div class="ax v" style="grid-row:1/3">Throughput/h de la mezcla →</div>${quad(Q[0])}${quad(Q[1])}${quad(Q[2])}${quad(Q[3])}
+    <div></div><div class="ax h">Contribución baja</div><div class="ax h">Contribución alta →</div>`;
+  $('cliMatrix').setAttribute('role','img');
+  $('cliMatrix').setAttribute('aria-label', 'Matriz de clientes: ' + cl.clis.map(c=>`${corto(c)}: ${c.cat}`).join('; '));
+  const jl = lecturaConjunta(cl);
+  $('cliJoint').innerHTML = jl.length ? jl.map(({p,c,sensible})=>`<li><span class="ic${sensible?'':' ok'}" aria-hidden="true">${sensible?'!':'✓'}</span><span>
+      <strong>${p.id} · ${esc(p.nombre)}</strong> ${qPill(p.final)}<br>
+      Su cliente principal es <strong>${esc(corto(c))}</strong> (${pct(p.pct)} del volumen), en ${qPill(c.cat)}.
+      ${sensible ? (c.ancla ? 'Es cliente ancla: el filtro estratégico ya lo protege; revisar condiciones con el cliente antes de cambiar el producto.' : 'Decidir considerando el efecto sobre esa relación: ofrecer sustituto o ajustar precio antes de retirarlo.') : 'El cliente no es clave para la cartera: la decisión sobre el producto puede seguir su curso.'}</span></li>`).join('')
+    : '<li><span class="ic ok" aria-hidden="true">✓</span><span>Ningún producto en Ajustar o Descontinuar depende de un cliente clave.</span></li>';
+  const prodsDe = c => cl.prods.filter(p=>p.cli===c.id);
+  $('cliTable').innerHTML = `<thead><tr><th scope="col">Cliente</th><th scope="col">Segmento</th><th scope="col" class="num">kg/mes</th><th scope="col" class="num">Contribución/mes</th><th scope="col" class="num">Throughput/h de la mezcla</th><th scope="col">Categoría (C)</th><th scope="col">Es cliente principal de</th></tr></thead><tbody>`
+    + [...cl.clis].sort((a,b)=>b.contrib-a.contrib).map(c=>`<tr><th scope="row">${esc(corto(c))}${c.ancla?' ⚓':''}</th><td>${esc(c.seg)}</td><td class="num">${nf(c.kg)}</td><td class="num">${money(c.contrib)}</td>
+      <td class="num">₡${nf(c.aporte)}${c.alerta?' <span title="Bajo la mediana">↓</span>':''}</td><td>${qPill(c.cat)}</td><td>${prodsDe(c).map(p=>`${p.id} ${esc(p.corto)}`).join(', ') || '—'}</td></tr>`).join('')
+    + `</tbody><tfoot><tr><td colspan="7" class="tiny">Medianas: contribución ${money(cl.medContrib)} · throughput/h ₡${nf(cl.medCli)}. ⚓ = cliente ancla (lo define la Gerencia Comercial). ↓ = bajo la mediana.</td></tr></tfoot>`;
 }
 
 /* ================= PÁGINA: EVALUADOR DE PEDIDOS ================= */
@@ -1496,7 +1776,7 @@ function buildEscenarios(){
     state.bitExtra.unshift({n: ped.cliente, cat:`Pedido · ${ev.cuadrante}`, dec:`${ev.cuadrante}: ${prod}`,
       just:`Throughput/h del pedido ₡${nf(ev.tot.tp)} frente a la mediana ₡${nf(cl.medTP)}; valor estratégico ${ev.score}/5; ${nf(ev.tot.horas,1)} h pedidas de ${nf(ped.horas)} disponibles.`,
       resp:'Comercial (rol ficticio)', seg:1, extra:true});
-    $('pedRegMsg').innerHTML = `✓ Registrado. <button type="button" class="btn" data-goto="bit">Ver la bitácora</button>`;
+    $('pedRegMsg').innerHTML = `✓ Registrado. <button type="button" class="btn" data-goto="bit">Ver el comité y la bitácora</button>`;
     renderAll();
   });
 }
@@ -1581,7 +1861,7 @@ const pedQuad = {
     ctx.fillStyle = col('--quad-b'); ctx.fillRect(left, top, mx-left, my-top); ctx.fillRect(mx, my, right-mx, bottom-my);
     ctx.strokeStyle = col('--text-3'); ctx.lineWidth = 1; ctx.setLineDash([4,4]);
     ctx.beginPath(); ctx.moveTo(left,my); ctx.lineTo(right,my); ctx.moveTo(mx,top); ctx.lineTo(mx,bottom); ctx.stroke();
-    ctx.setLineDash([]); ctx.fillStyle = col('--text-2'); ctx.font = '600 10px "Segoe UI", system-ui, sans-serif';
+    ctx.setLineDash([]); ctx.fillStyle = col('--text-2'); ctx.font = '500 10px ' + MONO;
     const txt = (lines, xx, yy, align, down) => { ctx.textAlign = align; lines.forEach((t,i)=>ctx.fillText(t, xx, down ? yy + i*12 : yy - (lines.length-1-i)*12)); };
     txt(['ACEPTAR'], right-6, top+13, 'right', true);
     txt(['ACEPTAR SI HAY','CAPACIDAD OCIOSA'], left+6, top+13, 'left', true);
@@ -1592,7 +1872,7 @@ const pedQuad = {
   afterDatasetsDraw(chart, _a, o){
     if(!o.cl) return;
     const ctx = chart.ctx;
-    ctx.save(); ctx.font = '11px "Segoe UI", system-ui, sans-serif'; ctx.fillStyle = col('--text-2'); ctx.textAlign = 'left';
+    ctx.save(); ctx.font = '11px ' + FONT; ctx.fillStyle = col('--text-2'); ctx.textAlign = 'left';
     const m0 = chart.getDatasetMeta(0);
     (o.ref||[]).forEach((r,i)=>{ const el = m0.data[i]; if(!el) return;
       const left = el.x + 8 + ctx.measureText(r.corto).width > chart.chartArea.right;
@@ -1634,29 +1914,81 @@ function renderPedChart(cl, ev){
 
 /* ================= PÁGINA: BITÁCORA ================= */
 const ORDEN_CAT = {Descontinuar:0, Ajustar:1, Revisar:2};
-function renderBitacora(cl){
+function bitFilas(cl){
   const t0 = state.sup.C.t0;
   const fecha = n => `Mes ${t0 + 2*n}` + (t0 + 2*n <= 24 ? ` · sesión ${n+1}` : '');
   const justTP = p => `Throughput/h ₡${nf(p.tp)} ${p.tp<cl.medTP?'bajo':'sobre'} la mediana (₡${nf(cl.medTP)}); volumen ${p.vol<cl.medVol?'bajo':'alto'}.`;
   const prods = cl.prods.filter(p=>p.final==='Ajustar'||p.final==='Descontinuar'||p.filtro)
     .sort((a,b)=>ORDEN_CAT[a.final]-ORDEN_CAT[b.final] || a.tp-b.tp).slice(0,5);
   const rows = prods.map(p=>{
-    if(p.final==='Descontinuar') return {n:`${p.id} · ${p.nombre}`, cat:'Descontinuar', dec:'Descontinuar de forma gradual y reasignar horas de línea', just: justTP(p)+' Sin cliente ancla ni categoría en tendencia.', resp:'Producción (rol ficticio)', seg:1};
-    if(p.final==='Ajustar') return {n:`${p.id} · ${p.nombre}`, cat:'Ajustar', dec:'Revisar precio, tamaño de lote o pedido mínimo', just: justTP(p)+` Ocupa ${nf(p.horas)} h de línea al mes.`, resp:'Comercial y Costos (roles ficticios)', seg:1};
-    if(p.ancla) return {n:`${p.id} · ${p.nombre}`, cat:'Revisar (filtro: cliente ancla)', dec:'Mantener; revisar condiciones con el cliente ancla', just: justTP(p)+` El ${pct(p.pct)} lo compra un cliente ancla.`, resp:'Comercial (rol ficticio)', seg:2};
-    return {n:`${p.id} · ${p.nombre}`, cat:'Revisar (filtro: tendencia)', dec:'Mantener en observación dos sesiones', just: justTP(p)+' Categoría alineada con tendencias.', resp:'Producción (rol ficticio)', seg:2};
+    const rel = p.cliObj && p.cliObj.cat==='Fidelizar' && !p.ancla ? ` Su cliente principal (${corto(p.cliObj)}) está en Fidelizar: ofrecer sustituto antes de retirarlo.` : '';
+    if(p.final==='Descontinuar') return {n:`${p.id} · ${p.nombre}`, cat:'Descontinuar', dec:'Descontinuar de forma gradual y reasignar horas de línea', just: justTP(p)+' Sin cliente ancla ni categoría en tendencia.'+rel, resp:'Producción', seg:1};
+    if(p.final==='Ajustar') return {n:`${p.id} · ${p.nombre}`, cat:'Ajustar', dec:'Revisar precio, tamaño de lote o pedido mínimo', just: justTP(p)+` Ocupa ${nf(p.horas)} h de línea al mes.`+rel, resp:'Gerencia Comercial y Administración', seg:1};
+    if(p.ancla) return {n:`${p.id} · ${p.nombre}`, cat:'Revisar (filtro: cliente ancla)', dec:'Mantener; revisar condiciones con el cliente ancla', just: justTP(p)+` El ${pct(p.pct)} lo compra un cliente ancla.`, resp:'Gerencia Comercial', seg:2};
+    return {n:`${p.id} · ${p.nombre}`, cat:'Revisar (filtro: tendencia)', dec:'Mantener en observación dos sesiones', just: justTP(p)+' Categoría alineada con tendencias.', resp:'Producción', seg:2};
   });
-  const cli = cl.clis.filter(c=>!c.ancla).sort((a,b)=>a.aporte-b.aporte)[0];
-  if(cli) rows.push({n:cli.nombre, cat: cli.alerta ? 'Cliente de bajo aporte' : 'Cliente (sin alerta)', dec:'Revisar frecuencia de entrega y pedido mínimo', just:`Aporte/h ₡${nf(cli.aporte)} frente a la mediana de clientes (₡${nf(cl.medCli)}). El instrumento de C evalúa también clientes.`, resp:'Comercial (rol ficticio)', seg:1});
-  const todas = [...state.bitExtra, ...rows];
-  $('bitTable').innerHTML = `<caption>Registro de la primera sesión del comité (mes ${t0}). Filas generadas a partir de los datos ficticios: cambian si edita la página Datos.${state.bitExtra.length?` Incluye ${state.bitExtra.length} decisión(es) registrada(s) desde el Evaluador de pedidos (★).`:''}</caption>
-    <thead><tr><th scope="col">Producto o cliente</th><th scope="col">Categoría</th><th scope="col">Decisión</th><th scope="col">Justificación</th><th scope="col">Responsable</th><th scope="col">Fecha de seguimiento</th></tr></thead>
-    <tbody>${todas.map(r=>`<tr${r.extra?' class="colC"':''}><td>${r.extra?'★ ':''}${esc(r.n)}</td><td>${esc(r.cat)}</td><td>${esc(r.dec)}</td><td>${esc(r.just)}</td><td>${esc(r.resp)}</td><td>${esc(fecha(r.seg))}</td></tr>`).join('')}</tbody>`;
-  const k = state.sel, isC = k==='C' || k==='todas';
-  $('bitTable').classList.toggle('dim', !isC);
-  $('bitNote').innerHTML = isC
-    ? `La bitácora es un componente de ${badge('C')}: cada decisión queda documentada con su responsable y fecha de seguimiento.`
-    : `La bitácora es un componente de ${badge('C')}; el informe no la describe para ${badge(k)}. Se muestra atenuada como referencia.`;
+  const DEC_CLI = {'Ajustar condiciones':'Revisar precio, pedido mínimo o frecuencia de entrega', 'Redefinir la relación':'Revisar condiciones o el nivel de atención'};
+  cl.clis.filter(c=>DEC_CLI[c.cat]).sort((a,b)=>a.aporte-b.aporte).slice(0,2).forEach(c=>rows.push({n:c.nombre, cat:c.cat, dec:DEC_CLI[c.cat],
+    just:`Contribución ${money(c.contrib)}/mes; throughput/h de su mezcla ₡${nf(c.aporte)} bajo la mediana de clientes (₡${nf(cl.medCli)}).`, resp:'Gerencia Comercial', seg:2}));
+  return [...state.bitExtra, ...rows].map(r=>({...r, fecha: r.fecha || fecha(r.seg)}));
+}
+function renderBitacora(cl){
+  const todas = bitFilas(cl), t0 = state.sup.C.t0;
+  $('bitTable').innerHTML = `<caption>Primera sesión del comité (mes ${t0}). Las filas se generan a partir de los datos ficticios y cambian si edita la página Datos.${state.bitExtra.length?` ★ = ${state.bitExtra.length} decisión(es) registrada(s) en esta pestaña.`:''}</caption>
+    <thead><tr><th scope="col">Producto o cliente</th><th scope="col">Categoría</th><th scope="col">Decisión</th><th scope="col">Justificación</th><th scope="col">Responsable</th><th scope="col">Seguimiento</th></tr></thead>
+    <tbody>${todas.map(r=>{ const base = String(r.cat).replace(/ \(filtro.*$/,'').replace(/^Pedido · .*/,''); return `<tr><td>${r.extra?'★ ':''}${esc(r.n)}</td><td>${Q_CLASS[base]?qPill(base)+(r.cat!==base?`<span class="tiny" style="display:block">${esc(r.cat.slice(base.length).trim())}</span>`:''):esc(r.cat)}</td><td>${esc(r.dec)}</td><td>${esc(r.just)}</td><td>${esc(r.resp)}</td><td style="white-space:nowrap">${esc(r.fecha)}</td></tr>`; }).join('')}</tbody>`;
+  const sel = $('bfItem');
+  const cur = sel.value;
+  sel.innerHTML = `<optgroup label="Productos">${cl.prods.map(p=>`<option value="P|${p.id}">${p.id} · ${esc(p.nombre)} — ${p.final}</option>`).join('')}</optgroup><optgroup label="Clientes">${cl.clis.map(c=>`<option value="C|${c.id}">${esc(corto(c))} — ${c.cat}</option>`).join('')}</optgroup>`;
+  if(cur) sel.value = cur;
+  const seg = $('bfSeg'), curS = seg.value;
+  seg.innerHTML = [1,2,3].map(n=>`<option value="${n}">Mes ${t0+2*n} · sesión ${n+1}</option>`).join('');
+  if(curS) seg.value = curS;
+}
+function buildBitForm(){
+  const form = $('bitForm'), btn = $('bitAddBtn');
+  const toggle = open => { form.hidden = !open; btn.setAttribute('aria-expanded', open?'true':'false'); if(open) $('bfItem').focus(); };
+  btn.addEventListener('click', ()=>toggle(form.hidden));
+  $('bfCancel').addEventListener('click', ()=>{ toggle(false); btn.focus(); });
+  $('bfItem').addEventListener('change', ()=>{
+    const [t,id] = $('bfItem').value.split('|'), cl = clasificar();
+    const o = t==='P' ? cl.prods.find(p=>p.id===id) : cl.clis.find(c=>c.id===id);
+    if(o){ $('bfDec').value = t==='P' ? o.final : o.cat; }
+  });
+  form.addEventListener('submit', ev=>{
+    ev.preventDefault();
+    const [t,id] = $('bfItem').value.split('|'), cl = clasificar();
+    const o = t==='P' ? cl.prods.find(p=>p.id===id) : cl.clis.find(c=>c.id===id);
+    if(!o) return;
+    const just = $('bfJust').value.trim() || (t==='P' ? `Throughput/h ₡${nf(o.tp)} frente a la mediana ₡${nf(cl.medTP)}.` : `Throughput/h de la mezcla ₡${nf(o.aporte)} frente a la mediana ₡${nf(cl.medCli)}.`);
+    state.bitExtra.unshift({n: t==='P' ? `${o.id} · ${o.nombre}` : o.nombre, cat: t==='P' ? o.final : o.cat, dec: $('bfDec').value, just, resp: $('bfResp').value, seg: +$('bfSeg').value, extra:true});
+    $('bfJust').value = '';
+    toggle(false);
+    $('bitMsg').textContent = '✓ Decisión guardada en la bitácora (solo en esta pestaña).';
+    renderAll();
+  });
+  $('bitCsv').addEventListener('click', ()=>{
+    const rows = bitFilas(clasificar());
+    const q = v => '"' + String(v).replace(/"/g,'""') + '"';
+    const csv = '﻿' + [['Producto o cliente','Categoría','Decisión','Justificación','Responsable','Seguimiento'].map(q).join(';'),
+      ...rows.map(r=>[r.n, r.cat, r.dec, r.just, r.resp, r.fecha].map(q).join(';'))].join('\r\n');
+    const url = URL.createObjectURL(new Blob([csv], {type:'text/csv;charset=utf-8'}));
+    const a = document.createElement('a'); a.href = url; a.download = 'bitacora-revision-cartera.csv';
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url), 1000);
+    $('bitMsg').textContent = `✓ Se descargó la bitácora (${rows.length} filas, separada por punto y coma para Excel).`;
+  });
+}
+function renderComite(sim){
+  const C = sim.C, t0 = state.sup.C.t0, cells = [];
+  let ok = 0, tot = 0;
+  for(let t=1;t<=12;t++){
+    const prog = C.sp[t] > C.sp[t-1], held = C.sr[t] > C.sr[t-1];
+    if(prog){ tot++; if(held) ok++; }
+    cells.push(`<div class="m"><div class="d${prog ? (held?' ok':' miss') : ''}">${prog ? (held?'✓':'✕') : ''}</div>M${t}</div>`);
+  }
+  $('cal').innerHTML = cells.join('');
+  $('cal').setAttribute('aria-label', `Calendario de 12 meses: ${tot} sesiones programadas desde el mes ${t0}, ${ok} realizadas.`);
+  $('calTxt').innerHTML = `${nf(tot)} sesiones programadas en los primeros 12 meses; con una constancia de <strong>${pct(state.extra.constancia)}</strong> se realizan <strong>${nf(ok)}</strong>. La constancia de las sesiones es el principal factor crítico de la implementación.`;
 }
 
 /* ================= PÁGINA: RECURSOS Y RIESGOS ================= */
@@ -1684,8 +2016,12 @@ function renderRecursos(){
   });
   $('heat').innerHTML = html;
   $('heat').setAttribute('aria-label', 'Mapa de calor de riesgos de C: ' + RIESGOS_C.map(r=>`${r.id} probabilidad ${r.p}, impacto ${r.i}`).join('; '));
-  $('riskTable').innerHTML = `<thead><tr><th scope="col">Riesgo de C</th><th scope="col">Probabilidad</th><th scope="col">Impacto</th></tr></thead><tbody>`
-    + RIESGOS_C.map(r=>`<tr><td><strong>${r.id}</strong> ${esc(r.nombre)}</td><td>${r.p}</td><td>${r.i}</td></tr>`).join('') + `</tbody>`;
+  $('riskTable').innerHTML = `<thead><tr><th scope="col">Riesgo de C</th><th scope="col">Probabilidad</th><th scope="col">Impacto</th><th scope="col">Mitigación</th></tr></thead><tbody>`
+    + RIESGOS_C.map(r=>`<tr><td><strong>${r.id}</strong> ${esc(r.nombre)}</td><td>${r.p}</td><td>${r.i}</td><td>${esc(r.m)}</td></tr>`).join('') + `</tbody>`;
+  const M = 8, pos = (d,h) => `left:calc(${(d-1)/M*100}% + 3px);width:calc(${(h-d+1)/M*100}% - 6px)`;
+  $('gantt').innerHTML = `<div class="gh" role="columnheader">Acción · responsable</div><div class="gh months" role="columnheader">${Array.from({length:M},(_,i)=>`<span>Mes ${i+1}</span>`).join('')}</div>`
+    + ACCIONES.map(x=>`<div class="nm" role="cell"><strong>${x.n}.</strong> ${esc(x.a)}<small>${esc(x.r)} · ${esc(x.rec)}${x.dep?` · depende de ${esc(x.dep)}`:''}</small></div>
+      <div class="tr" role="cell"><div class="bar${x.tipo?' '+x.tipo:''}" style="${pos(x.d,x.h)}" title="Mes ${x.d}${x.h>x.d?'–'+x.h:''}">${x.tipo==='cont'?'Continuo':x.h>x.d?`M${x.d}–M${x.h}`:`M${x.d}`}</div></div>`).join('');
   $('riskOthers').innerHTML = ['A','B','D'].map(k=>`${badge(k)} riesgos: no cuantificado en el informe`).join(' · ');
 }
 
@@ -1699,13 +2035,14 @@ const CLI_COLS = [
 ];
 const numInput = (tbl, i, c, v, nombre) => `<input type="number" data-t="${tbl}" data-i="${i}" data-f="${c.f}" min="${c.min}"${c.max!=null?` max="${c.max}"`:''} step="${c.step}" value="${v}" aria-label="${esc(c.t)} de ${esc(nombre)}">`;
 function buildDatos(){
-  $('tblProd').innerHTML = `<thead><tr><th scope="col">Producto</th>${PROD_COLS.map(c=>`<th scope="col">${c.t}</th>`).join('')}<th scope="col">Ancla</th><th scope="col">Tendencia</th><th scope="col" class="num">Margen %</th><th scope="col" class="num">Throughput ₡/h</th><th scope="col" class="num">Horas/mes</th><th scope="col">Cuadrante → C</th></tr></thead><tbody>`
+  $('tblProd').innerHTML = `<thead><tr><th scope="col">Producto</th>${PROD_COLS.map(c=>`<th scope="col">${c.t}</th>`).join('')}<th scope="col">Cliente principal</th><th scope="col">Ancla</th><th scope="col">Tendencia</th><th scope="col" class="num">Margen %</th><th scope="col" class="num">Throughput ₡/h</th><th scope="col" class="num">Horas/mes</th><th scope="col">Cuadrante → C</th></tr></thead><tbody>`
     + state.productos.map((p,i)=>`<tr id="pr-${i}"><th scope="row" title="${esc(p.nombre)} · ${esc(p.cat)}">${p.id} · ${esc(p.corto)}</th>
       ${PROD_COLS.map(c=>`<td>${numInput('p',i,c,p[c.f],p.nombre)}</td>`).join('')}
+      <td><select data-t="p" data-i="${i}" data-f="cli" aria-label="Cliente principal de ${esc(p.nombre)}">${state.clientes.map(c=>`<option value="${c.id}"${c.id===p.cli?' selected':''}>${esc(c.nombre.replace(' (ficticio)',''))}</option>`).join('')}</select></td>
       <td><input type="checkbox" data-t="p" data-i="${i}" data-f="ancla" ${p.ancla?'checked':''} aria-label="Cliente ancla de ${esc(p.nombre)}"></td>
       <td><input type="checkbox" data-t="p" data-i="${i}" data-f="tend" ${p.tend?'checked':''} aria-label="Categoría en tendencia de ${esc(p.nombre)}"></td>
       <td class="calc" id="pc-m-${i}"></td><td class="calc" id="pc-tp-${i}"></td><td class="calc" id="pc-h-${i}"></td><td class="calc" id="pc-q-${i}" style="text-align:left"></td></tr>`).join('') + `</tbody>`;
-  $('tblCli').innerHTML = `<thead><tr><th scope="col">Cliente</th><th scope="col">Segmento</th>${CLI_COLS.map(c=>`<th scope="col">${c.t}</th>`).join('')}<th scope="col">Ancla</th><th scope="col" class="num">Aporte ₡/h</th><th scope="col">Alerta</th></tr></thead><tbody>`
+  $('tblCli').innerHTML = `<thead><tr><th scope="col">Cliente</th><th scope="col">Segmento</th>${CLI_COLS.map(c=>`<th scope="col">${c.t}</th>`).join('')}<th scope="col">Ancla</th><th scope="col" class="num">Aporte ₡/h</th><th scope="col">Categoría (C)</th></tr></thead><tbody>`
     + state.clientes.map((c,i)=>`<tr><th scope="row">${esc(c.nombre)}</th><td>${esc(c.seg)}</td>
       ${CLI_COLS.map(k=>`<td>${numInput('c',i,k,c[k.f],c.nombre)}</td>`).join('')}
       <td><input type="checkbox" data-t="c" data-i="${i}" data-f="ancla" ${c.ancla?'checked':''} aria-label="Cliente ancla: ${esc(c.nombre)}"></td>
@@ -1715,6 +2052,7 @@ function onDataInput(ev){
   const el = ev.target; if(!el.dataset || !el.dataset.t) return;
   const arr = el.dataset.t==='p' ? state.productos : state.clientes, row = arr[+el.dataset.i], f = el.dataset.f;
   if(el.type==='checkbox'){ row[f] = el.checked; renderAll(); return; }
+  if(el.tagName==='SELECT'){ row[f] = el.value; renderAll(); return; }
   const v = parseFloat(el.value), min = parseFloat(el.min), max = el.max!=='' ? parseFloat(el.max) : Infinity;
   const ok = Number.isFinite(v) && v >= min && v <= max;
   el.setAttribute('aria-invalid', ok ? 'false' : 'true');
@@ -1722,7 +2060,7 @@ function onDataInput(ev){
   row[f] = v; renderAll();
 }
 $('page-datos').addEventListener('input', onDataInput);
-$('page-datos').addEventListener('change', ev=>{ if(ev.target.type==='checkbox') onDataInput(ev); });
+$('page-datos').addEventListener('change', ev=>{ if(ev.target.type==='checkbox' || ev.target.tagName==='SELECT') onDataInput(ev); });
 $('btnResetData').addEventListener('click', ()=>{ state.productos = clone(PRODUCTOS); state.clientes = clone(CLIENTES); buildDatos(); renderAll(); });
 
 function renderDatos(cl){
@@ -1734,7 +2072,7 @@ function renderDatos(cl){
     $('pr-'+i).classList.toggle('warnrow', p.margenKg <= 0);
     $('pr-'+i).title = p.margenKg <= 0 ? 'El costo variable es igual o mayor que el precio' : '';
   });
-  cl.clis.forEach((c,i)=>{ $('cc-a-'+i).textContent = nf(c.aporte); $('cc-al-'+i).textContent = c.alerta ? '⚠ Bajo la mediana' : '—'; });
+  cl.clis.forEach((c,i)=>{ $('cc-a-'+i).textContent = nf(c.aporte); $('cc-al-'+i).innerHTML = qPill(c.cat); });
   $('tblAgg').innerHTML = `<tbody>
     <tr><th scope="row">Mediana de throughput/h</th><td class="num">₡${nf(cl.medTP)}</td></tr>
     <tr><th scope="row">Mediana de volumen</th><td class="num">${nf(cl.medVol)} kg/mes</td></tr>
@@ -1787,7 +2125,9 @@ function renderAll(){
   renderFormula(cl);
   renderProdText(cl);
   const ev = renderPedido(cl);
+  renderClientes(cl);
   renderBitacora(cl);
+  renderComite(sim);
   renderRecursos();
   renderDatos(cl);
   renderDoc(sc);
@@ -1801,13 +2141,14 @@ function renderAll(){
   }
 }
 
-if(window.Chart) Chart.defaults.font.family = '"Segoe UI", system-ui, -apple-system, Roboto, sans-serif';
+if(window.Chart){ Chart.defaults.font.family = FONT; Chart.defaults.font.size = 12; }
 state.pedido = pedidoDesde(ESCENARIOS[0]);
 buildPages();
 buildPane();
 buildDatos();
 buildEscenarios();
 buildPedido();
+buildBitForm();
 setPane(state.paneOpen);
 renderAll();
 window.__terranea = {state, puntajes, verificarInforme, clasificar, simular, goPage, evaluarPedido, pedidoDesde, ESCENARIOS};

@@ -7,13 +7,16 @@ Curso DN-0111 Gestión de la Innovación y Estrategia Competitiva (UCR), Equipo 
 
 ## Qué incluye
 
-Informe por páginas con estilo de tablero BI:
+Informe por páginas con el estilo del Tablero Terranea (tipografía HWT Artz para títulos y cifras, IBM Plex Sans para el texto, IBM Plex Mono para etiquetas; blanco con acento dorado). El menú lateral agrupa las páginas en cuatro bloques:
 
-- **1 · Qué hace esta herramienta:** el problema y el flujo de C en tres pasos (clasificar cartera → evaluar pedidos → decidir y registrar).
-- **Resumen, Matriz, Simulación, Productos y clientes, Bitácora, Recursos y riesgos.**
-- **Evaluador de pedidos:** aplica la herramienta de C a un pedido de un cliente ficticio (cuatro escenarios o pedido personalizado). Lo ubica en una matriz de pedidos, recomienda la mezcla que más rinde en las horas de línea disponibles y permite registrar la decisión en la bitácora.
-- **Datos:** tablas ficticias de productos y clientes, editables; todo se recalcula al instante.
-- **Documentación:** contexto, modelo de datos, medidas, parámetros, indicadores y riesgos.
+- **La propuesta:** Qué hace esta herramienta, Resumen, Matriz de selección y Simulación. Comparan las alternativas A, B, C y D.
+- **Herramienta C:**
+  - **Productos:** mapa de clasificación (Mantener, Revisar, Ajustar, Descontinuar) con filtro estratégico y cliente principal de cada producto.
+  - **Clientes:** matriz de la Tabla 7 (Fidelizar, Desarrollar, Ajustar condiciones, Redefinir la relación) y lectura conjunta productos × clientes.
+  - **Evaluador de pedidos:** aplica la herramienta a un pedido ficticio y recomienda la mezcla que más rinde en las horas de línea disponibles.
+  - **Comité y bitácora:** agenda fija, integrantes (Tabla 8), calendario bimestral según la constancia de sesiones y bitácora (Tabla C2) donde se registran decisiones y se descarga en CSV.
+- **Viabilidad:** hoja de ruta de la Tabla 9, horas-persona y riesgos con su mitigación (Tabla 10).
+- **Referencia:** Datos (tablas ficticias editables) y Documentación.
 - **Panel ⚙ Parámetros:** pesos de la matriz y supuestos de la simulación, configurables en vivo.
 
 ## Cómo verla
@@ -30,9 +33,9 @@ Todo está en un solo archivo: `index.html`.
 
 Lo que está en el código:
 
-- Datos del informe: constantes `CRITERIOS`, `ESPERADOS`, `RECURSOS_C`, `INDICADORES` y `RIESGOS_C`.
+- Datos del informe: constantes `CRITERIOS`, `ESPERADOS`, `RECURSOS_C`, `INDICADORES`, `RIESGOS_C` y `ACCIONES` (hoja de ruta).
 - Datos ficticios iniciales: `PRODUCTOS` y `CLIENTES`.
 - Supuestos iniciales de la simulación: `SUP_DEF` y `EXTRA_DEF`.
-- Colores y modo oscuro: variables CSS en `:root`.
+- Colores, tipografías y modo oscuro: variables CSS en `:root`. La fuente de títulos se carga desde `fonts/HWT-Artz.ttf`; si no está, se usa Archivo.
 
 Pendiente: validación con Gerencia Comercial y prueba con datos reales de al menos cuatro semanas.
